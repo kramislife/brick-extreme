@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: "poppins", sans-serif;
+  min-height: 100vh;
+  background: linear-gradient(to bottom, var(--brand-start), var(--brand-end));
+}
+
+:root {
+  --brand-start: #132742; /* Darker Blue */
+  --brand-end: #1f3a5f; /* Lighter Blue */
+  --primary: #e9e7fd;
+  --accent: #a31621;
+  --dark: #09080d;
+  --muted: #45424d;
+}
