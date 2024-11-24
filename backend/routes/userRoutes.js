@@ -65,7 +65,8 @@ router.route("/designers/:id").get(getDesignerById);
 // ---------------------------------- PRODUCTS --------------------------------------------------
 
 // GET ALL PRODUCTS
-router.route("/products").get(isAuthenticatedUser, getProduct);
+//isAuthenticatedUser,
+router.route("/products").get(getProduct);
 
 // GET PRODUCT BY ID
 router.route("/products/:id").get(getProductById);
