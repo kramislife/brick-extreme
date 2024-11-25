@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
-  CardFooter,
   CardHeader,
 } from "@/components/ui/card";
 import { motion, useInView } from "framer-motion";
@@ -61,7 +60,7 @@ const LatestProduct = () => {
           >
             <Card className="w-[350px] mx-auto border rounded-md shadow-md bg-gradient-r text-white relative group overflow-hidden cursor-pointer transition-transform duration-300 hover:scale-105">
               <CardHeader className="relative overflow-hidden p-0">
-                <div className="relative w-full h-[300px]">
+                <div className="relative w-full aspect-square">
                   <img
                     src={default_image2}
                     alt="Nutcracker"
@@ -75,28 +74,27 @@ const LatestProduct = () => {
               </CardHeader>
 
               <CardContent className="p-4">
-                <h2 className="text-lg font-semibold">{product.title}</h2>
-                <p className="text-red-500 text-md">${product.price}</p>
-              </CardContent>
-
-              <CardFooter className="p-4">
-                <div className="flex items-center justify-center">
-                  <div className="flex text-yellow-500">
-                    {[...Array(5)].map((_, index) => (
-                      <svg
-                        key={index}
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="currentColor"
-                        viewBox="0 0 24 24"
-                        className="w-5 h-5"
-                      >
-                        <path d="M12 .587l3.668 7.431 8.332 1.209-6.045 5.891 1.428 8.329L12 18.896 4.617 23.447l1.428-8.329-6.045-5.891 8.332-1.209L12 .587z" />
-                      </svg>
-                    ))}
+                <h2 className="text-lg font-semibold mb-2">{product.title}</h2>
+                <div className="flex items-center justify-between py-2">
+                  <p className="text-red-500 text-md">${product.price}</p>
+                  <div className="flex items-center">
+                    <div className="flex text-yellow-500">
+                      {[...Array(5)].map((_, index) => (
+                        <svg
+                          key={index}
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="currentColor"
+                          viewBox="0 0 24 24"
+                          className="w-4 h-4"
+                        >
+                          <path d="M12 .587l3.668 7.431 8.332 1.209-6.045 5.891 1.428 8.329L12 18.896 4.617 23.447l1.428-8.329-6.045-5.891 8.332-1.209L12 .587z" />
+                        </svg>
+                      ))}
+                    </div>
+                    <span className="ml-2 text-gray-300 text-sm">(88)</span>
                   </div>
-                  <span className="ml-2 text-gray-300 text-sm">(88)</span>
                 </div>
-              </CardFooter>
+              </CardContent>
             </Card>
           </motion.div>
         ))}

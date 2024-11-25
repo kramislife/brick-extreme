@@ -19,24 +19,24 @@ const categories = [
   },
   {
     id: 3,
-    title: "Lifestyle and Dino Eggs",
-    image: image1,
+    title: "Pocket Monsters",
+    image: image2,
   },
   {
     id: 4,
-    title: "Lifestyle and Dino Eggs",
+    title: "Pocket Monsters",
     image: image2,
   },
   {
     id: 5,
     title: "Pocket Monsters",
-    image: image1,
+    image: image2,
   },
   {
     id: 6,
-    title: "Lifestyle and Dino Eggs",
-    image: image1,
-  }
+    title: "Pocket Monsters",
+    image: image2,
+  },
 ];
 
 const Categories = () => {
@@ -77,7 +77,7 @@ const Categories = () => {
         variants={categoryAnimations.containerVariants}
         initial="hidden"
         animate={isInView ? "visible" : "hidden"}
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto px-4 mb-8"
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6  mx-auto mb-8"
       >
         {categories.map((category, index) => (
           <motion.div
@@ -87,14 +87,14 @@ const Categories = () => {
           >
             <Card className="overflow-hidden bg-gradient-r border-none rounded-lg cursor-pointer">
               <motion.div 
-                className="relative h-48 sm:h-64"
+                className="relative w-full h-[60vh] aspect-square"
                 whileHover={{ scale: 1.05 }}
                 transition={{ duration: 0.3 }}
               >
                 <motion.img
                   src={category.image}
                   alt={category.title}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-fill"
                   {...categoryAnimations.imageVariants}
                 />
                 <motion.div

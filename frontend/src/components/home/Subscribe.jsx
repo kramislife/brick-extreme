@@ -34,9 +34,9 @@ const Subscribe = () => {
 
   return (
     <div ref={ref} className="w-full py-16">
-      <div className="max-w-8xl mx-auto px-12">
+      <div className="px-4">
         <motion.div 
-          className="relative rounded-lg p-8 md:p-12 h-[70vh] lg:h-[90vh]"
+          className="relative rounded-lg p-8 md:p-12 h-[70vh] lg:h-[90vh] overflow-hidden"
           variants={subscribeAnimations.containerVariants}
           initial="hidden"
           animate={isInView ? "visible" : "hidden"}
@@ -44,14 +44,14 @@ const Subscribe = () => {
           <motion.img
             src={lightsaber}
             alt="Lightsaber"
-            className="absolute top-0 inset-0 right-0 bg-cover transform translate-x-8 -translate-y-8 opacity-50 rounded-lg"
+            className="absolute inset-0 w-full h-full object-cover opacity-50 rounded-lg"
             variants={subscribeAnimations.imageVariants}
             initial="hidden"
             animate={isInView ? "visible" : "hidden"}
           />
 
           <motion.div 
-            className="relative top-36 z-10 text-center"
+            className="relative top-44 z-10 text-center"
             variants={subscribeAnimations.containerVariants}
           >
             <motion.h2 
@@ -87,7 +87,7 @@ const Subscribe = () => {
         </motion.div>
 
         <motion.div 
-          className="grid grid-cols-1 md:grid-cols-3 gap-8"
+          className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-16"
           variants={subscribeAnimations.containerVariants}
           initial="hidden"
           animate={isInView ? "visible" : "hidden"}
