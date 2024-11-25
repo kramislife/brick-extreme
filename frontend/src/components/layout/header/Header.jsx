@@ -23,7 +23,7 @@ const Header = () => {
         </div>
 
         {/* Desktop Navigation */}
-        <ul className="hidden md:flex items-center space-x-6">
+        <ul className="hidden md:flex items-center space-x-12 text-lg">
           {navItems.map((item) => (
             <li key={item.id}>
               <NavLink
