@@ -7,11 +7,10 @@ import {
   SheetClose,
 } from "@/components/ui/sheet";
 import logo from "@/assets/logo.png";
-import React, { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 const Header = () => {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <nav className="bg-brand-gradient sticky top-0 z-50 py-3">
@@ -43,10 +42,10 @@ const Header = () => {
         {/* Icons */}
         <div className="flex items-center space-x-4">
           <button className="text-white hover:text-gray-200">
-            <Search size={20} />
+            <Search size={24} />
           </button>
           <button className="text-white hover:text-gray-200 relative">
-            <ShoppingCart size={20} />
+            <ShoppingCart size={24} />
             <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
               0
             </span>
@@ -55,10 +54,10 @@ const Header = () => {
           {/* User Dropdown - Only visible on desktop */}
           <div className="relative hidden md:block">
             <button
-              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              onClick={() => navigate('/login')}
               className="text-white hover:text-gray-200"
             >
-              <User size={20} />
+              <User size={24} />
             </button>
           </div>
 
@@ -89,7 +88,12 @@ const Header = () => {
                       </NavLink>
                     ))}
                     <div className="pt-4 border-t border-white/20">
-                      <h1>Login</h1>
+                      <button 
+                        onClick={() => navigate('/login')} 
+                        className="text-white hover:text-gray-300 transition-colors duration-200"
+                      >
+                        Login
+                      </button>
                     </div>
                   </nav>
                 </div>
