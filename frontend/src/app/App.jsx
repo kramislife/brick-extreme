@@ -1,11 +1,21 @@
-import { Button } from "@/components/ui/button"
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import RootLayout from "@/routes/RootLayout";
+import UserRoutes from "@/routes/UserRoutes";
+import NotFound from "@/components/layout/error/NotFound";
 
 const App = () => {
   return (
-    <div>
-      <h1 className="text-3xl font-bold underline">Hello world!</h1>
-      <Button variant="destructive">Button</Button>
-      </div>
+    <BrowserRouter>
+      <Routes>
+        {/* Main Route Layout */}
+        <Route element={<RootLayout />}>
+          {UserRoutes}
+
+          {/* 404 Page */}
+          <Route path="*" element={<NotFound />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 };
 
