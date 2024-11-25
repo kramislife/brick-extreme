@@ -60,7 +60,7 @@ const socialLinks = [
 
 const Footer = () => {
   return (
-    <footer className="bg-gradient-to-b from-brand-start to-darkBrand text-light">
+    <footer className="bg-gradient-to-b from-brand-start to-darkBrand">
       <div className="max-w-8xl mx-auto px-5 md:px-12 pt-16">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-x-8 gap-y-12">
           {footerLinks.map((link) => (
