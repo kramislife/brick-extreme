@@ -4,7 +4,7 @@ import About from "@/pages/About/About";
 import Contact from "@/pages/Contact/Contact";
 import Home from "@/pages/Home/Home";
 import Products from "@/pages/Products/Products";
-import SingleProduct from "@/pages/Products/SingleProduct";
+import SingleProduct from "@/pages/Products/BestSelling/SingleProduct";
 import { Route } from "react-router-dom";
 
 const UserRoutes = (
