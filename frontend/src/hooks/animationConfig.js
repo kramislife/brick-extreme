@@ -295,7 +295,6 @@ export const loginAnimations = {
 // Animation config for Register component
 
 export const registerAnimations = {
-    // Left side image animations
     imageContainerVariants: {
       initial: { opacity: 0, x: -100 },
       animate: { opacity: 1, x: 0 },

@@ -4,11 +4,11 @@ import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
-  CardFooter,
   CardHeader,
 } from "@/components/ui/card";
 import { motion, useInView } from "framer-motion";
 import { bestSellingAnimations } from "@/hooks/animationConfig";
+import { useNavigate } from "react-router-dom";
 
 const sampleData = [
   { id: 1, title: "Nutcracker", price: 800, image: droid },
@@ -18,6 +18,7 @@ const sampleData = [
 ];
 
 const BestSelling = () => {
+  const navigate = useNavigate();
   const ref = React.useRef(null);
   const isInView = useInView(ref, { 
     once: true, 
@@ -25,6 +26,10 @@ const BestSelling = () => {
     margin: "0px 0px -100px 0px"
   });
  
+  const handleViewDetails = (productId) => {
+    navigate(`/products/${productId}`);
+  };
+  
   return (
     <section ref={ref} className="p-4">
       <motion.h2
@@ -66,7 +71,10 @@ const BestSelling = () => {
                   />
                   <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-50 transition-opacity duration-300"></div>
                 </div>
-                <button className="absolute bottom-4 left-1/2 transform -translate-x-1/2 translate-y-full opacity-0 group-hover:translate-y-0 group-hover:opacity-100 bg-red-600 hover:bg-red-700 text-white text-sm font-semibold px-6 py-2 rounded-md transition-all duration-300 ease-in-out">
+                <button 
+                  onClick={() => handleViewDetails(item.id)}
+                  className="absolute bottom-4 left-1/2 transform -translate-x-1/2 translate-y-full opacity-0 group-hover:translate-y-0 group-hover:opacity-100 bg-red-600 hover:bg-red-700 text-white text-sm font-semibold px-6 py-2 rounded-md transition-all duration-300 ease-in-out"
+                >
                   View Details
                 </button>
               </CardHeader>
