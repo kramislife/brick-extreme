@@ -3,7 +3,7 @@ import ProductRating from "@/components/product/BestSelling/ProductRating";
 import ProductSpecification from "@/components/product/BestSelling/ProductSpecification";
 import React from "react";
 
-const SingleProduct = () => {
+const BestSellingProduct = () => {
   return (
     <>
       <ProductDetails />
@@ -13,4 +13,4 @@ const SingleProduct = () => {
   );
 };
 
-export default SingleProduct;
+export default BestSellingProduct;

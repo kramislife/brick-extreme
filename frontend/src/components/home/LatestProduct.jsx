@@ -18,13 +18,17 @@ const sampleProducts = [
 ];
 
 const LatestProduct = () => {
+  const navigate = useNavigate();
   const ref = React.useRef(null);
   const isInView = useInView(ref, { 
     once: true, 
     amount: 0.2,
     margin: "0px 0px -100px 0px"
   });
-  const navigate = useNavigate();
+
+  const handleViewDetails = (productId) => {
+    navigate(`/latest-product/${productId}`);
+  };
 
   return (
     <section ref={ref} className="p-4">
@@ -68,7 +72,10 @@ const LatestProduct = () => {
                   />
                   <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-50 transition-opacity duration-300"></div>
                 </div>
-                <button className="absolute bottom-4 left-1/2 transform -translate-x-1/2 translate-y-full opacity-0 group-hover:translate-y-0 group-hover:opacity-100 bg-red-600 hover:bg-red-700 text-white text-sm font-semibold px-6 py-2 rounded-md transition-all duration-300 ease-in-out">
+                <button 
+                  onClick={() => handleViewDetails(product.id)}
+                  className="absolute bottom-4 left-1/2 transform -translate-x-1/2 translate-y-full opacity-0 group-hover:translate-y-0 group-hover:opacity-100 bg-red-600 hover:bg-red-700 text-white text-sm font-semibold px-6 py-2 rounded-md transition-all duration-300 ease-in-out"
+                >
                   View Details
                 </button>
               </CardHeader>
