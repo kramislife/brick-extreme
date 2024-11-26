@@ -17,7 +17,7 @@ const UserRoutes = (
 		<Route path="register" element={<Register />} />
 
 		{/* Single Product Details */}
-		<Route path="products/:id" element={<SingleProduct/>}/>
+		<Route path="best-selling/:id" element={<SingleProduct/>}/>
 	</>
 );
 

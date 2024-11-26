@@ -27,7 +27,7 @@ const BestSelling = () => {
   });
  
   const handleViewDetails = (productId) => {
-    navigate(`/products/${productId}`);
+    navigate(`/best-selling/${productId}`);
   };
   
   return (
