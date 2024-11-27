@@ -54,6 +54,15 @@ const Products = () => {
         { value: "500-999", count: 10 },
         { value: "1000+", count: 5 }
       ]
+    },
+    Designers: {
+      title: "Designers",
+      options: [
+        { value: "John Doe" },
+        { value: "Jane Smith" },
+        { value: "Emily Johnson" },
+        { value: "Michael Brown" }
+      ]
     }
   };
 
@@ -70,6 +79,7 @@ const Products = () => {
       reviews: 88,
       priceRange: "$500-$1000",
       image: droid,
+      designer: "John Doe"
     },
     {
       id: 2,
@@ -83,6 +93,7 @@ const Products = () => {
       reviews: 156,
       priceRange: "Over $1000",
       image: droid,
+      designer: "Jane Smith"
     },
     {
       id: 3,
@@ -96,6 +107,7 @@ const Products = () => {
       reviews: 67,
       priceRange: "$100-$500",
       image: droid,
+      designer: "Emily Johnson"
     },
     {
       id: 4,
@@ -109,6 +121,7 @@ const Products = () => {
       reviews: 92,
       priceRange: "$100-$500",
       image: droid,
+      designer: "Michael Brown"
     },
     {
       id: 5,
@@ -122,6 +135,7 @@ const Products = () => {
       reviews: 245,
       priceRange: "$500-$1000",
       image: droid,
+      designer: "John Doe"
     },
     {
       id: 6,
@@ -135,6 +149,7 @@ const Products = () => {
       reviews: 67,
       priceRange: "$100-$500",
       image: droid,
+      designer: "Jane Smith"
     },
     {
       id: 7,
@@ -148,6 +163,7 @@ const Products = () => {
       reviews: 156,
       priceRange: "$500-$1000",
       image: droid,
+      designer: "Emily Johnson"
     },
     {
       id: 8,
@@ -161,6 +177,7 @@ const Products = () => {
       reviews: 78,
       priceRange: "$100-$500",
       image: droid,
+      designer: "Michael Brown"
     },
     {
       id: 9,
@@ -174,6 +191,7 @@ const Products = () => {
       reviews: 45,
       priceRange: "$100-$500",
       image: droid,
+      designer: "John Doe"
     },
   ];
 
@@ -183,7 +201,8 @@ const Products = () => {
     category: [],
     availability: [],
     skillLevel: [],
-    pieceCount: []
+    pieceCount: [],
+    Designers: []
   });
   const [openCategories, setOpenCategories] = useState(
     Object.keys(filterCategories)
@@ -215,13 +234,17 @@ const Products = () => {
         const pieceMatch =
           newFilters.pieceCount.length === 0 ||
           newFilters.pieceCount.includes(product.pieceCount);
+        const designerMatch =
+          newFilters.Designers.length === 0 ||
+          newFilters.Designers.includes(product.designer);
 
         return (
           priceMatch &&
           categoryMatch &&
           availabilityMatch &&
           skillMatch &&
-          pieceMatch
+          pieceMatch &&
+          designerMatch
         );
       });
 
@@ -296,7 +319,7 @@ const Products = () => {
                             {option.value}
                           </label>
                         </div>
-                        <span className="text-sm text-gray-400">({option.count})</span>
+                        {option.count && <span className="text-sm text-gray-400">({option.count})</span>}
                       </div>
                     ))}
                   </AccordionContent>
@@ -337,11 +360,11 @@ const Products = () => {
                       View Details
                     </button>
                   </div>
-                  <div className="p-4">
-                    <h3 className="text-lg font-bold text-white group-hover:text-red-400 transition-colors">
+                  <div className="p-4 flex flex-col h-[120px]">
+                    <h3 className="text-lg font-bold text-white group-hover:text-red-400 transition-colors mb-auto">
                       {product.name}
                     </h3>
-                    <div className="flex items-center justify-between mt-5">
+                    <div className="flex items-center justify-between mt-2">
                       <p className="text-red-500 font-bold text-xl">${product.price}</p>
                       <div className="flex items-center space-x-2">
                         <div className="flex items-center">
