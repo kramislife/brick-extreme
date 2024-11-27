@@ -9,7 +9,15 @@ import { motion } from "framer-motion";
 import { Filter, Star } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import droid from "@/assets/bestSellingAssets/droid.png";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 
+// This is the main Products component
 const Products = () => {
   const filterCategories = {
     priceRange: {
@@ -207,6 +215,7 @@ const Products = () => {
   const [openCategories, setOpenCategories] = useState(
     Object.keys(filterCategories)
   );
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   const handleFilterChange = (type, value) => {
     setFilters((prev) => {
@@ -251,6 +260,9 @@ const Products = () => {
       setProducts(filteredProducts);
       return newFilters;
     });
+    
+    // Close the sheet after filter selection
+    setIsFilterOpen(false);
   };
 
   const handleAccordionValueChange = (value) => {
@@ -272,15 +284,80 @@ const Products = () => {
 
   return (
     <div className="mx-auto p-4">
-      <div className="grid grid-cols-4 gap-6">
-        {/* Filters Section - Add height and sticky positioning */}
-        <div className="col-span-1 border border-gray-600 rounded-xl shadow-lg p-4 sticky top-24 h-[85vh]">
+
+      {/* Mobile Filter */}
+      <div className="lg:hidden mb-4">
+        <Sheet open={isFilterOpen} onOpenChange={setIsFilterOpen}>
+          <SheetTrigger asChild>
+            <button className="flex items-center space-x-2 bg-brand px-4 py-2 rounded-lg">
+              <Filter className="h-5 w-5" />
+              <span>Filters</span>
+            </button>
+          </SheetTrigger>
+          <SheetContent side="left" className="w-[400px] bg-darkBrand border-gray-800">
+            <SheetHeader>
+              <SheetTitle className="text-white text-left">Filters</SheetTitle>
+            </SheetHeader>
+            <div className="mt-6 overflow-y-auto scrollbar-none h-full">
+              <Accordion 
+                type="multiple" 
+                value={openCategories}
+                onValueChange={handleAccordionValueChange}
+                className="space-y-2 mb-10"
+              >
+                {Object.entries(filterCategories).map(([key, category]) => (
+                  <AccordionItem 
+                    key={key} 
+                    value={key} 
+                    className="border border-gray-700 rounded-md my-2 bg-brand"
+                  >
+                    <AccordionTrigger className="px-4 py-3 transition-colors group hover:no-underline rounded-md">
+                      <span className="font-semibold text-white group-hover:text-red-400">
+                        {category.title}
+                      </span>
+                    </AccordionTrigger>
+                    <AccordionContent className="px-4 py-3 bg-darkBrand rounded-b-md">
+                      {category.options.map((option) => (
+                        <div 
+                          key={option.value} 
+                          className="flex items-center justify-between py-2 hover:bg-brand rounded-md px-2 group"
+                        >
+                          <div className="flex items-center space-x-2">
+                            <Checkbox
+                              id={`${key}-${option.value}`}
+                              checked={filters[key].includes(option.value)}
+                              onCheckedChange={() => handleFilterChange(key, option.value)}
+                              className="border-gray-600 data-[state=checked]:bg-red-600 data-[state=checked]:border-red-600"
+                            />
+                            <label 
+                              htmlFor={`${key}-${option.value}`}
+                              className="text-sm text-gray-300 cursor-pointer group-hover:text-red-400 py-2"
+                            >
+                              {option.value}
+                            </label>
+                          </div>
+                          {option.count && <span className="text-sm text-gray-400">({option.count})</span>}
+                        </div>
+                      ))}
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
+            </div>
+          </SheetContent>
+        </Sheet>
+      </div>
+
+
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+
+        {/* Desktop Filter */}
+        <div className="hidden lg:block col-span-1 border border-gray-600 rounded-xl shadow-lg p-4 sticky top-24 h-[85vh]">
           <div className="flex items-center mb-4 space-x-2">
             <Filter className="h-6 w-6 text-white" />
             <h2 className="text-xl font-bold text-white">Filters</h2>
           </div>
           
-          {/* Adjust max-height to account for the header */}
           <div className="max-h-[75vh] overflow-y-auto pr-2">
             <Accordion 
               type="multiple" 
@@ -329,11 +406,11 @@ const Products = () => {
           </div>
         </div>
 
-        {/* Products Grid  */}
-        <div className="col-span-3 pb-8">
+        {/* Products */}
+        <div className="col-span-1 lg:col-span-3 pb-8">
           {products.length > 0 ? (
             <motion.div
-              className="grid grid-cols-3 gap-5"
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5 }}
