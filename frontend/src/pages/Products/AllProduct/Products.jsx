@@ -19,61 +19,6 @@ import {
 
 // This is the main Products component
 const Products = () => {
-  const filterCategories = {
-    priceRange: {
-      title: "Price Range",
-      options: [
-        { value: "Under $100", count: 15 },
-        { value: "$100-$500", count: 25 },
-        { value: "$500-$1000", count: 10 },
-        { value: "Over $1000", count: 5 }
-      ]
-    },
-    category: {
-      title: "Category",
-      options: [
-        { value: "Collectibles", count: 20 },
-        { value: "Star Wars", count: 15 },
-        { value: "Holiday Themes", count: 10 },
-        { value: "Movies Memorabilia", count: 12 }
-      ]
-    },
-    availability: {
-      title: "Availability",
-      options: [
-        { value: "In Stock", count: 45 },
-        { value: "Limited Edition", count: 8 },
-        { value: "Pre-order", count: 7 }
-      ]
-    },
-    skillLevel: {
-      title: "Skill Level",
-      options: [
-        { value: "Beginner", count: 25 },
-        { value: "Intermediate", count: 18 },
-        { value: "Expert", count: 12 }
-      ]
-    },
-    pieceCount: {
-      title: "Piece Count",
-      options: [
-        { value: "100-249", count: 20 },
-        { value: "250-499", count: 15 },
-        { value: "500-999", count: 10 },
-        { value: "1000+", count: 5 }
-      ]
-    },
-    Designers: {
-      title: "Designers",
-      options: [
-        { value: "John Doe" },
-        { value: "Jane Smith" },
-        { value: "Emily Johnson" },
-        { value: "Michael Brown" }
-      ]
-    }
-  };
-
   const initialProducts = [
     {
       id: 1,
@@ -212,9 +157,90 @@ const Products = () => {
     pieceCount: [],
     Designers: []
   });
-  const [openCategories, setOpenCategories] = useState(
-    Object.keys(filterCategories)
-  );
+
+  // Move getInitialCounts and filterCounts state here
+  const getInitialCounts = () => {
+    const counts = {
+      priceRange: {},
+      category: {},
+      availability: {},
+      skillLevel: {},
+      pieceCount: {},
+      Designers: {}
+    };
+
+    initialProducts.forEach(product => {
+      counts.priceRange[product.priceRange] = (counts.priceRange[product.priceRange] || 0) + 1;
+      counts.category[product.category] = (counts.category[product.category] || 0) + 1;
+      counts.availability[product.availability] = (counts.availability[product.availability] || 0) + 1;
+      counts.skillLevel[product.skillLevel] = (counts.skillLevel[product.skillLevel] || 0) + 1;
+      counts.pieceCount[product.pieceCount] = (counts.pieceCount[product.pieceCount] || 0) + 1;
+      counts.Designers[product.designer] = (counts.Designers[product.designer] || 0) + 1;
+    });
+
+    return counts;
+  };
+
+  const [filterCounts, setFilterCounts] = useState(getInitialCounts());
+
+  // Define filterCategories before using it in openCategories
+  const filterCategories = {
+    priceRange: {
+      title: "Price Range",
+      options: [
+        { value: "Under $100", count: filterCounts.priceRange["Under $100"] || 0 },
+        { value: "$100-$500", count: filterCounts.priceRange["$100-$500"] || 0 },
+        { value: "$500-$1000", count: filterCounts.priceRange["$500-$1000"] || 0 },
+        { value: "Over $1000", count: filterCounts.priceRange["Over $1000"] || 0 }
+      ]
+    },
+    category: {
+      title: "Category",
+      options: [
+        { value: "Collectibles", count: filterCounts.category["Collectibles"] || 0 },
+        { value: "Star Wars", count: filterCounts.category["Star Wars"] || 0 },
+        { value: "Holiday Themes", count: filterCounts.category["Holiday Themes"] || 0 },
+        { value: "Movies Memorabilia", count: filterCounts.category["Movies Memorabilia"] || 0 }
+      ]
+    },
+    availability: {
+      title: "Availability",
+      options: [
+        { value: "In Stock", count: filterCounts.availability["In Stock"] || 0 },
+        { value: "Limited Edition", count: filterCounts.availability["Limited Edition"] || 0 },
+        { value: "Pre-order", count: filterCounts.availability["Pre-order"] || 0 }
+      ]
+    },
+    skillLevel: {
+      title: "Skill Level",
+      options: [
+        { value: "Beginner", count: filterCounts.skillLevel["Beginner"] || 0 },
+        { value: "Intermediate", count: filterCounts.skillLevel["Intermediate"] || 0 },
+        { value: "Expert", count: filterCounts.skillLevel["Expert"] || 0 }
+      ]
+    },
+    pieceCount: {
+      title: "Piece Count",
+      options: [
+        { value: "100-249", count: filterCounts.pieceCount["100-249"] || 0 },
+        { value: "250-499", count: filterCounts.pieceCount["250-499"] || 0 },
+        { value: "500-999", count: filterCounts.pieceCount["500-999"] || 0 },
+        { value: "1000+", count: filterCounts.pieceCount["1000+"] || 0 }
+      ]
+    },
+    Designers: {
+      title: "Designers",
+      options: [
+        { value: "John Doe", count: filterCounts.Designers["John Doe"] || 0 },
+        { value: "Jane Smith", count: filterCounts.Designers["Jane Smith"] || 0 },
+        { value: "Emily Johnson", count: filterCounts.Designers["Emily Johnson"] || 0 },
+        { value: "Michael Brown", count: filterCounts.Designers["Michael Brown"] || 0 }
+      ]
+    }
+  };
+
+  // Now we can safely initialize openCategories
+  const [openCategories, setOpenCategories] = useState(Object.keys(filterCategories));
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   const handleFilterChange = (type, value) => {
@@ -257,11 +283,30 @@ const Products = () => {
         );
       });
 
+      // Recalculate counts based on filtered products
+      const newCounts = {
+        priceRange: {},
+        category: {},
+        availability: {},
+        skillLevel: {},
+        pieceCount: {},
+        Designers: {}
+      };
+
+      filteredProducts.forEach(product => {
+        newCounts.priceRange[product.priceRange] = (newCounts.priceRange[product.priceRange] || 0) + 1;
+        newCounts.category[product.category] = (newCounts.category[product.category] || 0) + 1;
+        newCounts.availability[product.availability] = (newCounts.availability[product.availability] || 0) + 1;
+        newCounts.skillLevel[product.skillLevel] = (newCounts.skillLevel[product.skillLevel] || 0) + 1;
+        newCounts.pieceCount[product.pieceCount] = (newCounts.pieceCount[product.pieceCount] || 0) + 1;
+        newCounts.Designers[product.designer] = (newCounts.Designers[product.designer] || 0) + 1;
+      });
+
+      setFilterCounts(newCounts);
       setProducts(filteredProducts);
       return newFilters;
     });
     
-    // Close the sheet after filter selection
     setIsFilterOpen(false);
   };
 
