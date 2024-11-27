@@ -18,13 +18,17 @@ const sampleProducts = [
 ];
 
 const LatestProduct = () => {
+  const navigate = useNavigate();
   const ref = React.useRef(null);
   const isInView = useInView(ref, { 
     once: true, 
     amount: 0.2,
     margin: "0px 0px -100px 0px"
   });
-  const navigate = useNavigate();
+
+  const handleViewDetails = (productId) => {
+    navigate(`/latest-product/${productId}`);
+  };
 
   return (
     <section ref={ref} className="p-4">
@@ -58,27 +62,29 @@ const LatestProduct = () => {
             variants={latestProductAnimations.cardVariants}
             custom={index}
           >
-            <Card className="w-[350px] mx-auto border rounded-md shadow-md bg-gradient-r text-white relative group overflow-hidden cursor-pointer transition-transform duration-300 hover:scale-105">
-              <CardHeader className="relative overflow-hidden p-0">
-                <div className="relative w-full aspect-square">
-                  <img
-                    src={default_image2}
-                    alt="Nutcracker"
-                    className="h-full w-full object-cover rounded-t-md"
-                  />
-                  <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-50 transition-opacity duration-300"></div>
-                </div>
-                <button className="absolute bottom-4 left-1/2 transform -translate-x-1/2 translate-y-full opacity-0 group-hover:translate-y-0 group-hover:opacity-100 bg-red-600 hover:bg-red-700 text-white text-sm font-semibold px-6 py-2 rounded-md transition-all duration-300 ease-in-out">
+            <Card className="bg-brand-gradient text-white border border-gray-700 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 group">
+              <div className="relative overflow-hidden aspect-square">
+                <img
+                  src={default_image2}
+                  alt="Nutcracker"
+                  className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-50 transition-opacity duration-300"></div>
+                <button 
+                  onClick={() => handleViewDetails(product.id)}
+                  className="absolute bottom-4 left-1/2 transform -translate-x-1/2 translate-y-full opacity-0 group-hover:translate-y-0 group-hover:opacity-100 bg-red-600 hover:bg-red-700 text-white text-sm font-semibold px-6 py-2 rounded-md transition-all duration-300 ease-in-out"
+                >
                   View Details
                 </button>
-              </CardHeader>
-
-              <CardContent className="p-4">
-                <h2 className="text-lg font-semibold mb-2">{product.title}</h2>
-                <div className="flex items-center justify-between py-2">
-                  <p className="text-red-500 text-md">${product.price}</p>
-                  <div className="flex items-center">
-                    <div className="flex text-yellow-500">
+              </div>
+              <div className="p-4">
+                <h3 className="text-lg font-bold text-white group-hover:text-red-400 transition-colors">
+                  {product.title}
+                </h3>
+                <div className="flex items-center justify-between mt-1">
+                  <p className="text-red-500 font-bold text-xl">${product.price}</p>
+                  <div className="flex items-center space-x-2">
+                    <div className="flex text-yellow-400">
                       {[...Array(5)].map((_, index) => (
                         <svg
                           key={index}
@@ -91,10 +97,10 @@ const LatestProduct = () => {
                         </svg>
                       ))}
                     </div>
-                    <span className="ml-2 text-gray-300 text-sm">(88)</span>
+                    <span className="text-sm text-gray-300">(88)</span>
                   </div>
                 </div>
-              </CardContent>
+              </div>
             </Card>
           </motion.div>
         ))}

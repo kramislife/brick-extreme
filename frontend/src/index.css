@@ -2,6 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+.scrollbar-none {
+  -ms-overflow-style: none;  /* IE and Edge */
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;  /* Chrome, Safari and Opera */
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
