@@ -68,7 +68,7 @@ const ProductDetails = ({ product, containerVariants, itemVariants }) => {
                     key={index}
                     onClick={() => selectImage(index)}
                     className={`min-w-[130px] md:min-w-0 h-[130px] rounded-lg overflow-hidden border-2 transition-all ${
-                      currentImageIndex === index ? "border-red-500" : "border-transparent"
+                      currentImageIndex === index ? "border-red-600 border-4" : "border-transparent"
                     }`}
                   >
                     <img 
@@ -151,12 +151,12 @@ const ProductDetails = ({ product, containerVariants, itemVariants }) => {
           {/* Details Section */}
           {details && details.length > 0 && (
             <div className="mb-6">
-              <div className="grid grid-cols-2 gap-2 max-w-[500px]">
+              <div className="grid lg:grid-cols-2 gap-2 lg:max-w-[500px]">
                 {details.map((detail, index) => (
                   <Button
                     key={index}
                     variant="outline"
-                    className="bg-slate-800/50 hover:bg-slate-800 hover:text-white hover:scale-105 transition-all duration-300 border-slate-700 w-full"
+                    className="bg-slate-800/50 hover:bg-slate-800 hover:text-white hover:scale-105 transition-all duration-300 border-slate-700 w-full text-left justify-start"
                   >
                     {detail.label}: {detail.value}
                   </Button>
