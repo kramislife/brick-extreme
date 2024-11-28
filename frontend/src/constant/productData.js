@@ -79,6 +79,15 @@ export const FILTER_CATEGORIES = {
       { value: "advanced", label: "Advanced" },
       { value: "expert", label: "Expert" }
     ]
+  }, 
+  designer: {
+    name: "Designer",
+    options: [
+      { value: "emily-wilson", label: "Emily Wilson" },
+      { value: "oliver-lee", label: "Oliver Lee" },
+      { value: "ava-martin", label: "Ava Martin" },
+      { value: "jackson-hall", label: "Jackson Hall" }
+    ]
   }
 };
 
@@ -737,3 +746,6 @@ export const sampleProducts = [
     ]
   }
 ];
+
+// Combined Products
+export const allProducts = [...sampleData, ...sampleProducts];
