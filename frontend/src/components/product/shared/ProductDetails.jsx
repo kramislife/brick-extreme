@@ -151,7 +151,7 @@ const ProductDetails = ({ product, containerVariants, itemVariants }) => {
           {/* Details Section */}
           {details && details.length > 0 && (
             <div className="mb-6">
-              <div className="grid grid-cols-2 gap-2 max-w-[400px]">
+              <div className="grid grid-cols-2 gap-2 max-w-[500px]">
                 {details.map((detail, index) => (
                   <Button
                     key={index}
