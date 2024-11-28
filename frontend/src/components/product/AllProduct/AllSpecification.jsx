@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Ruler, User, Dices } from 'lucide-react';
 
-const LatestSpecification = () => {
+const AllSpecification = () => {
   const specifications = [
     {
       title: "Piece Count",
@@ -77,4 +77,4 @@ const LatestSpecification = () => {
   );
 };
 
-export default LatestSpecification;
+export default AllSpecification;

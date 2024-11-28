@@ -37,12 +37,12 @@ const AVAILABILITY_STATES = {
   },
 };
 
-const ProductDetails = () => {
+const AllDetails = () => {
   const [quantity, setQuantity] = React.useState(1);
   const [currentImageIndex, setCurrentImageIndex] = React.useState(0);
 
   const product = {
-    name: "Product Name",
+    name: "All Products Name",
     price: 800,
     originalPrice: 1000,
     rating: 5,
@@ -295,4 +295,4 @@ const ProductDetails = () => {
   );
 };
 
-export default ProductDetails;
+export default AllDetails;

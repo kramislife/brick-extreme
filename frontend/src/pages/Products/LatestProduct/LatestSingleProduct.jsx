@@ -1,17 +1,42 @@
-import LatestSpecification from "@/components/product/LatestProduct/LatestSpecification";
-import LatestDetails from "@/components/product/LatestProduct/LatestDetails";
 import React from "react";
-import LatestRating from "@/components/product/LatestProduct/LatestRating";
+import ProductDetails from "@/components/product/shared/ProductDetails";
+import ProductRating from "@/components/product/shared/ProductRating";
+import ProductSpecification from "@/components/product/shared/ProductSpecification";
+import { sampleProducts } from "@/constant/productData";
+import { useParams } from "react-router-dom";
 
 const LatestSingleProduct = () => {
+  const { id } = useParams();
+  const product = sampleProducts.find(p => p.id === parseInt(id));
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { duration: 0.5, staggerChildren: 0.2 },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 },
+  };
+
+  if (!product) {
+    return <div>Product not found</div>;
+  }
+
   return (
     <>
-      <LatestDetails />
-      <LatestSpecification />
-      <LatestRating />
+      <ProductDetails 
+        product={product}
+        containerVariants={containerVariants}
+        itemVariants={itemVariants}
+      />
+      <ProductSpecification product={product} />
+      <ProductRating product={product} />
     </>
   );
 };
 
 export default LatestSingleProduct;
-    

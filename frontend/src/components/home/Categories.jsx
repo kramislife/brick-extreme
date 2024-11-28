@@ -44,7 +44,6 @@ const Categories = () => {
   const isInView = useInView(ref, { 
     once: true, 
     amount: 0.2,
-    margin: "0px 0px -100px 0px"
   });
 
   return (
@@ -77,7 +76,7 @@ const Categories = () => {
         variants={categoryAnimations.containerVariants}
         initial="hidden"
         animate={isInView ? "visible" : "hidden"}
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6  mx-auto mb-8"
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mx-auto mb-8"
       >
         {categories.map((category, index) => (
           <motion.div
@@ -87,14 +86,14 @@ const Categories = () => {
           >
             <Card className="overflow-hidden bg-gradient-r border-none rounded-lg cursor-pointer">
               <motion.div 
-                className="relative w-full h-[60vh] aspect-square"
+                className="relative w-full h-[300px] sm:h-[400px] lg:h-[60vh] aspect-auto sm:aspect-square"
                 whileHover={{ scale: 1.05 }}
                 transition={{ duration: 0.3 }}
               >
                 <motion.img
                   src={category.image}
                   alt={category.title}
-                  className="w-full h-full object-fill"
+                  className="w-full h-full object-cover"
                   {...categoryAnimations.imageVariants}
                 />
                 <motion.div
@@ -114,7 +113,7 @@ const Categories = () => {
               >
                 <CardFooter className="p-4 bg-gradient-to-t from-black/60">
                   <motion.h3
-                    className="text-lg font-semibold text-gray-200 text-center w-full"
+                    className="text-base sm:text-lg font-semibold text-gray-200 text-center w-full"
                     whileHover={{ scale: 1.05 }}
                     transition={{ duration: 0.2 }}
                   >

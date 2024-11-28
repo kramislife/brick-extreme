@@ -6,7 +6,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Card } from "@/components/ui/card"
 import { User } from "lucide-react"
 
-const ProductRating = () => {
+const AllRating = () => {
   const reviews = [
     {
       id: 1,
@@ -177,4 +177,4 @@ const ProductRating = () => {
   )
 }
 
-export default ProductRating
+export default AllRating

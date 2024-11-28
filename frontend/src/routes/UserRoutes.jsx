@@ -6,12 +6,14 @@ import Home from "@/pages/Home/Home";
 import Products from "@/pages/Products/AllProduct/Products";
 import BestSellingProduct from "@/pages/Products/BestSelling/BestSellingProduct";
 import LatestSingleProduct from "@/pages/Products/LatestProduct/LatestSingleProduct";
+import ProductView from "@/pages/Products/AllProduct/ProductView";
 import { Route } from "react-router-dom";
 
 const UserRoutes = (
 	<>
 		<Route index element={<Home />} />
 		<Route path="products" element={<Products />} />
+		<Route path="products/:id" element={<ProductView />} />
 		<Route path="about" element={<About />} />
 		<Route path="contact" element={<Contact />} />
 		<Route path="login" element={<Login />} />

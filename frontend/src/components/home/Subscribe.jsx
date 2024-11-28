@@ -29,7 +29,6 @@ const Subscribe = () => {
   const isInView = useInView(ref, { 
     once: true, 
     amount: 0.2,
-    margin: "0px 0px -100px 0px"
   });
 
   return (
@@ -55,14 +54,14 @@ const Subscribe = () => {
             variants={subscribeAnimations.containerVariants}
           >
             <motion.h2 
-              className="text-4xl text-gray-200 font-bold mb-4"
+              className="text-3xl sm:text-4xl text-gray-200 font-bold mb-4"
               variants={subscribeAnimations.itemVariants}
             >
               Subscribe and Save
             </motion.h2>
 
             <motion.p 
-              className="text-gray-300 mb-8 max-w-2xl mx-auto"
+              className="text-gray-300 mb-8 max-w-2xl mx-auto text-sm sm:text-base"
               variants={subscribeAnimations.itemVariants}
             >
               Unlock exclusive deals and never miss out! Subscribe now and save
