@@ -10,7 +10,6 @@ const FeaturedProducts = () => {
   const isInView = useInView(ref, { 
     once: true, 
     amount: 0.2,
-    margin: "0px 0px -100px 0px"
   });
 
   return (
