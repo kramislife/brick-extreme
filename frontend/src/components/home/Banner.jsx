@@ -1,13 +1,13 @@
-import { bannerItems } from '@/constant/banner';
+import { bannerItems } from "@/constant/banner";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel";
-import { useCarousel } from '@/hooks/useCarousel';
+import { useCarousel } from "@/hooks/useCarousel";
 
 const Banner = () => {
-  const { setApi, plugin, options } = useCarousel(); 
+  const { setApi, plugin, options } = useCarousel();
 
   return (
     <Carousel
@@ -22,7 +22,7 @@ const Banner = () => {
             <img
               src={item.image}
               alt={item.altText}
-              className="w-full h-[50vh] lg:h-[90vh] sm:h-[60vh] md:h-[70vh] object-cover"
+              className="w-full h-[50vh] lg:h-[90vh] sm:h-[60vh] md:h-[70vh] object-center"
             />
           </CarouselItem>
         ))}
