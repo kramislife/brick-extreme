@@ -114,7 +114,7 @@ const Products = () => {
               <span>Filters</span>
             </button>
           </SheetTrigger>
-          <SheetContent side="left" className="w-[400px] bg-darkBrand border-gray-800">
+          <SheetContent side="left" className="w-[350px] bg-darkBrand border-gray-800">
             <SheetHeader>
               <SheetTitle className="text-white text-left">Filters</SheetTitle>
             </SheetHeader>
