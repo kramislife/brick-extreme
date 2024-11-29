@@ -115,28 +115,42 @@ const FilterAccordion = ({
             </span>
           </AccordionTrigger>
           <AccordionContent className="px-4 py-3 bg-darkBrand rounded-b-md">
-            {category.options.map((option) => (
-              <label 
-                key={option.value} 
-                htmlFor={`${key}-${option.value}`}
-                className="flex items-center justify-between py-2 hover:bg-brand rounded-md px-2 group cursor-pointer"
-              >
-                <div className="flex items-center space-x-2">
-                  <Checkbox
-                    id={`${key}-${option.value}`}
-                    checked={selectedFilters[key].includes(option.value)}
-                    onCheckedChange={(checked) => onFilterChange(key, option.value)}
-                    className="border-gray-600 data-[state=checked]:bg-red-600 data-[state=checked]:border-red-600"
-                  />
-                  <span className="text-sm text-gray-300 group-hover:text-red-400 py-2">
-                    {option.label}
+            {category.options.map((option) => {
+              const count = filterCounts[key]?.[option.value] || 0;
+              const isDisabled = count === 0;
+
+              return (
+                <label 
+                  key={option.value} 
+                  htmlFor={`${key}-${option.value}`}
+                  className={`flex items-center justify-between py-2 px-2 rounded-md ${
+                    isDisabled 
+                      ? 'opacity-50 cursor-not-allowed' 
+                      : 'hover:bg-brand group cursor-pointer'
+                  }`}
+                >
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id={`${key}-${option.value}`}
+                      checked={selectedFilters[key].includes(option.value)}
+                      onCheckedChange={(checked) => !isDisabled && onFilterChange(key, option.value)}
+                      disabled={isDisabled}
+                      className="border-gray-600 data-[state=checked]:bg-red-600 data-[state=checked]:border-red-600 disabled:opacity-50"
+                    />
+                    <span className={`text-sm ${
+                      isDisabled 
+                        ? 'text-gray-500' 
+                        : 'text-gray-300 group-hover:text-red-400'
+                    } py-2`}>
+                      {option.label}
+                    </span>
+                  </div>
+                  <span className="text-sm text-gray-400">
+                    ({count})
                   </span>
-                </div>
-                <span className="text-sm text-gray-400">
-                  ({filterCounts[key]?.[option.value] || 0})
-                </span>
-              </label>
-            ))}
+                </label>
+              );
+            })}
           </AccordionContent>
         </AccordionItem>
       ))}
