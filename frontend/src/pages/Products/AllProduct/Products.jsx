@@ -73,20 +73,22 @@ const Products = () => {
       Designers: {},
     };
 
-    initialProducts.forEach((product) => {
-      counts.priceRange[product.priceRange] =
+    data?.products?.forEach((product) => {
+      counts.priceRange[product.price] =
         (counts.priceRange[product.priceRange] || 0) + 1;
-      counts.category[product.category] =
-        (counts.category[product.category] || 0) + 1;
-      counts.availability[product.availability] =
-        (counts.availability[product.availability] || 0) + 1;
-      counts.skillLevel[product.skillLevel] =
-        (counts.skillLevel[product.skillLevel] || 0) + 1;
-      counts.pieceCount[product.pieceCount] =
-        (counts.pieceCount[product.pieceCount] || 0) + 1;
-      counts.Designers[product.designer] =
-        (counts.Designers[product.designer] || 0) + 1;
+      counts.category[product.product_category] =
+        (counts.category[product.product_category] || 0) + 1;
+      counts.availability[product.product_availability] =
+        (counts.availability[product.product_availability] || 0) + 1;
+      counts.skillLevel[product.product_skill_level] =
+        (counts.skillLevel[product.product_skill_level] || 0) + 1;
+      counts.pieceCount[product.product_piece_count] =
+        (counts.pieceCount[product.product_piece_count] || 0) + 1;
+      counts.Designers[product.product_designer] =
+        (counts.Designers[product.product_designer] || 0) + 1;
     });
+
+    console.log("COUNTS:", counts);
 
     return counts;
   };

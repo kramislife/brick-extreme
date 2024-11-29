@@ -22,12 +22,15 @@ class API_Filters {
         console.log("KEYWORDS: ", keywords);
 
         this.query = this.query.find(keywordFilter); // Apply the constructed filter
-      } else {
-        this.query = this.query.find();
       }
     } else {
       this.query = this.query.find();
     }
+
+    //    this.query = this.query.populate("product_category");
+    this.query = this.query
+      .populate("product_category", "name")
+      .populate("product_collection", "name");
 
     return this;
   }
@@ -37,7 +40,7 @@ class API_Filters {
   filters() {
     const queryCopy = { ...this.queryStr };
 
-    const fieldsToRemove = ["keyword","page"];
+    const fieldsToRemove = ["keyword", "page"];
 
     fieldsToRemove.forEach((element) => delete queryCopy[element]);
 
