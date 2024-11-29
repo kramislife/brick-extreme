@@ -17,7 +17,7 @@ const ProductDetails = ({ product, containerVariants, itemVariants }) => {
     availability = {},
     details = [],
     description = {},
-    images = [product?.image]
+    images = [product?.image],
   } = product || {};
 
   // Only render image gallery if there are images
@@ -25,9 +25,8 @@ const ProductDetails = ({ product, containerVariants, itemVariants }) => {
 
   const nextImage = () => {
     if (!hasImages) return;
-    setCurrentImageIndex((prev) =>
-      prev === images.length - 1 ? 0 : prev + 1
-    );
+    setCurrentImageIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+
     document
       .getElementById(`thumbnail-${(currentImageIndex + 1) % images.length}`)
       ?.scrollIntoView({ behavior: "smooth", block: "nearest" });
@@ -35,11 +34,13 @@ const ProductDetails = ({ product, containerVariants, itemVariants }) => {
 
   const prevImage = () => {
     if (!hasImages) return;
-    setCurrentImageIndex((prev) =>
-      prev === 0 ? images.length - 1 : prev - 1
-    );
+    setCurrentImageIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
     document
-      .getElementById(`thumbnail-${currentImageIndex === 0 ? images.length - 1 : currentImageIndex - 1}`)
+      .getElementById(
+        `thumbnail-${
+          currentImageIndex === 0 ? images.length - 1 : currentImageIndex - 1
+        }`
+      )
       ?.scrollIntoView({ behavior: "smooth", block: "nearest" });
   };
 
@@ -58,7 +59,10 @@ const ProductDetails = ({ product, containerVariants, itemVariants }) => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Image Gallery */}
         {hasImages && (
-          <motion.div variants={itemVariants} className="relative flex flex-col-reverse md:flex-row gap-4">
+          <motion.div
+            variants={itemVariants}
+            className="relative flex flex-col-reverse md:flex-row gap-4"
+          >
             {/* Thumbnails */}
             <div className="w-full md:w-[130px] h-[130px] md:h-[640px] overflow-x-auto md:overflow-y-auto overflow-y-hidden scrollbar-none">
               <div className="flex flex-row md:flex-col gap-2">
@@ -68,13 +72,15 @@ const ProductDetails = ({ product, containerVariants, itemVariants }) => {
                     key={index}
                     onClick={() => selectImage(index)}
                     className={`min-w-[130px] md:min-w-0 h-[130px] rounded-lg overflow-hidden border-2 transition-all ${
-                      currentImageIndex === index ? "border-red-500" : "border-transparent"
+                      currentImageIndex === index
+                        ? "border-red-500"
+                        : "border-transparent"
                     }`}
                   >
-                    <img 
-                      src={image} 
-                      alt={`Thumbnail ${index + 1}`} 
-                      className="w-full h-full object-cover hover:scale-110 transition-transform duration-300" 
+                    <img
+                      src={image}
+                      alt={`Thumbnail ${index + 1}`}
+                      className="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
                     />
                   </button>
                 ))}
@@ -123,15 +129,24 @@ const ProductDetails = ({ product, containerVariants, itemVariants }) => {
 
             <div className="flex items-center gap-1 mb-8">
               {[...Array(Math.floor(rating))].map((_, i) => (
-                <Star key={i} className="w-4 h-4 fill-yellow-500 text-yellow-500" />
+                <Star
+                  key={i}
+                  className="w-4 h-4 fill-yellow-500 text-yellow-500"
+                />
               ))}
-              <span className="text-gray-400 ml-2 text-sm">({reviewCount} reviews)</span>
+              <span className="text-gray-400 ml-2 text-sm">
+                ({reviewCount} reviews)
+              </span>
             </div>
 
             <div className="flex items-center space-x-4">
-              <span className="text-4xl font-semibold text-white">${price}</span>
+              <span className="text-4xl font-semibold text-white">
+                ${price}
+              </span>
               {originalPrice > price && (
-                <span className="text-md text-gray-400 line-through">${originalPrice}</span>
+                <span className="text-md text-gray-400 line-through">
+                  ${originalPrice}
+                </span>
               )}
             </div>
           </div>
@@ -140,8 +155,12 @@ const ProductDetails = ({ product, containerVariants, itemVariants }) => {
           {availability && Object.keys(availability).length > 0 && (
             <div className="mb-6">
               <div className="flex items-center space-x-2">
-                <span className={`w-2 h-2 rounded-full ${availability.dotColor}`}></span>
-                <span className={`${availability.textColor} text-sm font-medium`}>
+                <span
+                  className={`w-2 h-2 rounded-full ${availability.dotColor}`}
+                ></span>
+                <span
+                  className={`${availability.textColor} text-sm font-medium`}
+                >
                   {availability.text}
                 </span>
               </div>
@@ -168,9 +187,21 @@ const ProductDetails = ({ product, containerVariants, itemVariants }) => {
           {/* Description Section */}
           {description && Object.keys(description).length > 0 && (
             <div className="mb-6">
-              {description.intro && <p className="text-gray-300 mb-3 leading-loose">{description.intro}</p>}
-              {description.features && <p className="text-gray-300 mb-3 leading-loose">{description.features}</p>}
-              {description.usage && <p className="text-gray-300 leading-loose">{description.usage}</p>}
+              {description.intro && (
+                <p className="text-gray-300 mb-3 leading-loose">
+                  {description.intro}
+                </p>
+              )}
+              {description.features && (
+                <p className="text-gray-300 mb-3 leading-loose">
+                  {description.features}
+                </p>
+              )}
+              {description.usage && (
+                <p className="text-gray-300 leading-loose">
+                  {description.usage}
+                </p>
+              )}
             </div>
           )}
 
@@ -178,7 +209,8 @@ const ProductDetails = ({ product, containerVariants, itemVariants }) => {
           <div className="mt-auto">
             <div className="flex items-center space-x-4 mb-4">
               <div className="flex items-center border rounded-md">
-                <Button className="rounded-r-none"
+                <Button
+                  className="rounded-r-none"
                   variant="ghost"
                   size="icon"
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
@@ -186,7 +218,8 @@ const ProductDetails = ({ product, containerVariants, itemVariants }) => {
                   <Minus className="w-4 h-4" />
                 </Button>
                 <span className="w-12 text-center">{quantity}</span>
-                <Button className="rounded-l-none"
+                <Button
+                  className="rounded-l-none"
                   variant="ghost"
                   size="icon"
                   onClick={() => setQuantity(quantity + 1)}
@@ -198,7 +231,10 @@ const ProductDetails = ({ product, containerVariants, itemVariants }) => {
             <div className="flex space-x-4">
               <Button
                 className="w-full bg-red-600 hover:bg-red-700 hover:scale-105 transition-all duration-300"
-                disabled={availability?.text === "Out of Stock" || availability?.text === "Currently Unavailable"}
+                disabled={
+                  availability?.text === "Out of Stock" ||
+                  availability?.text === "Currently Unavailable"
+                }
               >
                 Add to Cart
               </Button>

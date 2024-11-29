@@ -6,7 +6,6 @@ import ErrorHandler from "../Utills/customErrorHandler.js";
 //------------------------------------  GET ALL PRODUCT => GET /products  ------------------------------------
 
 export const getProduct = catchAsyncErrors(async (req, res, next) => {
-
   // API Filters & Search
 
   const resPerPage = 9;
@@ -16,7 +15,7 @@ export const getProduct = catchAsyncErrors(async (req, res, next) => {
   let products = await apiFilters.query;
 
   if (!products) {
-    return next(new ErrorHandler(404, "No Products Found"));
+    return next(new ErrorHandler("Product not found", 404));
   }
 
   let filteredProductCount = products?.length;

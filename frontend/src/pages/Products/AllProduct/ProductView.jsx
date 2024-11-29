@@ -1,6 +1,6 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import AllDetails from "@/components/product/AllProduct/AllDetails";
+import AllDetails from "@/components/product/AllProduct/ProductDetails";
 import AllSpecification from "@/components/product/AllProduct/AllSpecification";
 import AllRating from "@/components/product/AllProduct/AllRating";
 

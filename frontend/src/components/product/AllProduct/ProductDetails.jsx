@@ -37,7 +37,7 @@ const AVAILABILITY_STATES = {
   },
 };
 
-const AllDetails = () => {
+const ProductDetails = () => {
   const [quantity, setQuantity] = React.useState(1);
   const [currentImageIndex, setCurrentImageIndex] = React.useState(0);
 
@@ -217,7 +217,9 @@ const AllDetails = () => {
               <span
                 className={`w-2 h-2 rounded-full ${product.availability.dotColor}`}
               ></span>
-              <span className={`${product.availability.textColor} text-sm font-medium`}>
+              <span
+                className={`${product.availability.textColor} text-sm font-medium`}
+              >
                 {product.availability.text}
               </span>
             </div>
@@ -295,4 +297,4 @@ const AllDetails = () => {
   );
 };
 
-export default AllDetails;
+export default ProductDetails;

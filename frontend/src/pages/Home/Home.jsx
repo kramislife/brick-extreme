@@ -8,6 +8,7 @@ import Metadata from "@/components/layout/Metadata/Metadata";
 import React from "react";
 
 const Home = () => {
+  
   return (
     <>
       <Metadata title="Homepage" />
