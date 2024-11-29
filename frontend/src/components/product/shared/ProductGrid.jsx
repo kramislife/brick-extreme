@@ -86,7 +86,7 @@ const ProductGrid = ({
             <Card className="bg-brand-gradient text-white border border-gray-700 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 group">
               <div className="relative overflow-hidden aspect-square">
                 <img
-                  src={product.mainImage}
+                  src={product.images[0]}
                   alt={product.title}
                   className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                 />
