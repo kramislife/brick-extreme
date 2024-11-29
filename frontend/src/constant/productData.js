@@ -102,7 +102,7 @@ export const sampleData = [
     images: [droid, droid2, droid, droid2, droid],
     rating: 4.5,
     reviewCount: 4,
-    availability: AVAILABILITY_STATES.IN_STOCK,
+    availability: AVAILABILITY_STATES.PRE_ORDER,
     details: [
       {
         label: "Theme",
@@ -169,7 +169,7 @@ export const sampleData = [
       },
       {
         type: "designer",
-        items: ["Jane Smith"],
+        items: ["Emily Wilson"],
         description: "Award-winning designer with over 10 years of experience in creating iconic builds."
       }
     ]
@@ -243,7 +243,7 @@ export const sampleData = [
       },
       {
         type: "designer",
-        items: ["Mark Johnson"],
+        items: ["Emily Wilson"],
         description: "Sci-fi specialist designer known for innovative mechanical designs and authentic detailing."
       }
     ]
@@ -331,7 +331,7 @@ export const sampleData = [
       },
       {
         type: "designer",
-        items: ["Sarah Chen"],
+        items: ["Oliver Lee"],
         description: "Robotics design expert with background in mechanical engineering. Known for innovative articulation systems."
       }
     ]
@@ -412,7 +412,7 @@ export const sampleData = [
       },
       {
         type: "designer",
-        items: ["Thomas Wright"],
+        items: ["Ava Martin"],
         description: "Vintage mechanism specialist with expertise in steampunk aesthetics. Master of incorporating working gears."
       }
     ]
@@ -497,7 +497,7 @@ export const sampleProducts = [
       },
       {
         type: "designer",
-        items: ["Thomas Wright"],
+        items: ["Ava Martin"],
         description: "Vintage mechanism specialist with expertise in steampunk aesthetics. Master of incorporating working gears."
       }
     ]
@@ -571,7 +571,7 @@ export const sampleProducts = [
       },
       {
         type: "designer",
-        items: ["Mark Johnson"],
+        items: ["Jackson Hall"],
         description: "Sci-fi specialist designer known for innovative mechanical designs and authentic detailing."
       }
     ]
@@ -659,7 +659,7 @@ export const sampleProducts = [
       },
       {
         type: "designer",
-        items: ["Sarah Chen"],
+        items: ["Emily Wilson"],
         description: "Robotics design expert with background in mechanical engineering. Known for innovative articulation systems."
       }
     ]
@@ -740,7 +740,7 @@ export const sampleProducts = [
       },
       {
         type: "designer",
-        items: ["Jane Smith"],
+        items: ["Jackson Hall"],
         description: "Award-winning designer with over 10 years of experience in creating iconic builds."
       }
     ]
