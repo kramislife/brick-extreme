@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  getBestSellerProduct,
   getProduct,
   getProductById,
 } from "../controllers/productController.js";
@@ -67,6 +68,9 @@ router.route("/designers/:id").get(getDesignerById);
 // GET ALL PRODUCTS
 //isAuthenticatedUser,
 router.route("/products").get(getProduct);
+
+// GET ALL BEST SELLER PRODUCTS
+router.route("/products/best-seller").get(getBestSellerProduct);
 
 // GET PRODUCT BY ID
 router.route("/products/:id").get(getProductById);
