@@ -6,6 +6,8 @@ import { useGetBestSellerProductsQuery } from "@/redux/api/productApi";
 
 const BestSelling = () => {
   const { data } = useGetBestSellerProductsQuery();
+
+  
   return (
     <ProductGrid
       title="Best Selling Products"
