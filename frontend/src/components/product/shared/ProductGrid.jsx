@@ -3,36 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { motion, useInView } from "framer-motion";
-import { Star } from "lucide-react";
-
-const StarRating = ({ rating }) => {
-  return (
-    <div className="flex text-yellow-400">
-      {[1, 2, 3, 4, 5].map((index) => {
-        const isHalf = rating - index + 1 < 1 && rating - index + 1 > 0;
-        const isEmpty = rating - index + 1 <= 0;
-        
-        return (
-          <Star
-            key={index}
-            className="w-4 h-4"
-            fill={isEmpty ? 'none' : isHalf ? 'url(#half)' : 'currentColor'}
-            strokeWidth={1.5}
-          >
-            {isHalf && (
-              <defs>
-                <linearGradient id="half">
-                  <stop offset="50%" stopColor="currentColor" />
-                  <stop offset="50%" stopColor="transparent" />
-                </linearGradient>
-              </defs>
-            )}
-          </Star>
-        );
-      })}
-    </div>
-  );
-};
+import StarRating from "@/components/product/shared/StarRating";
 
 const ProductGrid = ({
   title,
@@ -91,6 +62,8 @@ const ProductGrid = ({
                   className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                 />
                 <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-50 transition-opacity duration-300"></div>
+
+                {/* View Details Button */}
                 <button 
                   onClick={() => handleViewDetails(product.id)}
                   className="absolute bottom-4 left-1/2 transform -translate-x-1/2 translate-y-full opacity-0 group-hover:translate-y-0 group-hover:opacity-100 bg-red-600 hover:bg-red-700 text-white text-sm font-semibold px-6 py-2 rounded-md transition-all duration-300 ease-in-out"
@@ -98,15 +71,18 @@ const ProductGrid = ({
                   View Details
                 </button>
               </div>
+              
               <div className="p-4">
                 <h3 className="text-lg font-bold text-white group-hover:text-red-400 transition-colors">
                   {product.title}
                 </h3>
                 <div className="flex items-center justify-between mt-1">
                   <p className="text-red-500 font-bold text-xl">${product.price}</p>
+
+                  {/* Star Rating */}
                   <div className="flex items-center space-x-2">
                     <StarRating rating={product.rating} />
-                    <span className="text-sm text-gray-300">({product.reviewCount})</span>
+                    <span className="text-sm text-gray-300">({product.rating})</span>
                   </div>
                 </div>
               </div>

@@ -131,7 +131,7 @@ const Products = () => {
         </Sheet>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 py-2">
         {/* Desktop Filter */}
         <div className="hidden lg:block col-span-1 border border-gray-600 rounded-xl shadow-lg p-4 sticky top-24 h-[85vh]">
           <div className="flex items-center mb-4 space-x-2">

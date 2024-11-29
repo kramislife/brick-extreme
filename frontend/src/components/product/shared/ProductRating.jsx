@@ -1,9 +1,10 @@
 import React, { useMemo } from 'react';
-import { Star, Quote, User } from 'lucide-react';
+import { Quote, User } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Card } from "@/components/ui/card";
+import StarRating from "@/components/product/shared/StarRating";
 
 const ProductRating = ({ product }) => {
   // Calculate ratings dynamically based on product reviews
@@ -52,13 +53,8 @@ const ProductRating = ({ product }) => {
             <div className="text-5xl font-semibold mb-4">
               {ratings.average}<span className="text-3xl text-gray-400">/5.0</span>
             </div>
-            <div className="flex gap-1 mb-3">
-              {[...Array(5)].map((_, i) => (
-                <Star 
-                  key={i} 
-                  className={`w-5 h-5 ${i < Math.round(ratings.average) ? 'fill-yellow-400 text-yellow-400' : 'text-gray-600'}`} 
-                />
-              ))}
+            <div className="mb-3">
+              <StarRating rating={ratings.average} />
             </div>
             <div className="text-sm text-gray-400">
               {ratings.total} reviews
@@ -71,16 +67,7 @@ const ProductRating = ({ product }) => {
               <div key={rating.stars} className="flex items-center gap-4">
                 <span className="w-4 text-gray-400">{rating.stars}</span>
                 <div className="flex gap-2 items-center flex-1">
-                  {[...Array(5)].map((_, i) => (
-                    <Star 
-                      key={i}
-                      className={`w-4 h-4 ${
-                        rating.count > 0 && i < rating.stars 
-                          ? 'fill-yellow-400 text-yellow-400' 
-                          : 'text-gray-600'
-                      }`}
-                    />
-                  ))}
+                  <StarRating rating={rating.stars} />
                   <Progress 
                     value={ratings.total > 0 ? (rating.count / ratings.total * 100) : 0} 
                     className="h-2 flex-1 bg-gray-700/50"
@@ -119,10 +106,7 @@ const ProductRating = ({ product }) => {
               Customer Reviews
             </h3>
             {product.reviews.map((review) => (
-              <Card 
-                key={review.id} 
-                className="bg-brand/70 border-none text-white p-8 rounded-xl shadow-lg hover:bg-gray-800/70 transition-all duration-300"
-              >
+              <Card key={review.id} className="bg-brand/70 border-none text-white p-8 rounded-xl shadow-lg hover:bg-gray-800/70 transition-all duration-300">
                 <div className="flex items-start gap-6">
                   <Avatar className="w-12 h-12">
                     <AvatarFallback className="bg-gray-700 text-gray-300">
@@ -135,18 +119,7 @@ const ProductRating = ({ product }) => {
                       <div>
                         <div className="font-semibold text-lg">{review.author}</div>
                         <div className="flex items-center gap-3">
-                          <div className="flex gap-0.5">
-                            {[...Array(5)].map((_, i) => (
-                              <Star
-                                key={i}
-                                className={`w-4 h-4 ${
-                                  i < review.rating
-                                    ? "fill-yellow-400 text-yellow-400"
-                                    : "text-gray-600"
-                                }`}
-                              />
-                            ))}
-                          </div>
+                          <StarRating rating={review.rating} />
                           <span className="text-sm text-gray-400">
                             {review.date}
                           </span>
