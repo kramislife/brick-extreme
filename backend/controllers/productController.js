@@ -1,4 +1,5 @@
 import catchAsyncErrors from "../middlewares/catchAsyncErrors.js";
+import Category from "../models/category.model.js";
 import Product from "../models/product.model.js";
 import API_Filters from "../Utills/apiFilters.js";
 import ErrorHandler from "../Utills/customErrorHandler.js";
@@ -28,6 +29,45 @@ export const getProduct = catchAsyncErrors(async (req, res, next) => {
     resPerPage,
     message: `${filteredProductCount} Products retrieved successfully`,
     products,
+  });
+});
+//------------------------------------  GET BEST SELLER PRODUCTS  => GET /products/best-seller  ------------------------------------
+
+export const getBestSellerProduct = catchAsyncErrors(async (req, res, next) => {
+  console.log("Fetching Best Seller Products...");
+
+  // Find the Best Seller Category
+  const bestSellerCategory = await Category.findOne({ key: "best_seller" });
+
+  if (!bestSellerCategory) {
+    return res.status(404).json({
+      status: false,
+      message: "Best Seller category not found.",
+    });
+  }
+
+  console.log("BEST SELLER CATEGORY:", bestSellerCategory);
+
+  // Fetch Products under the Best Seller Category
+  const bestSellerProducts = await Product.find({
+    product_category: bestSellerCategory._id,
+  })
+    .sort({ createdAt: -1 })
+    .populate("product_category");
+
+  if (!bestSellerProducts || bestSellerProducts.length === 0) {
+    return res.status(404).json({
+      status: false,
+      message: "No products found under the Best Seller category.",
+    });
+  }
+
+  console.log("BEST SELLER PRODUCTS:", bestSellerProducts);
+
+  res.status(200).json({
+    status: true,
+    message: "Best Seller Products retrieved successfully.",
+    products: bestSellerProducts,
   });
 });
 
