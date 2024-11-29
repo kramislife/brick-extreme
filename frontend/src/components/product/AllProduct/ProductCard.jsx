@@ -1,23 +1,10 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { Star } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import StarRating from "@/components/product/shared/StarRating";
 
 const ProductCard = ({ product }) => {
   const navigate = useNavigate();
-
-  const renderStars = (rating) => {
-    return [...Array(5)].map((_, index) => (
-      <Star
-        key={index}
-        className={`h-4 w-4 ${
-          index < Math.floor(rating)
-            ? "text-yellow-400 fill-yellow-400"
-            : "text-gray-300"
-        }`}
-      />
-    ));
-  };
 
   const handleViewDetails = () => {
     navigate(`/products/${product.id}`);
@@ -52,11 +39,9 @@ const ProductCard = ({ product }) => {
         <div className="flex items-center justify-between mt-2">
           <p className="text-red-500 font-bold text-xl">${product.price}</p>
           <div className="flex items-center space-x-2">
-            <div className="flex items-center">
-              {renderStars(product.rating)}
-            </div>
+            <StarRating rating={product.rating} />
             <span className="text-sm text-gray-300">
-              ({product.reviewCount})
+              ({product.rating})
             </span>
           </div>
         </div>

@@ -1,8 +1,9 @@
 import React from "react";
-import { Star, Minus, Plus, ChevronLeft, ChevronRight } from "lucide-react";
+import { Minus, Plus, ChevronLeft, ChevronRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import Metadata from "@/components/layout/Metadata/Metadata";
+import StarRating from "@/components/product/shared/StarRating";
 
 const ProductDetails = ({ product, containerVariants, itemVariants }) => {
   const [quantity, setQuantity] = React.useState(1);
@@ -130,12 +131,7 @@ const ProductDetails = ({ product, containerVariants, itemVariants }) => {
               <h1 className="text-4xl font-bold text-white mb-2">{title}</h1>
 
               <div className="flex items-center gap-1 mb-8">
-                {[...Array(Math.floor(rating))].map((_, i) => (
-                  <Star
-                    key={i}
-                    className="w-4 h-4 fill-yellow-500 text-yellow-500"
-                  />
-                ))}
+                <StarRating rating={rating} />
                 <span className="text-gray-400 ml-2 text-sm">
                   ({reviewCount} reviews)
                 </span>
