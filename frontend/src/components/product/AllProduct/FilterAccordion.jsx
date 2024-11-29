@@ -6,7 +6,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Checkbox } from "@/components/ui/checkbox";
-import { sampleData, sampleProducts } from "@/constant/productData";
+import { PRODUCTS } from "@/constant/productData";
 
 const FilterAccordion = ({ 
   categories, 
@@ -18,7 +18,8 @@ const FilterAccordion = ({
   // Calculate counts for each filter option
   const filterCounts = useMemo(() => {
     const counts = {};
-    const allProducts = [...sampleData, ...sampleProducts];
+    // Combine all products from both categories
+    const allProducts = [...PRODUCTS.bestSelling, ...(PRODUCTS.latestProducts || [])];
 
     // Initialize counts
     Object.entries(categories).forEach(([categoryKey, category]) => {

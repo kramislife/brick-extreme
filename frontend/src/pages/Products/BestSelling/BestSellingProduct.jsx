@@ -2,12 +2,12 @@ import React from "react";
 import ProductDetails from "@/components/product/shared/ProductDetails";
 import ProductRating from "@/components/product/shared/ProductRating";
 import ProductSpecification from "@/components/product/shared/ProductSpecification";
-import { sampleData } from "@/constant/productData";
+import { PRODUCTS } from "@/constant/productData";
 import { useParams } from "react-router-dom";
 
 const BestSellingProduct = () => {
   const { id } = useParams();
-  const product = sampleData.find(p => p.id === parseInt(id));
+  const product = PRODUCTS.bestSelling?.find(p => p.id === parseInt(id));
 
   const containerVariants = {
     hidden: { opacity: 0 },
