@@ -34,9 +34,6 @@ export const getProduct = catchAsyncErrors(async (req, res, next) => {
 //------------------------------------  GET BEST SELLER PRODUCTS  => GET /products/best-seller  ------------------------------------
 
 export const getBestSellerProduct = catchAsyncErrors(async (req, res, next) => {
-  console.log("Fetching Best Seller Products...");
-
-  // Find the Best Seller Category
   const bestSellerCategory = await Category.findOne({ key: "best_seller" });
 
   if (!bestSellerCategory) {
@@ -46,14 +43,10 @@ export const getBestSellerProduct = catchAsyncErrors(async (req, res, next) => {
     });
   }
 
-  console.log("BEST SELLER CATEGORY:", bestSellerCategory);
-
   // Fetch Products under the Best Seller Category
   const bestSellerProducts = await Product.find({
     product_category: bestSellerCategory._id,
-  })
-    .sort({ createdAt: -1 })
-    .populate("product_category");
+  }).sort({ createdAt: -1 });
 
   if (!bestSellerProducts || bestSellerProducts.length === 0) {
     return res.status(404).json({
@@ -61,12 +54,10 @@ export const getBestSellerProduct = catchAsyncErrors(async (req, res, next) => {
       message: "No products found under the Best Seller category.",
     });
   }
-
-  console.log("BEST SELLER PRODUCTS:", bestSellerProducts);
-
+  // .populate("product_category");
   res.status(200).json({
     status: true,
-    message: "Best Seller Products retrieved successfully.",
+    message: `${bestSellerProducts.length} Products retrieved successfully`,
     products: bestSellerProducts,
   });
 });
