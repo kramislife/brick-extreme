@@ -4,8 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { motion, useInView } from "framer-motion";
 import StarRating from "@/components/product/shared/StarRating";
-
-import defaultImage from "../../../assets/bestSellingAssets/droid.png";
+import defaultImage from "@/assets/bestSellingAssets/droid.png";
 
 const ProductGrid = ({ title, products, baseUrl, animations }) => {
   const navigate = useNavigate();
@@ -41,7 +40,9 @@ const ProductGrid = ({ title, products, baseUrl, animations }) => {
         transition={{ duration: 0.8, delay: 0.2 }}
         className="flex items-center justify-center pb-10"
       >
-        <Button className="bg-red-600 hover:bg-red-700">View All</Button>
+        <button className="py-2 px-6 rounded-md text-white font-semibold bg-red-600 hover:bg-red-700">
+          View All
+        </button>
       </motion.div>
 
       <motion.div
