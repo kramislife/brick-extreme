@@ -2,12 +2,13 @@ import React from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import StarRating from "@/components/product/shared/StarRating";
+import defaultImage from "@/assets/bestSellingAssets/droid.png";
 
 const ProductCard = ({ product }) => {
   const navigate = useNavigate();
 
   const handleViewDetails = () => {
-    navigate(`/products/${product.id}`);
+    navigate(`/products/${product._id}`);
   };
 
   return (
@@ -20,12 +21,12 @@ const ProductCard = ({ product }) => {
     >
       <div className="relative overflow-hidden aspect-square">
         <img
-          src={product.images[0]}
-          alt={product.title}
-          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+          src={product?.product_images?.[0]?.url || defaultImage}
+          alt={product.product_name}
+          className="w-full h-full aspect-square transition-transform duration-300 group-hover:scale-110"
         />
         <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-50 transition-opacity duration-300"></div>
-        <button 
+        <button
           onClick={handleViewDetails}
           className="absolute bottom-4 left-1/2 transform -translate-x-1/2 translate-y-full opacity-0 group-hover:translate-y-0 group-hover:opacity-100 bg-red-600 hover:bg-red-700 text-white text-sm font-semibold px-6 py-2 rounded-md transition-all duration-300 ease-in-out"
         >
@@ -33,16 +34,14 @@ const ProductCard = ({ product }) => {
         </button>
       </div>
       <div className="p-4 flex flex-col h-[120px]">
-        <h3 className="text-lg font-bold text-white group-hover:text-red-400 transition-colors mb-auto">
-          {product.title}
+        <h3 className="text-lg font-bold text-white group-hover:text-red-400 transition-colors mb-auto line-clamp-2">
+          {product.product_name}
         </h3>
         <div className="flex items-center justify-between mt-2">
           <p className="text-red-500 font-bold text-xl">${product.price}</p>
           <div className="flex items-center space-x-2">
-            <StarRating rating={product.rating} />
-            <span className="text-sm text-gray-300">
-              ({product.rating})
-            </span>
+            <StarRating rating={product.ratings} />
+            <span className="text-sm text-gray-300">({product.ratings})</span>
           </div>
         </div>
       </div>

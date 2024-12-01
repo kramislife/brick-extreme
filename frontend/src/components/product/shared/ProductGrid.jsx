@@ -1,6 +1,5 @@
-import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
+import React from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { motion, useInView } from "framer-motion";
 import StarRating from "@/components/product/shared/StarRating";
@@ -15,9 +14,13 @@ const ProductGrid = ({ title, products, baseUrl, animations }) => {
     amount: 0.2,
   });
 
-  useEffect(() => {
-    console.log("URL:", products);
-  }, [products]);
+  const handleViewAll = () => {
+    // Extract the category from baseUrl (e.g., "best-selling" or "latest-product")
+    const category = baseUrl.replace('/', '');
+    
+    // Navigate to Products page with the category in the URL
+    navigate(`/products?category=${category}`);
+  };
 
   const handleViewDetails = (productId) => {
     navigate(`${baseUrl}/${productId}`);
@@ -40,7 +43,10 @@ const ProductGrid = ({ title, products, baseUrl, animations }) => {
         transition={{ duration: 0.8, delay: 0.2 }}
         className="flex items-center justify-center pb-10"
       >
-        <button className="py-2 px-6 rounded-md text-white font-semibold bg-red-600 hover:bg-red-700">
+        <button 
+          onClick={handleViewAll}
+          className="py-2 px-6 rounded-md text-white font-semibold bg-red-600 hover:bg-red-700"
+        >
           View All
         </button>
       </motion.div>
@@ -49,7 +55,7 @@ const ProductGrid = ({ title, products, baseUrl, animations }) => {
         variants={animations.containerVariants}
         initial="hidden"
         animate={isInView ? "visible" : "hidden"}
-        className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 py-5"
+        className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-5 py-5"
       >
         {products?.slice(0, 4).map((product, index) => (
           <motion.div
@@ -59,7 +65,7 @@ const ProductGrid = ({ title, products, baseUrl, animations }) => {
           >
             <Card
               key={product.id}
-              className="bg-brand-gradient text-white border border-gray-700 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 group"
+              className="bg-brand-gradient text-white border border-gray-700 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 group flex flex-col h-full"
             >
               <div className="relative overflow-hidden aspect-square">
                 <img
@@ -77,11 +83,11 @@ const ProductGrid = ({ title, products, baseUrl, animations }) => {
                 </button>
               </div>
 
-              <div className="p-4">
-                <h3 className="text-lg font-bold text-white group-hover:text-red-400 transition-colors">
+              <div className="p-4 flex flex-col flex-grow">
+                <h3 className="text-lg font-bold text-white group-hover:text-red-400 transition-colors min-h-[2.5rem]">
                   {product.product_name}
                 </h3>
-                <div className="flex items-center justify-between mt-1">
+                <div className="flex items-center justify-between mt-auto pt-5">
                   <p className="text-red-500 font-bold text-xl">
                     ${product.price}
                   </p>
