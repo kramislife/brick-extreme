@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Minus, Plus, ChevronLeft, ChevronRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -6,40 +6,36 @@ import Metadata from "@/components/layout/Metadata/Metadata";
 import StarRating from "@/components/product/shared/StarRating";
 
 const ProductDetails = ({ product, containerVariants, itemVariants }) => {
-  const [quantity, setQuantity] = React.useState(1);
-  const [currentImageIndex, setCurrentImageIndex] = React.useState(0);
-
-  // Default values if product is undefined or missing properties
-  const {
-    title = "Product",
-    price = 0,
-    originalPrice = 0,
-    rating = 0,
-    reviewCount = 0,
-    availability = {},
-    details = [],
-    description = {},
-    images = [product?.image],
-  } = product || {};
+  const [quantity, setQuantity] = useState(1);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   // Only render image gallery if there are images
-  const hasImages = images && images.length > 0;
+  const hasImages =
+    product?.product_images && product.product_images.length > 0;
 
   const nextImage = () => {
     if (!hasImages) return;
-    setCurrentImageIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+    setCurrentImageIndex((prev) =>
+      prev === product.product_images.length - 1 ? 0 : prev + 1
+    );
     document
-      .getElementById(`thumbnail-${(currentImageIndex + 1) % images.length}`)
+      .getElementById(
+        `thumbnail-${(currentImageIndex + 1) % product.product_images.length}`
+      )
       ?.scrollIntoView({ behavior: "smooth", block: "nearest" });
   };
 
   const prevImage = () => {
     if (!hasImages) return;
-    setCurrentImageIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
+    setCurrentImageIndex((prev) =>
+      prev === 0 ? product.product_images.length - 1 : prev - 1
+    );
     document
       .getElementById(
         `thumbnail-${
-          currentImageIndex === 0 ? images.length - 1 : currentImageIndex - 1
+          currentImageIndex === 0
+            ? product.product_images.length - 1
+            : currentImageIndex - 1
         }`
       )
       ?.scrollIntoView({ behavior: "smooth", block: "nearest" });
@@ -52,7 +48,7 @@ const ProductDetails = ({ product, containerVariants, itemVariants }) => {
 
   return (
     <>
-      <Metadata title={title} />
+      <Metadata title={product.product_name} />
       <motion.div
         variants={containerVariants}
         initial="hidden"
@@ -69,7 +65,7 @@ const ProductDetails = ({ product, containerVariants, itemVariants }) => {
               {/* Thumbnails */}
               <div className="w-full md:w-[130px] h-[130px] md:h-[640px] overflow-x-auto md:overflow-y-auto overflow-y-hidden scrollbar-none">
                 <div className="flex flex-row md:flex-col gap-2">
-                  {images.map((image, index) => (
+                  {product.product_images.map((image, index) => (
                     <button
                       id={`thumbnail-${index}`}
                       key={index}
@@ -81,9 +77,9 @@ const ProductDetails = ({ product, containerVariants, itemVariants }) => {
                       }`}
                     >
                       <img
-                        src={image}
+                        src={image.url}
                         alt={`Thumbnail ${index + 1}`}
-                        className="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
+                        className="w-full h-full aspect-square hover:scale-110 transition-transform duration-300"
                       />
                     </button>
                   ))}
@@ -95,9 +91,9 @@ const ProductDetails = ({ product, containerVariants, itemVariants }) => {
                 <AnimatePresence mode="wait">
                   <motion.img
                     key={currentImageIndex}
-                    src={images[currentImageIndex]}
+                    src={product.product_images[currentImageIndex].url}
                     alt={`Product view ${currentImageIndex + 1}`}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full aspect-square"
                     initial={{ opacity: 0, x: 100 }}
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: -100 }}
@@ -128,85 +124,115 @@ const ProductDetails = ({ product, containerVariants, itemVariants }) => {
           <motion.div variants={itemVariants} className="flex flex-col h-full">
             {/* Basic Info Section - Always visible */}
             <div className="mb-6">
-              <h1 className="text-4xl font-bold text-white mb-2">{title}</h1>
+              <h1 className="text-4xl font-bold text-white mb-2">
+                {product?.product_name}
+              </h1>
 
               <div className="flex items-center gap-1 mb-8">
-                <StarRating rating={rating} />
+                <StarRating rating={product?.ratings} />
                 <span className="text-gray-400 ml-2 text-sm">
-                  ({reviewCount} reviews)
+                  ({product?.ratings})
                 </span>
               </div>
 
+              {/* Updated Price Display */}
               <div className="flex items-center space-x-4">
-                <span className="text-4xl font-semibold text-white">
-                  ${price}
+                <span className="text-4xl font-semibold ">
+                  $
+                  {(
+                    (product?.price || 0) -
+                    ((product?.price || 0) * (product?.discount || 0)) / 100
+                  ).toFixed(2)}
                 </span>
-                {originalPrice > price && (
+                {product?.discount > 0 && (
                   <span className="text-md text-gray-400 line-through">
-                    ${originalPrice}
+                    ${product?.price?.toFixed(2)}
                   </span>
                 )}
               </div>
             </div>
 
             {/* Availability Section */}
-            {availability && Object.keys(availability).length > 0 && (
+            {product?.product_availability && (
               <div className="mb-6">
                 <div className="flex items-center space-x-2">
                   <span
-                    className={`w-2 h-2 rounded-full ${availability.dotColor}`}
+                    className={`w-2 h-2 rounded-full ${product?.product_availability?.dotColor}`}
                   ></span>
                   <span
-                    className={`${availability.textColor} text-sm font-medium`}
+                    className={`${product?.product_availability?.textColor} text-sm font-medium`}
                   >
-                    {availability.text}
+                    {product?.product_availability}
                   </span>
                 </div>
               </div>
             )}
 
             {/* Details Section */}
-            {details && details.length > 0 && (
-              <div className="mb-6">
-                <div className="flex flex-wrap gap-2 lg:max-w-[500px]">
-                  {details.map((detail, index) => (
+            <div className="mb-6">
+              {/* Category and Collection row */}
+              <div className="flex flex-wrap gap-2 mb-2">
+                <div className="flex-1">
+                  {/* Category Button */}
+                  {product?.product_category && (
                     <Button
-                      key={index}
                       variant="outline"
-                      className="bg-slate-800/50 hover:bg-slate-800 hover:text-white hover:scale-105 transition-all duration-300 border-slate-700 inline-flex w-auto text-left justify-start"
+                      className="bg-slate-800/50 hover:bg-slate-800 hover:text-white hover:scale-105 transition-all duration-300 border-slate-700 inline-flex w-full text-left justify-start mb-2"
                     >
                       <div className="flex items-center gap-2">
-                        <span className="whitespace-nowrap">
-                          {detail.label}:
-                        </span>
-                        <span className="text-gray-400">{detail.value}</span>
+                        <span className="whitespace-nowrap">Category:</span>
+                        <span className="text-gray-400">{product.product_category}</span>
                       </div>
                     </Button>
-                  ))}
+                  )}
+
+                  {/* Includes Button */}
+                  {product?.product_includes && (
+                    <Button
+                      variant="outline"
+                      className="bg-slate-800/50 hover:bg-slate-800 hover:text-white hover:scale-105 transition-all duration-300 border-slate-700 inline-flex w-full text-left justify-start"
+                    >
+                      <div className="flex items-center gap-2">
+                        <span className="whitespace-nowrap">Includes:</span>
+                        <span className="text-gray-400">{product.product_includes}</span>
+                      </div>
+                    </Button>
+                  )}
                 </div>
+
+                {/* Collection Button */}
+                {product?.product_collection && (
+                  <Button
+                    variant="outline"
+                    className="bg-slate-800/50 hover:bg-slate-800 hover:text-white hover:scale-105 transition-all duration-300 border-slate-700 inline-flex w-auto text-left justify-start flex-1"
+                  >
+                    <div className="flex items-center gap-2">
+                      <span className="whitespace-nowrap">Collection:</span>
+                      <span className="text-gray-400">{product.product_collection}</span>
+                    </div>
+                  </Button>
+                )}
               </div>
-            )}
+            </div>
 
             {/* Description Section */}
-            {description && Object.keys(description).length > 0 && (
-              <div className="mb-6">
-                {description.intro && (
-                  <p className="text-gray-300 mb-3 leading-loose">
-                    {description.intro}
-                  </p>
-                )}
-                {description.features && (
-                  <p className="text-gray-300 mb-3 leading-loose">
-                    {description.features}
-                  </p>
-                )}
-                {description.usage && (
-                  <p className="text-gray-300 leading-loose">
-                    {description.usage}
-                  </p>
-                )}
-              </div>
-            )}
+            <div className="mb-6">
+              {product?.product_description_1 && (
+                <p className="text-gray-300 mb-3 leading-loose">
+                  {product.product_description_1}
+                </p>
+              )}
+              {product?.product_description_1 && (
+                <p className="text-gray-300 mb-3 leading-loose">
+                  {product.product_description_1}
+                </p>
+              )}
+              {product?.product_description_1 && (
+                <p className="text-gray-300 leading-loose">
+                  {product.product_description_1}
+                </p>
+              )}
+            </div>
 
             {/* Quantity and Cart Section - Always at bottom */}
             <div className="mt-auto">
@@ -234,17 +260,14 @@ const ProductDetails = ({ product, containerVariants, itemVariants }) => {
               <div className="flex space-x-4">
                 <Button
                   className="w-full bg-red-600 hover:bg-red-700 hover:scale-105 transition-all duration-300"
-                  disabled={
-                    availability?.text === "Out of Stock" ||
-                    availability?.text === "Currently Unavailable"
-                  }
+                  disabled={!product?.stock || product?.stock <= 0}
                 >
                   Add to Cart
                 </Button>
                 <Button
                   variant="outline"
                   className="bg-slate-800/50 hover:bg-slate-800 hover:text-white hover:scale-105 transition-all duration-300 border-slate-700 w-full"
-                  disabled={availability?.text === "Currently Unavailable"}
+                  disabled={!product?.stock || product?.stock <= 0}
                 >
                   Buy Now
                 </Button>

@@ -7,37 +7,17 @@ import { Card } from "@/components/ui/card";
 import StarRating from "@/components/product/shared/StarRating";
 
 const ProductRating = ({ product }) => {
-  // Calculate ratings dynamically based on product reviews
-  const ratings = useMemo(() => {
-    const total = product.reviews?.length || 0;
-    const sum = product.reviews?.reduce((acc, review) => acc + review.rating, 0) || 0;
-    const average = total > 0 ? (sum / total).toFixed(1) : product.rating?.toFixed(1) || "0.0";
+  if (!product) {
+    return null;
+  }
 
-    // Initialize distribution array
-    const distribution = [
-      { stars: 5, count: 0 },
-      { stars: 4, count: 0 },
-      { stars: 3, count: 0 },
-      { stars: 2, count: 0 },
-      { stars: 1, count: 0 },
-    ];
-
-    // Count ratings from reviews if available
-    if (product.reviews) {
-      product.reviews.forEach(review => {
-        const index = distribution.findIndex(d => d.stars === review.rating);
-        if (index !== -1) {
-          distribution[index].count++;
-        }
-      });
-    }
-
-    return {
-      average: parseFloat(average),
-      total: product.reviewCount || total,
-      distribution
-    };
-  }, [product]);
+  const distribution = [
+    { stars: 5, count: 0 },
+    { stars: 4, count: 0 },
+    { stars: 3, count: 0 },
+    { stars: 2, count: 0 },
+    { stars: 1, count: 0 },
+  ];
 
   return (
     <div className="bg-brand-gradient py-12 px-6">
@@ -51,25 +31,25 @@ const ProductRating = ({ product }) => {
           {/* Average Rating Display */}
           <div className="flex flex-col items-center justify-center">
             <div className="text-5xl font-semibold mb-4">
-              {ratings.average}<span className="text-3xl text-gray-400">/5.0</span>
+              {product?.ratings}<span className="text-3xl text-gray-400">/5.0</span>
             </div>
             <div className="mb-3">
-              <StarRating rating={ratings.average} />
+              <StarRating rating={product?.ratings} />
             </div>
             <div className="text-sm text-gray-400">
-              {ratings.total} reviews
+              ({product?.reviews?.length}) reviews
             </div>
           </div>
 
           {/* Rating Distribution */}
           <div className="flex-1 w-full max-w-2xl space-y-3">
-            {ratings.distribution.map((rating) => (
+            {distribution.map((rating) => (
               <div key={rating.stars} className="flex items-center gap-4">
                 <span className="w-4 text-gray-400">{rating.stars}</span>
                 <div className="flex gap-2 items-center flex-1">
                   <StarRating rating={rating.stars} />
                   <Progress 
-                    value={ratings.total > 0 ? (rating.count / ratings.total * 100) : 0} 
+                    value={product?.reviews?.length > 0 ? (rating.count / product?.reviews?.length * 100) : 0} 
                     className="h-2 flex-1 bg-gray-700/50"
                     indicatorClassName={`${
                       rating.count > 0 
@@ -99,14 +79,15 @@ const ProductRating = ({ product }) => {
         </div>
 
         {/* Reviews List */}
-        {product.reviews && product.reviews.length > 0 && (
-          <div className="mt-16 space-y-8">
-            <h3 className="text-xl font-semibold mb-6 flex items-center gap-3">
-              <Quote className="w-6 h-6 text-red-500" />
-              Customer Reviews
-            </h3>
-            {product.reviews.map((review) => (
-              <Card key={review.id} className="bg-brand/70 border-none text-white p-8 rounded-xl shadow-lg hover:bg-gray-800/70 transition-all duration-300">
+        <div className="mt-16 space-y-8">
+          <h3 className="text-xl font-semibold mb-6 flex items-center gap-3">
+            <Quote className="w-6 h-6 text-red-500" />
+            Customer Reviews
+          </h3>
+          
+          {product?.reviews && product.reviews.length > 0 ? (
+            product.reviews.map((review) => (
+              <Card key={review?.id} className="bg-brand/70 border-none text-white p-8 rounded-xl shadow-lg hover:bg-gray-800/70 transition-all duration-300">
                 <div className="flex items-start gap-6">
                   <Avatar className="w-12 h-12">
                     <AvatarFallback className="bg-gray-700 text-gray-300">
@@ -117,24 +98,28 @@ const ProductRating = ({ product }) => {
                   <div className="flex-1">
                     <div className="flex items-center justify-between mb-3">
                       <div>
-                        <div className="font-semibold text-lg">{review.author}</div>
+                        <div className="font-semibold text-lg">{review?.author}</div>
                         <div className="flex items-center gap-3">
-                          <StarRating rating={review.rating} />
+                          <StarRating rating={review?.rating} />
                           <span className="text-sm text-gray-400">
-                            {review.date}
+                            {review?.date}
                           </span>
                         </div>
                       </div>
                     </div>
                     <p className="text-gray-300 leading-relaxed">
-                      {review.content}
+                      {review?.content}
                     </p>
                   </div>
                 </div>
               </Card>
-            ))}
-          </div>
-        )}
+            ))
+          ) : (
+            <Card className="bg-brand/70 border-none text-white p-8 rounded-xl shadow-lg text-center">
+              <p className="text-gray-300 text-lg">No reviews yet. Be the first to share your experience!</p>
+            </Card>
+          )}
+        </div>
       </div>
     </div>
   );
