@@ -21,10 +21,34 @@ const DEFAULT_SPECS = {
 };
 
 const ProductSpecification = ({ product }) => {
-  const specifications = product.specifications?.map(spec => ({
-    ...DEFAULT_SPECS[spec.type],
-    ...spec,
-  })) || [];
+  if (!product) {
+    return null;
+  }
+
+  const specifications = [
+    {
+      ...DEFAULT_SPECS.pieceCount,
+      items: product?.product_piece_count ? [
+        `${product?.product_piece_count} ${product?.product_piece_count === 1 ? 'piece' : 'pieces'}`
+      ] : [],
+    },
+    {
+      ...DEFAULT_SPECS.skillLevel,
+      items: product?.product_skill_level ? [product.product_skill_level] : [],
+    },
+    {
+      ...DEFAULT_SPECS.dimensions,
+      items: [
+        product?.product_length && `Length: ${product.product_length}`,
+        product?.product_width && `Width: ${product.product_width}`,
+        product?.product_height && `Height: ${product.product_height}`,
+      ].filter(Boolean),
+    },
+    {
+      ...DEFAULT_SPECS.designer,
+      items: product?.product_designer ? [product.product_designer] : [],
+    },
+  ].filter(spec => spec.items.some(item => item));
 
   return (
     <div className="bg-gradient-to-b from-brand-start to-brand-end py-20 px-4">
@@ -45,14 +69,14 @@ const ProductSpecification = ({ product }) => {
                   <div
                     className="p-3 rounded-lg bg-gray-800/50"
                   >
-                    {spec.icon}
+                    {spec?.icon}
                   </div>
                   <h2 className="text-2xl font-semibold tracking-wide text-white drop-shadow-md pl-5">
-                    {spec.title}
+                    {spec?.title}
                   </h2>
                 </div>
                 <ul className="space-y-3 mb-4 pt-5">
-                  {spec.items.map((item, itemIndex) => (
+                  {spec?.items?.map((item, itemIndex) => (
                     <li
                       key={itemIndex}
                       className="text-gray-300/90 text-md font-medium transition-colors hover:text-white text-center"
@@ -61,11 +85,6 @@ const ProductSpecification = ({ product }) => {
                     </li>
                   ))}
                 </ul>
-                {spec.description && (
-                  <div className="text-sm text-gray-400/80 italic pl-4 border-l-2 border-gray-500/20">
-                    {spec.description}
-                  </div>
-                )}
               </div>
             ))}
           </div>

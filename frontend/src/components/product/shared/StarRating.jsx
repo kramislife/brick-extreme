@@ -1,7 +1,7 @@
 import React from "react";
 import { Star } from "lucide-react";
 
-const StarRating = ({ rating }) => {
+const StarRating = ({ rating = 0 }) => {
   return (
     <div className="flex text-yellow-400">
       {[1, 2, 3, 4, 5].map((index) => {
