@@ -50,11 +50,10 @@ const ProductRating = ({ product }) => {
                   <StarRating rating={rating.stars} />
                   <Progress 
                     value={product?.reviews?.length > 0 ? (rating.count / product?.reviews?.length * 100) : 0} 
-                    className="h-2 flex-1 bg-gray-700/50"
-                    indicatorClassName={`${
+                    className={`h-2 flex-1 bg-gray-700/50 ${
                       rating.count > 0 
-                        ? 'bg-yellow-400' 
-                        : 'bg-gray-600'
+                        ? '[&>div]:bg-yellow-400' 
+                        : '[&>div]:bg-gray-600'
                     }`}
                   />
                   <span className="text-sm text-gray-400 w-8">
