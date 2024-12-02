@@ -5,6 +5,7 @@ import ProductCard from "@/components/product/AllProduct/ProductCard";
 import { PackageX } from "lucide-react";
 import { productGridAnimations } from "@/hooks/animationConfig";
 
+// return an empty array if products is not provided
 const ProductGrid = ({ title, products = [], baseUrl }) => {
   const navigate = useNavigate();
   const ref = useRef(null);
@@ -14,6 +15,7 @@ const ProductGrid = ({ title, products = [], baseUrl }) => {
     amount: 0.2,
   });
 
+  // return a best-selling or latest-product category
   const handleViewAll = () => {
     navigate(`/products?category=${baseUrl.replace("/", "")}`);
   };
@@ -29,6 +31,7 @@ const ProductGrid = ({ title, products = [], baseUrl }) => {
         {title}
       </motion.h2>
 
+      {/* return a product grid if the product is available */}
       {products?.length > 0 ? (
         <>
           <motion.div
@@ -62,6 +65,8 @@ const ProductGrid = ({ title, products = [], baseUrl }) => {
           </motion.div>
         </>
       ) : (
+        
+        // return a message if the product is not available
         <motion.div
           variants={productGridAnimations.cardVariants(0)}
           initial="hidden"
