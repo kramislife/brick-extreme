@@ -27,7 +27,6 @@ class API_Filters {
       this.query = this.query.find();
     }
 
-    //    this.query = this.query.populate("product_category");
     this.query = this.query
       .populate("product_category", "name")
       .populate("product_collection", "name");
@@ -36,23 +35,76 @@ class API_Filters {
   }
 
   // PRODUCT FILTER -> FILTER PRODUCTS BASED ON DIFFERENT ATTRIBUTES
-
   filters() {
     const queryCopy = { ...this.queryStr };
 
     const fieldsToRemove = ["keyword", "page"];
-
     fieldsToRemove.forEach((element) => delete queryCopy[element]);
 
-    // ADVANCED FILTER FOR PRICE, RATING, AND OTHER ATTRIBUTES
-    let queryString = JSON.stringify(queryCopy);
+    // Arrays to store OR conditions for product_category and product_collection
+    const categoryConditions = [];
+    const collectionConditions = [];
+    const otherConditions = [];
 
-    queryString = queryString.replace(
-      /\b(gte|gt|lte|lt)\b/g,
-      (match) => `$${match}`
-    );
+    for (let key in queryCopy) {
+      if (queryCopy[key]) {
+        // If the filter contains multiple values separated by commas, split them into an array
+        if (
+          typeof queryCopy[key] === "string" &&
+          queryCopy[key].includes(",")
+        ) {
+          queryCopy[key] = queryCopy[key]
+            .split(",")
+            .map((value) => value.trim());
+        }
 
-    this.query = this.query.find(JSON.parse(queryString));
+        // Handle product_category filters (with OR between multiple values)
+        if (key === "product_category") {
+          if (Array.isArray(queryCopy[key])) {
+            queryCopy[key].forEach((value) => {
+              categoryConditions.push({ [key]: value });
+            });
+          } else {
+            categoryConditions.push({ [key]: queryCopy[key] });
+          }
+        }
+        // Handle product_collection filters (with OR between multiple values)
+        else if (key === "product_collection") {
+          if (Array.isArray(queryCopy[key])) {
+            queryCopy[key].forEach((value) => {
+              collectionConditions.push({ [key]: value });
+            });
+          } else {
+            collectionConditions.push({ [key]: queryCopy[key] });
+          }
+        }
+        // For other filters, handle using $in
+        else {
+          otherConditions.push({ [key]: { $in: queryCopy[key] } });
+        }
+      }
+    }
+
+    // Combine all conditions with $or logic
+    const orConditions = [];
+
+    if (categoryConditions.length > 0) {
+      orConditions.push({ $or: categoryConditions }); // $or for product_category
+    }
+
+    if (collectionConditions.length > 0) {
+      orConditions.push({ $or: collectionConditions }); // $or for product_collection
+    }
+
+    // If there are other conditions (like price, rating, etc.), include them
+    if (otherConditions.length > 0) {
+      orConditions.push(...otherConditions); // $or for other filters like price
+    }
+
+    // Apply the $or conditions if any
+    if (orConditions.length > 0) {
+      this.query = this.query.find({ $or: orConditions });
+    }
 
     return this;
   }
