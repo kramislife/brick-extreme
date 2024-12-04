@@ -1,8 +1,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import image1 from "@/assets/bestSellingAssets/droid.png";
-import image2 from "@/assets/bestSellingAssets/droid.png";
+import { Card, CardFooter } from "@/components/ui/card";
+import image1 from "@/assets/subscribeAssets/lightsaber.png";
 import { motion, useInView } from "framer-motion";
 import { categoryAnimations } from "@/hooks/animationConfig";
 
@@ -15,27 +14,27 @@ const categories = [
   {
     id: 2,
     title: "Pocket Monsters",
-    image: image2,
+    image: image1,
   },
   {
     id: 3,
     title: "Pocket Monsters",
-    image: image2,
+    image: image1,
   },
   {
     id: 4,
     title: "Pocket Monsters",
-    image: image2,
+    image: image1,
   },
   {
     id: 5,
     title: "Pocket Monsters",
-    image: image2,
+    image: image1,
   },
   {
     id: 6,
     title: "Pocket Monsters",
-    image: image2,
+    image: image1,
   },
 ];
 
@@ -54,7 +53,7 @@ const Categories = () => {
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
         className="text-3xl text-gray-300 font-extrabold mb-4 text-center pt-6 header-text"
       >
-        Browse by Categories
+        Browse by Collections
       </motion.h2>
 
       <motion.div
@@ -76,7 +75,7 @@ const Categories = () => {
         variants={categoryAnimations.containerVariants}
         initial="hidden"
         animate={isInView ? "visible" : "hidden"}
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mx-auto mb-8"
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 mx-auto mb-8"
       >
         {categories.map((category, index) => (
           <motion.div
@@ -86,14 +85,14 @@ const Categories = () => {
           >
             <Card className="overflow-hidden bg-gradient-r border-none rounded-lg cursor-pointer">
               <motion.div 
-                className="relative w-full h-[300px] sm:h-[400px] lg:h-[60vh] aspect-auto sm:aspect-square"
+                className="relative w-full"
                 whileHover={{ scale: 1.05 }}
                 transition={{ duration: 0.3 }}
               >
                 <motion.img
                   src={category.image}
                   alt={category.title}
-                  className="w-full h-full object-cover"
+                  className="w-full h-[30vh] object-fill"
                   {...categoryAnimations.imageVariants}
                 />
                 <motion.div
