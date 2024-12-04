@@ -124,7 +124,7 @@ const Dashboard = () => {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid gap-6 mb-8 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-6 mb-8 md:grid-cols-2 lg:grid-cols-4 ">
         {/* Total Sales Card */}
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
