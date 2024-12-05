@@ -3,24 +3,40 @@ import { Label } from "@/components/ui/label";
 
 const COLLECTIONS = ['Limited Edition', 'Classic', 'Premium'];
 
+const ACTIVE_COLORS = {
+  'Limited Edition': 'bg-purple-500 text-white',
+  Classic: 'bg-gray-500 text-white',
+  Premium: 'bg-yellow-500 text-white',
+};
+
+const DEFAULT_COLOR = 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300';
+
 const ProductCollections = ({ formData, onChange }) => {
   return (
     <section className="space-y-6">
-      <Label>Product Collections</Label>
-      <div className="flex items-center space-x-4">
+      <Label className="text-lg font-semibold">Product Collections</Label>
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {COLLECTIONS.map((collection) => (
-          <div key={collection} className="flex items-center space-x-2">
-            <input 
+          <label
+            key={collection}
+            htmlFor={collection}
+            className={`flex items-center justify-center p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer ${
+              formData.productCollections === collection
+                ? ACTIVE_COLORS[collection]
+                : DEFAULT_COLOR
+            }`}
+          >
+            <input
               type="radio"
-              id={collection} 
+              id={collection}
               name="productCollections"
               value={collection}
               checked={formData.productCollections === collection}
               onChange={onChange}
-              className="form-radio text-blue-600 h-4 w-4"
+              className="hidden"
             />
-            <Label htmlFor={collection}>{collection}</Label>
-          </div>
+            <span className="text-sm font-medium">{collection}</span>
+          </label>
         ))}
       </div>
     </section>

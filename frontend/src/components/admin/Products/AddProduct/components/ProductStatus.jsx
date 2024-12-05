@@ -2,62 +2,103 @@ import React from 'react';
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 
+const ACTIVE_COLOR = 'bg-blue-500 text-white';
+const DEFAULT_COLOR = 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300';
+
 const ProductStatus = ({ formData, onChange, onCheckboxChange }) => {
   return (
-    <>
-      <section className="space-y-6">
-        <Label>Is Active</Label>
-        <div className="flex items-center space-x-4">
-          {['Yes', 'No'].map((status) => (
-            <div key={status} className="flex items-center space-x-2">
-              <input 
-                type="radio"
-                id={status} 
-                name="isActive"
-                value={status}
-                checked={formData.isActive === status}
-                onChange={onChange}
-                className="form-radio text-blue-600 h-4 w-4"
-              />
-              <Label htmlFor={status}>{status}</Label>
-            </div>
-          ))}
+    <div className="space-y-6">
+      {/* Product Status Section */}
+      <section>
+        <Label className="text-lg font-semibold">Product Status</Label>
+        <div className="grid grid-cols-3 gap-4">
+          {/* Yes Option */}
+          <label
+            htmlFor="yes"
+            className={`flex items-center justify-center p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer ${
+              formData.isActive === 'Yes' ? ACTIVE_COLOR : DEFAULT_COLOR
+            }`}
+          >
+            <input
+              type="radio"
+              id="yes"
+              name="isActive"
+              value="Yes"
+              checked={formData.isActive === 'Yes'}
+              onChange={onChange}
+              className="hidden"
+            />
+            <span className="text-sm font-medium">Yes</span>
+          </label>
+
+          {/* No Option */}
+          <label
+            htmlFor="no"
+            className={`flex items-center justify-center p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer ${
+              formData.isActive === 'No' ? ACTIVE_COLOR : DEFAULT_COLOR
+            }`}
+          >
+            <input
+              type="radio"
+              id="no"
+              name="isActive"
+              value="No"
+              checked={formData.isActive === 'No'}
+              onChange={onChange}
+              className="hidden"
+            />
+            <span className="text-sm font-medium">No</span>
+          </label>
+
+          {/* Preorder Available Option */}
+          <label
+            htmlFor="preorder"
+            className={`flex items-center justify-center p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer ${
+              formData.preorder ? ACTIVE_COLOR : DEFAULT_COLOR
+            }`}
+          >
+            <Checkbox
+              id="preorder"
+              checked={formData.preorder}
+              onCheckedChange={(checked) =>
+                onCheckboxChange('preorder', checked, checked)
+              }
+              className="hidden"
+            />
+            <span className="text-sm font-medium">Preorder Available</span>
+          </label>
         </div>
       </section>
 
-      <section className="space-y-6">
-        <Label>Product Availability</Label>
-        <div className="flex items-center space-x-4">
+      {/* Product Availability Section */}
+      <section>
+        <Label className="text-lg font-semibold">Product Availability</Label>
+        <div className="grid grid-cols-2 gap-4">
           {['In Stock', 'Out of Stock'].map((availability) => (
-            <div key={availability} className="flex items-center space-x-2">
-              <input 
+            <label
+              key={availability}
+              htmlFor={availability}
+              className={`flex items-center justify-center p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer ${
+                formData.availability === availability
+                  ? ACTIVE_COLOR
+                  : DEFAULT_COLOR
+              }`}
+            >
+              <input
                 type="radio"
-                id={availability} 
+                id={availability}
                 name="availability"
                 value={availability}
                 checked={formData.availability === availability}
                 onChange={onChange}
-                className="form-radio text-blue-600 h-4 w-4"
+                className="hidden"
               />
-              <Label htmlFor={availability}>{availability}</Label>
-            </div>
+              <span className="text-sm font-medium">{availability}</span>
+            </label>
           ))}
         </div>
       </section>
-
-      <section className="space-y-6">
-        <div className="flex items-center space-x-2">
-          <Checkbox 
-            id="preorder" 
-            checked={formData.preorder}
-            onCheckedChange={(checked) => 
-              onCheckboxChange('preorder', checked, checked)
-            }
-          />
-          <Label htmlFor="preorder">Preorder Available</Label>
-        </div>
-      </section>
-    </>
+    </div>
   );
 };
 
