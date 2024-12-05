@@ -145,7 +145,7 @@ const Dashboard = () => {
         <h1 className="text-3xl font-bold text-light tracking-tight">
           Dashboard
         </h1>
-        <p className="text-gray-200/70 text-lg">Welcome to your dashboard</p>
+        <p className="text-gray-200/70 text-md">Welcome to your dashboard</p>
       </div>
 
       {/* Stats Cards with enhanced styling */}
