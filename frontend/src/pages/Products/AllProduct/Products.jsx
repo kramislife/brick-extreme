@@ -4,8 +4,7 @@ import FilterAccordion from "@/components/product/AllProduct/FilterAccordion";
 import ProductSection from "@/components/product/AllProduct/ProductSection";
 import { FILTER_CATEGORIES } from "@/constant/productData";
 import Metadata from "@/components/layout/Metadata/Metadata";
-import { useGetBestSellerProductsQuery } from "@/redux/api/productApi";
-import { Loader } from "lucide-react";
+import { useGetProductsQuery } from "@/redux/api/productApi";
 import { Filter } from "lucide-react";
 import {
   Sheet,
@@ -14,41 +13,40 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import LoadingSpinner from "@/components/layout/spinner/LoadingSpinner";
 
 const Products = () => {
   const [searchParams] = useSearchParams();
-  const category = searchParams.get('category');
-  
+
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [openCategories, setOpenCategories] = useState(Object.keys(FILTER_CATEGORIES));
+  const [openCategories, setOpenCategories] = useState(
+    Object.keys(FILTER_CATEGORIES)
+  );
   const [selectedFilters, setSelectedFilters] = useState({
     price: [],
     theme: [],
     collection: [],
     availability: [],
     skillLevel: [],
-    designer: []
+    designer: [],
   });
 
   // Only fetch best seller products
-  const { 
-    data: bestSellerData, 
-    isLoading
-  } = useGetBestSellerProductsQuery();
+  const { data, isLoading } = useGetProductsQuery(searchParams);
 
   if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
-        <Loader className="animate-spin" />
+        <LoadingSpinner className="animate-spin" />
       </div>
     );
   }
 
   const handleFilterChange = (category, value) => {
-    setSelectedFilters(prev => {
+    setSelectedFilters((prev) => {
       const newFilters = { ...prev };
       if (newFilters[category].includes(value)) {
-        newFilters[category] = newFilters[category].filter(v => v !== value);
+        newFilters[category] = newFilters[category].filter((v) => v !== value);
       } else {
         newFilters[category] = [...newFilters[category], value];
       }
@@ -57,17 +55,19 @@ const Products = () => {
   };
 
   // Filter the best seller products
-  const filteredProducts = bestSellerData?.products.filter(product => {
+  const filteredProducts = data?.products.filter((product) => {
     // If no filters are selected, show all products
-    if (Object.values(selectedFilters).every(filters => filters.length === 0)) {
+    if (
+      Object.values(selectedFilters).every((filters) => filters.length === 0)
+    ) {
       return true;
     }
 
     // Price filter
     if (selectedFilters.price.length > 0) {
       const price = product.price;
-      const matchesPrice = selectedFilters.price.some(range => {
-        const [min, max] = range.split('-').map(Number);
+      const matchesPrice = selectedFilters.price.some((range) => {
+        const [min, max] = range.split("-").map(Number);
         if (max) {
           return price >= min && price <= max;
         }
@@ -81,7 +81,6 @@ const Products = () => {
 
   return (
     <>
-      <Metadata title="Best Selling Products" />
       <div className="mx-auto p-4">
         {/* Mobile Filter */}
         <div className="lg:hidden mb-4">
@@ -92,12 +91,17 @@ const Products = () => {
                 <span>Filters</span>
               </button>
             </SheetTrigger>
-            <SheetContent side="left" className="w-[350px] bg-darkBrand border-gray-800">
+            <SheetContent
+              side="left"
+              className="w-[350px] bg-darkBrand border-gray-800"
+            >
               <SheetHeader>
-                <SheetTitle className="text-white text-left">Filters</SheetTitle>
+                <SheetTitle className="text-white text-left">
+                  Filters
+                </SheetTitle>
               </SheetHeader>
               <div className="mt-6 overflow-y-auto scrollbar-none h-full">
-                <FilterAccordion 
+                <FilterAccordion
                   categories={FILTER_CATEGORIES}
                   openCategories={openCategories}
                   onCategoriesChange={setOpenCategories}
@@ -116,9 +120,9 @@ const Products = () => {
               <Filter className="h-6 w-6 text-white" />
               <h2 className="text-xl font-bold text-white">Filters</h2>
             </div>
-            
+
             <div className="max-h-[75vh] overflow-y-auto pr-2">
-              <FilterAccordion 
+              <FilterAccordion
                 categories={FILTER_CATEGORIES}
                 openCategories={openCategories}
                 onCategoriesChange={setOpenCategories}

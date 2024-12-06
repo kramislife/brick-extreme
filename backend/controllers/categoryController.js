@@ -15,6 +15,20 @@ export const getAllCategories = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
+// GET A CATEGORY BASED ON CATEGORY KEY
+export const getCategoryByKey = catchAsyncErrors(async (req, res, next) => {
+  console.log("KEY:", req.params.key);
+
+  const category = await Category.find({ key: req.params.key });
+  if (!category) {
+    return next(new ErrorHandler("Category not found", 404));
+  }
+  res.status(200).json({
+    message: "Category retrieved successfully",
+    category,
+  });
+});
+
 //------------------------------------  GET CATEGORY BY ID => GET /categories/:id  ------------------------------------
 
 export const getCategoryById = catchAsyncErrors(async (req, res, next) => {

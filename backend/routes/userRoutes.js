@@ -8,6 +8,7 @@ import {
 import {
   getAllCategories,
   getCategoryById,
+  getCategoryByKey,
 } from "../controllers/categoryController.js";
 
 import {
@@ -37,7 +38,10 @@ const router = express.Router();
 // ---------------------------------- CATEGORIES --------------------------------------------------
 
 // GET ALL CATEGORY
-router.route("/categories").get(isAuthenticatedUser, getAllCategories);
+router.route("/categories").get(getAllCategories);
+
+// GET CATEGORY BY KEY
+router.route("/categories/:key").get(getCategoryByKey);
 
 // GET CATEGORIES BY ID
 router.route("/categories/:id").get(isAuthenticatedUser, getCategoryById);

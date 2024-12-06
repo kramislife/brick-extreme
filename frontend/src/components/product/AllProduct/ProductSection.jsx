@@ -1,8 +1,10 @@
 import React from "react";
-import { motion } from "framer-motion";
+import { motion } from "framer-motion"; 
 import ProductCard from "./ProductCard";
 
 const ProductSection = ({ products }) => {
+  console.log("Product Section :", products);
+
   return (
     <div className="col-span-1 lg:col-span-3">
       <motion.div
@@ -11,8 +13,8 @@ const ProductSection = ({ products }) => {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
       >
-        {products.map((product) => (
-          <ProductCard key={product.id} product={product} />
+        {products.map((product, index) => (
+          <ProductCard key={index} product={product} />
         ))}
       </motion.div>
     </div>

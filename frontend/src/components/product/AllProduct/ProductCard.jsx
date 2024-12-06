@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { motion } from "framer-motion";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import StarRating from "@/components/product/shared/StarRating";
@@ -7,7 +7,11 @@ import defaultImage from "@/assets/bestSellingAssets/droid.png";
 const ProductCard = ({ product }) => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const category = searchParams.get('category');
+  const category = searchParams.get("category");
+
+  useEffect(() => {
+    console.log("PRODUCT:", product);
+  }, []);
 
   const handleViewDetails = () => {
     if (category) {
@@ -78,7 +82,16 @@ const ProductCard = ({ product }) => {
                 <StarRating rating={product.ratings} />
                 <span>({product.ratings})</span>
               </div>
-              <span className="text-green-400 font-medium">In Stock</span>
+              {/* <span className="text-green-400 font-medium">In Stock</span> */}
+              <span className="text-green-400 font-medium">
+                {product?.product_category.map((category, index) => {
+                  return (
+                    <span key={index} className="capitalize mr-2">
+                      {category.name}
+                    </span>
+                  );
+                })}
+              </span>
             </div>
           </div>
         </div>
