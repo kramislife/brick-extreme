@@ -7,13 +7,23 @@ export const productApi = createApi({
   }),
   endpoints: (builder) => ({
     getProducts: builder.query({
-      query: (params) => "/products",
+      query: (params) => {
+        const queryParams = new URLSearchParams(params).toString();
+        return `/products?${queryParams}`;
+      },
     }),
 
-    getBestSellerProducts: builder.query({
-      query: (params) => "/products/best-seller",
+    getCategory: builder.query({
+      query: () => `/categories`,
+    }),
+
+    getCategoryByKey: builder.query({
+      query: (key) => `/categories/${key}`,
     }),
   }),
 });
-export const { useGetProductsQuery, useGetBestSellerProductsQuery } =
-  productApi;
+export const {
+  useGetProductsQuery,
+  useGetCategoryByKeyQuery,
+  useGetCategoryQuery,
+} = productApi;

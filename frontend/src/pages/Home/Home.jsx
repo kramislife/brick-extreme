@@ -1,3 +1,4 @@
+import React from "react";
 import Banner from "@/components/home/Banner";
 import BestSelling from "@/components/home/BestSelling";
 import Categories from "@/components/home/Categories";
@@ -5,10 +6,8 @@ import FeaturedProduct from "@/components/home/FeaturedProduct";
 import LatestProduct from "@/components/home/LatestProduct";
 import Subscribe from "@/components/home/Subscribe";
 import Metadata from "@/components/layout/Metadata/Metadata";
-import React from "react";
 
 const Home = () => {
-  
   return (
     <>
       <Metadata title="Homepage" />
