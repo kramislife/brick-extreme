@@ -6,11 +6,14 @@ import {
   getFilteredRowModel,
   flexRender,
 } from '@tanstack/react-table';
-import { Eye, Edit2, Trash2, Search } from 'lucide-react';
+import { Eye, Edit2, Trash2 } from 'lucide-react';
 import { Card, CardContent } from "@/components/ui/card";
+import SearchBar from '@/components/admin/table/SearchBar';
+import ShowEntries from '@/components/admin/table/ShowEntries';
+import TableLayout from '@/components/admin/table/TableLayout';
+import Pagination from '@/components/admin/table/Pagination';
 
 const ViewUsers = () => {
-  // Sample data - replace with your actual user data
   const [data] = useState([
     {
       id: 1,
@@ -30,7 +33,33 @@ const ViewUsers = () => {
       joinDate: "2024-03-15",
       lastLogin: "2024-03-24"
     },
-    // Add more users...
+    {
+      id: 3,
+      name: "Jane Smith",
+      email: "jane@example.com",
+      role: "Admin",
+      status: "Active",
+      joinDate: "2024-03-15",
+      lastLogin: "2024-03-24"
+    },
+    {
+      id: 4,
+      name: "Jane Smith",
+      email: "jane@example.com",
+      role: "Admin",
+      status: "Active",
+      joinDate: "2024-03-15",
+      lastLogin: "2024-03-24"
+    },
+    {
+      id: 5,
+      name: "Jane Smith",
+      email: "jane@example.com",
+      role: "Admin",
+      status: "Active",
+      joinDate: "2024-03-15",
+      lastLogin: "2024-03-24"
+    },
   ]);
 
   const [globalFilter, setGlobalFilter] = useState('');
@@ -131,22 +160,18 @@ const ViewUsers = () => {
   // Handler functions
   const handleViewDetails = (user) => {
     console.log("View details for user:", user);
-    // Implement view details logic
   };
 
   const handleEdit = (user) => {
     console.log("Edit user:", user);
-    // Implement edit logic
   };
 
   const handleDelete = (user) => {
     console.log("Delete user:", user);
-    // Implement delete logic
   };
 
   return (
     <div className="container mx-auto py-6 px-4">
-      {/* Header */}
       <div className="mb-8 space-y-2">
         <h1 className="text-3xl font-bold text-light tracking-tight">
           User Management
@@ -158,104 +183,25 @@ const ViewUsers = () => {
 
       <Card className="bg-darkBrand border-none">
         <CardContent className="p-10">
-          {/* Search and Entries Info */}
-          <div className="flex flex-col md:flex-row justify-between mb-6 gap-4">
-            <div className="flex items-center">
-              <span className="text-light mr-2">Show</span>
-              <select
-                value={table.getState().pagination.pageSize}
-                onChange={e => table.setPageSize(Number(e.target.value))}
-                className="border border-gray-600 rounded-md px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-darkBrand text-light"
-              >
-                {[10, 20, 30, 40, 50].map(pageSize => (
-                  <option key={pageSize} value={pageSize}>
-                    {pageSize}
-                  </option>
-                ))}
-              </select>
-              <span className="text-light ml-2">entries</span>
-            </div>
-            
-            <div className="relative">
-              <input
-                value={globalFilter ?? ''}
-                onChange={e => setGlobalFilter(e.target.value)}
-                placeholder="Search users..."
-                className="pl-10 pr-4 py-3 bg-darkBrand border border-gray-600 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-light placeholder-gray-400 text-sm"
-              />
-              <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
-            </div>
+          <div className="flex flex-col md:flex-row justify-between gap-6 mb-10">
+            <ShowEntries 
+              value={table.getState().pagination.pageSize}
+              onChange={table.setPageSize}
+            />
+            <SearchBar 
+              value={globalFilter}
+              onChange={setGlobalFilter}
+              placeholder="Search users..."
+            />
           </div>
 
-          {/* Table */}
-          <div className="overflow-x-auto">
-            <table className="w-full caption-bottom text-sm">
-              <thead>
-                {table.getHeaderGroups().map(headerGroup => (
-                  <tr key={headerGroup.id} className="border-b border-gray-200/10">
-                    {headerGroup.headers.map(header => (
-                      <th
-                        key={header.id}
-                        className="h-14 px-6 align-middle font-semibold text-light/90 text-center"
-                      >
-                        {flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                      </th>
-                    ))}
-                  </tr>
-                ))}
-              </thead>
-              <tbody>
-                {table.getRowModel().rows.map(row => (
-                  <tr 
-                    key={row.id}
-                    className="border-b border-gray-200/10 transition-colors hover:bg-blue-500/10 text-center"
-                  >
-                    {row.getVisibleCells().map(cell => (
-                      <td key={cell.id} className="px-6 py-5 text-sm text-light/80 text-center">
-                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                      </td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <TableLayout 
+            headerGroups={table.getHeaderGroups()}
+            rows={table.getRowModel().rows}
+            flexRender={flexRender}
+          />
 
-          {/* Pagination */}
-          <div className="mt-6 flex flex-col md:flex-row items-center justify-between gap-4">
-            <div className="text-sm text-light/80">
-              Showing {table.getState().pagination.pageIndex * table.getState().pagination.pageSize + 1} to{' '}
-              {Math.min(
-                (table.getState().pagination.pageIndex + 1) * table.getState().pagination.pageSize,
-                table.getFilteredRowModel().rows.length
-              )}{' '}
-              of {table.getFilteredRowModel().rows.length} entries
-            </div>
-            
-            <div className="flex gap-2">
-              <button
-                onClick={() => table.previousPage()}
-                disabled={!table.getCanPreviousPage()}
-                className="px-4 py-2 border border-gray-600 rounded-md text-sm font-medium text-light 
-                         hover:bg-blue-500/10 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
-                         disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-              >
-                Previous
-              </button>
-              <button
-                onClick={() => table.nextPage()}
-                disabled={!table.getCanNextPage()}
-                className="px-4 py-2 border border-gray-600 rounded-md text-sm font-medium text-light 
-                         hover:bg-blue-500/10 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
-                         disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-              >
-                Next
-              </button>
-            </div>
-          </div>
+          <Pagination table={table} />
         </CardContent>
       </Card>
     </div>
