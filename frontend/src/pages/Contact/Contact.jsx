@@ -1,180 +1,148 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { 
-  Mail, 
-  User, 
-  MessageSquare, 
-  MapPin, 
-  Phone, 
-  Send 
-} from 'lucide-react';
-
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
-import { 
-  Card, 
-  CardContent, 
-  CardHeader, 
-  CardTitle 
-} from '@/components/ui/card';
+import contactImage from "@/assets/contact2.png"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { Button } from "@/components/ui/button"
+import { MapPin, Phone, Mail, Send } from "lucide-react"
+import { motion } from "framer-motion"
 
 const Contact = () => {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    subject: '',
-    message: ''
-  });
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Add form submission logic here
-    console.log('Form submitted:', formData);
-    // You would typically send this data to a backend service
-  };
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: { 
-      opacity: 1,
-      transition: { 
-        delayChildren: 0.3,
-        staggerChildren: 0.2 
-      }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: { 
-      y: 0, 
-      opacity: 1 
-    }
-  };
-
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
-      <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-        className="w-full max-w-4xl grid md:grid-cols-2 gap-8"
-      >
-        {/* Contact Information */}
+    <div className="min-h-screen flex items-center justify-center bg-brand-gradient p-4">
+      <div className="w-full max-w-7xl flex gap-12 items-center">
+        {/* Left side - Image */}
         <motion.div 
-          variants={itemVariants}
-          className="bg-blue-600 text-white rounded-lg p-8 flex flex-col justify-between"
+          initial={{ opacity: 0, x: -50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5 }}
+          className="flex-1 hidden lg:block"
         >
-          <div>
-            <h2 className="text-3xl font-bold mb-4">Contact Brick Extreme</h2>
-            <p className="mb-6">Ready to Build? Get Started Today.</p>
-            
-            <div className="space-y-4">
-              <div className="flex items-center">
-                <MapPin className="mr-3" />
-                <span>2406 W 1350 N Lehi, Ut 84043</span>
-              </div>
-              <div className="flex items-center">
-                <Phone className="mr-3" />
-                <span>+1 801-781-0705</span>
-              </div>
-            </div>
-          </div>
+          <img 
+            src={contactImage} 
+            alt="Contact" 
+            className="w-full h-full object-contain drop-shadow-2xl filter saturate-110"
+          />
         </motion.div>
 
-        {/* Contact Form */}
-        <motion.div variants={itemVariants}>
-          <Card>
-            <CardHeader>
-              <CardTitle>Send Us a Message</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div>
-                  <Label htmlFor="name">Name</Label>
-                  <div className="relative">
-                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                    <Input 
-                      type="text" 
-                      name="name"
-                      placeholder="Your Name" 
-                      required
-                      value={formData.name}
-                      onChange={handleChange}
-                      className="pl-10"
-                    />
-                  </div>
-                </div>
+        {/* Right side - Contact Form */}
+        <motion.div 
+          initial={{ opacity: 0, x: 50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5 }}
+          className="flex-1 p-8 rounded-3xl backdrop-blur-lg shadow-2xl bg-gradient-to-br from-brand-start/40 to-brand-end/40 border border-white/20 relative overflow-hidden"
+        >
+          <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/5 to-transparent pointer-events-none" />
 
-                <div>
-                  <Label htmlFor="email">Email</Label>
-                  <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                    <Input 
-                      type="email" 
-                      name="email"
-                      placeholder="Your Email" 
-                      required
-                      value={formData.email}
-                      onChange={handleChange}
-                      className="pl-10"
-                    />
-                  </div>
-                </div>
+          <div className="space-y-8 py-6 px-2 relative">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="space-y-3"
+            >
+              <h2 className="text-4xl font-bold text-white tracking-tight">
+                Get in Touch
+              </h2>
+              <p className="text-light/90 text-md tracking-wide font-light">
+                We'd love to hear from you. Send us a message!
+              </p>
+            </motion.div>
 
-                <div>
-                  <Label htmlFor="subject">Subject (Optional)</Label>
-                  <div className="relative">
-                    <MessageSquare className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                    <Input 
-                      type="text" 
-                      name="subject"
-                      placeholder="Your Subject" 
-                      value={formData.subject}
-                      onChange={handleChange}
-                      className="pl-10"
-                    />
-                  </div>
-                </div>
+            <form className="space-y-6">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+              >
+                <Input 
+                  type="text" 
+                  placeholder="Full Name" 
+                  className="bg-darkBrand/50 border-white/20 text-white placeholder:text-gray-400 h-14 rounded-xl focus:ring-2 focus:ring-light/40 focus:border-light/40 transition-all duration-300 text-lg hover:bg-darkBrand/70"
+                />
+              </motion.div>
+              
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 }}
+              >
+                <Input 
+                  type="email" 
+                  placeholder="Email Address" 
+                  className="bg-darkBrand/50 border-white/20 text-white placeholder:text-gray-400 h-14 rounded-xl focus:ring-2 focus:ring-light/40 focus:border-light/40 transition-all duration-300 text-lg hover:bg-darkBrand/70"
+                />
+              </motion.div>
 
-                <div>
-                  <Label htmlFor="message">Message</Label>
-                  <div className="relative">
-                    <Textarea 
-                      name="message"
-                      placeholder="Your Message" 
-                      required
-                      value={formData.message}
-                      onChange={handleChange}
-                      className="min-h-[120px]"
-                    />
-                  </div>
-                </div>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.6 }}
+              >
+                <Textarea 
+                  placeholder="Your Message" 
+                  className="bg-darkBrand/50 border-white/20 text-white placeholder:text-gray-400 min-h-[150px] rounded-xl focus:ring-2 focus:ring-light/40 focus:border-light/40 transition-all duration-300 text-lg resize-none hover:bg-darkBrand/70"
+                />
+              </motion.div>
 
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.7 }}
+              >
                 <Button 
                   type="submit" 
-                  className="w-full"
-                  variant="default"
+                  className="w-full bg-gradient-r border border-brand hover:bg-brand-gradient text-white h-14 rounded-xl text-md shadow-lg transition-all duration-300 relative overflow-hidden group"
                 >
-                  <Send className="mr-2" /> Send Message
+                  <span className="relative z-10 flex items-center justify-center gap-2">
+                    Send Message
+                    <Send className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
+                  </span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </Button>
-              </form>
-            </CardContent>
-          </Card>
-        </motion.div>
-      </motion.div>
-    </div>
-  );
-};
+              </motion.div>
+            </form>
 
-export default Contact;
+            {/* Contact Information */}
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.8 }}
+              className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8 pt-8 border-t border-white/10"
+            >
+              <motion.div 
+                whileHover={{ scale: 1.05 }}
+                className="flex flex-col items-center space-y-2 p-4 rounded-xl bg-darkBrand/30 hover:bg-darkBrand/50 transition-colors duration-300 cursor-pointer group"
+              >
+                <div className="p-3 rounded-full bg-brand/20 group-hover:bg-brand/30 transition-colors duration-300">
+                  <MapPin className="w-6 h-6 text-light group-hover:text-white transition-colors duration-300" />
+                </div>
+                <span className="text-light/90 text-sm text-center">123 Business Street, New York, NY 10001</span>
+              </motion.div>
+
+              <motion.div 
+                whileHover={{ scale: 1.05 }}
+                className="flex flex-col items-center space-y-2 p-4 rounded-xl bg-darkBrand/30 hover:bg-darkBrand/50 transition-colors duration-300 cursor-pointer group"
+              >
+                <div className="p-3 rounded-full bg-brand/20 group-hover:bg-brand/30 transition-colors duration-300">
+                  <Phone className="w-6 h-6 text-light group-hover:text-white transition-colors duration-300" />
+                </div>
+                <span className="text-light/90 text-sm text-center">+1 (555) 123-4567</span>
+              </motion.div>
+
+              <motion.div 
+                whileHover={{ scale: 1.05 }}
+                className="flex flex-col items-center space-y-2 p-4 rounded-xl bg-darkBrand/30 hover:bg-darkBrand/50 transition-colors duration-300 cursor-pointer group"
+              >
+                <div className="p-3 rounded-full bg-brand/20 group-hover:bg-brand/30 transition-colors duration-300">
+                  <Mail className="w-6 h-6 text-light group-hover:text-white transition-colors duration-300" />
+                </div>
+                <span className="text-light/90 text-sm text-center">contact@yourcompany.com</span>
+              </motion.div>
+            </motion.div>
+          </div>
+        </motion.div>
+      </div>
+    </div>
+  )
+}
+
+export default Contact

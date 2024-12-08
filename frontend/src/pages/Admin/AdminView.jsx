@@ -8,7 +8,7 @@ const AdminView = () => {
       <div className="sticky top-20 h-screen">
         <Sidebar />
       </div>
-      <main className="flex-1 px-8 py-5">
+      <main className="flex-1 p-5">
         <Outlet />
       </main>
     </div>
