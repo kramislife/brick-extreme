@@ -44,14 +44,14 @@ router.route("/categories").get(getAllCategories);
 router.route("/categories/:key").get(getCategoryByKey);
 
 // GET CATEGORIES BY ID
-router.route("/categories/:id").get(isAuthenticatedUser, getCategoryById);
+router.route("/categories/:id").get(getCategoryById);
 
 // ---------------------------------- COLLECTION --------------------------------------------------
 // GET ALL COLLECTIONS
-router.route("/collections").get(isAuthenticatedUser, getAllCollections);
+router.route("/collections").get(getAllCollections);
 
 // GET COLLECTION BY ID
-router.route("/collections/:id").get(isAuthenticatedUser, getCollectionById);
+router.route("/collections/:id").get(getCollectionById);
 
 // ---------------------------------- SKILL --------------------------------------------------
 // GET ALL SKILLS
