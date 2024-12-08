@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import image1 from "@/assets/bannerAssets/Banner-1.png";
 import image2 from "@/assets/bannerAssets/Banner-3.png";
@@ -7,8 +7,8 @@ import { featuredProductAnimations } from "@/hooks/animationConfig";
 
 const FeaturedProducts = () => {
   const ref = React.useRef(null);
-  const isInView = useInView(ref, { 
-    once: true, 
+  const isInView = useInView(ref, {
+    once: true,
     amount: 0.2,
   });
 
@@ -50,8 +50,8 @@ const FeaturedProducts = () => {
             variants={featuredProductAnimations.imageVariants}
             className="relative overflow-hidden group"
           >
-            <motion.img 
-              src={image} 
+            <motion.img
+              src={image}
               alt={`Featured Product ${index + 1}`}
               className="w-full lg:h-[80vh] h-full object-cover"
               whileHover={{ scale: 1.05 }}

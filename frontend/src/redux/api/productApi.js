@@ -17,6 +17,18 @@ export const productApi = createApi({
       query: () => `/categories`,
     }),
 
+    getCollection: builder.query({
+      query: () => `/collections`,
+    }),
+
+    getSkillLevels: builder.query({
+      query: () => `/skillLevels`,
+    }),
+
+    getDesigners: builder.query({
+      query: () => `/designers`,
+    }),
+
     getCategoryByKey: builder.query({
       query: (key) => `/categories/${key}`,
     }),
@@ -28,7 +40,10 @@ export const productApi = createApi({
 });
 export const {
   useGetProductsQuery,
-  useGetCategoryByKeyQuery,
   useGetCategoryQuery,
+  useGetCollectionQuery,
+  useGetSkillLevelsQuery,
+  useGetDesignersQuery,
+  useGetCategoryByKeyQuery,
   useGetProductDetailsQuery,
 } = productApi;

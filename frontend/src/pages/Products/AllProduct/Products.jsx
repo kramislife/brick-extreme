@@ -1,10 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import FilterAccordion from "@/components/product/AllProduct/FilterAccordion";
 import ProductSection from "@/components/product/AllProduct/ProductSection";
-import { FILTER_CATEGORIES } from "@/constant/productData";
 import Metadata from "@/components/layout/Metadata/Metadata";
-import { useGetProductsQuery } from "@/redux/api/productApi";
+import {
+  useGetProductsQuery,
+  useGetCategoryQuery,
+  useGetCollectionQuery,
+  useGetSkillLevelsQuery,
+  useGetDesignersQuery,
+} from "@/redux/api/productApi";
 import { Filter } from "lucide-react";
 import {
   Sheet,
@@ -18,57 +23,127 @@ import { toast } from "react-toastify";
 
 const Products = () => {
   const [searchParams] = useSearchParams();
-
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [openCategories, setOpenCategories] = useState(
-    Object.keys(FILTER_CATEGORIES)
-  );
+  const [openCategories, setOpenCategories] = useState([]);
+  const [selectedFilters, setSelectedFilters] = useState({});
 
-  const [selectedFilters, setSelectedFilters] = useState({
-    price: [],
-    theme: [],
-    collection: [],
-    availability: [],
-    skillLevel: [],
-    designer: [],
-  });
+  // Fetch data for products and filters
+  const {
+    data: productData,
+    isLoading: isProductLoading,
+    isError: productError,
+    error: productErrorMsg,
+  } = useGetProductsQuery(searchParams.toString());
 
-  // FETCH PRODUCTS BASED ON SEARCH PARAMETERS
-  const { data, isLoading, isError, error } = useGetProductsQuery(
-    searchParams.toString()
+  const {
+    data: categoriesData,
+    isLoading: categoriesIsLoading,
+    isError: categoriesIsError,
+    error: categoriesError,
+  } = useGetCategoryQuery();
+
+  const {
+    data: collectionsData,
+    isLoading: collectionsIsLoading,
+    isError: collectionsIsError,
+    error: collectionsError,
+  } = useGetCollectionQuery();
+
+  const {
+    data: skillLevelsData,
+    isLoading: skillLevelsIsLoading,
+    isError: skillLevelsIsError,
+    error: skillLevelsError,
+  } = useGetSkillLevelsQuery();
+
+  const {
+    data: designersData,
+    isLoading: designersIsLoading,
+    isError: designerIsError,
+    error: designersError,
+  } = useGetDesignersQuery();
+
+  useEffect(() => {
+    if (categoriesIsError) {
+      toast.error(
+        categoriesError?.data?.message || "Failed to load categories."
+      );
+    }
+    if (collectionsIsError) {
+      toast.error(
+        collectionsError?.data?.message || "Failed to load collections."
+      );
+    }
+    if (skillLevelsIsError) {
+      toast.error(
+        skillLevelsError?.data?.message || "Failed to load skill levels."
+      );
+    }
+    if (designerIsError) {
+      toast.error(designersError?.data?.message || "Failed to load designers.");
+    }
+    if (productError) {
+      toast.error(
+        productErrorMsg?.data?.message ||
+          "An error occurred while fetching products."
+      );
+    }
+  }, [
+    categoriesIsError,
+    categoriesError,
+    collectionsIsError,
+    collectionsError,
+    skillLevelsIsError,
+    skillLevelsError,
+    designerIsError,
+    designersError,
+    productError,
+    productErrorMsg,
+  ]);
+
+  const filterOptions = useMemo(
+    () => ({
+      price: [
+        { label: "$0-$100", value: "0-100" },
+        { label: "$101-$500", value: "101-500" },
+        { label: "$501-$1000", value: "501-1000" },
+        { label: "$1000+", value: "1000+" },
+      ],
+      Categories:
+        categoriesData?.categories?.map((category) => ({
+          label: category.name,
+          value: category._id,
+        })) || [],
+      collection:
+        collectionsData?.collections?.map((collection) => ({
+          label: collection.name,
+          value: collection._id,
+        })) || [],
+      skillLevel:
+        skillLevelsData?.skillLevels?.map((level) => ({
+          label: level.name,
+          value: level._id,
+        })) || [],
+      designer:
+        designersData?.designers?.map((designer) => ({
+          label: designer.name,
+          value: designer._id,
+        })) || [],
+    }),
+    [categoriesData, collectionsData, skillLevelsData, designersData]
   );
 
   useEffect(() => {
-    if (isError) {
-      toast.error(error?.data?.message);
-    }
-  }, [error, isError]);
-
-  if (isLoading) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <LoadingSpinner className="animate-spin" />
-      </div>
+    setOpenCategories(Object.keys(filterOptions));
+    setSelectedFilters(
+      Object.keys(filterOptions).reduce((acc, key) => {
+        acc[key] = [];
+        return acc;
+      }, {})
     );
-  }
+  }, [filterOptions]);
 
-  const handleFilterChange = (category, value) => {
-    setSelectedFilters((prev) => {
-      const newFilters = { ...prev };
-      if (newFilters[category].includes(value)) {
-        newFilters[category] = newFilters[category].filter((v) => v !== value);
-      } else {
-        newFilters[category] = [...newFilters[category], value];
-      }
-      return newFilters;
-    });
-  };
-
-  // FILTER PRODUCTS
-
-  const filteredProducts = data?.products?.filter((product) => {
-    // IF NO FILTER IS SELECTED
-
+  const filteredProducts = productData?.products?.filter((product) => {
     if (
       Object.values(selectedFilters).every((filters) => filters.length === 0)
     ) {
@@ -78,24 +153,37 @@ const Products = () => {
     // Price filter
     if (selectedFilters.price.length > 0) {
       const price = product.price;
-      console.log("PRICE:", price);
-
       const matchesPrice = selectedFilters.price.some((range) => {
         const [min, max] = range.split("-").map(Number);
-        if (max) {
-          return price >= min && price <= max;
-        }
-        return price > min;
+        return max ? price >= min && price <= max : price > min;
       });
       if (!matchesPrice) return false;
+    }
+
+    // Other filters
+    for (const key of ["theme", "collection", "skillLevel", "designer"]) {
+      if (
+        selectedFilters[key]?.length > 0 &&
+        !selectedFilters[key].includes(product[key])
+      ) {
+        return false;
+      }
     }
 
     return true;
   });
 
+  if (isProductLoading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <LoadingSpinner className="animate-spin" />
+      </div>
+    );
+  }
+
   return (
     <>
-      <Metadata title={"Products"} />
+      <Metadata title="Products" />
       <div className="mx-auto p-4">
         {/* Mobile Filter */}
         <div className="lg:hidden mb-4">
@@ -117,11 +205,19 @@ const Products = () => {
               </SheetHeader>
               <div className="mt-6 overflow-y-auto scrollbar-none h-full">
                 <FilterAccordion
-                  categories={FILTER_CATEGORIES}
+                  categories={filterOptions}
                   openCategories={openCategories}
                   onCategoriesChange={setOpenCategories}
                   selectedFilters={selectedFilters}
-                  onFilterChange={handleFilterChange}
+                  onFilterChange={(category, value) => {
+                    setSelectedFilters((prev) => ({
+                      ...prev,
+                      [category]: prev[category]?.includes(value)
+                        ? prev[category].filter((v) => v !== value)
+                        : [...(prev[category] || []), value],
+                    }));
+                  }}
+                  products={productData?.products || []}
                 />
               </div>
             </SheetContent>
@@ -135,14 +231,21 @@ const Products = () => {
               <Filter className="h-6 w-6 text-white" />
               <h2 className="text-xl font-bold text-white">Filters</h2>
             </div>
-
             <div className="max-h-[75vh] overflow-y-auto pr-2">
               <FilterAccordion
-                categories={FILTER_CATEGORIES}
+                categories={filterOptions}
                 openCategories={openCategories}
                 onCategoriesChange={setOpenCategories}
                 selectedFilters={selectedFilters}
-                onFilterChange={handleFilterChange}
+                onFilterChange={(category, value) => {
+                  setSelectedFilters((prev) => ({
+                    ...prev,
+                    [category]: prev[category]?.includes(value)
+                      ? prev[category].filter((v) => v !== value)
+                      : [...(prev[category] || []), value],
+                  }));
+                }}
+                products={productData?.products || []}
               />
             </div>
           </div>
