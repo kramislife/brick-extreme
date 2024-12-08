@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useParams, useSearchParams } from "react-router-dom";
 import FilterAccordion from "@/components/product/AllProduct/FilterAccordion";
 import ProductSection from "@/components/product/AllProduct/ProductSection";
 import { FILTER_CATEGORIES } from "@/constant/productData";
@@ -14,9 +14,13 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import LoadingSpinner from "@/components/layout/spinner/LoadingSpinner";
+import { toast } from "react-toastify";
 
 const Products = () => {
   const [searchParams] = useSearchParams();
+  // const paramsObject = Object.fromEntries(searchParams.entries());
+
+  // console.log(paramsObject);
 
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [openCategories, setOpenCategories] = useState(
@@ -32,7 +36,15 @@ const Products = () => {
   });
 
   // Only fetch best seller products
-  const { data, isLoading } = useGetProductsQuery(searchParams);
+  const { data, isLoading, isError, error } = useGetProductsQuery(
+    searchParams.toString()
+  );
+
+  useEffect(() => {
+    if (isError) {
+      toast.error(error?.data?.message);
+    }
+  }, [error]);
 
   if (isLoading) {
     return (

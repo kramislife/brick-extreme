@@ -162,7 +162,14 @@ const ProductDetails = ({ product, containerVariants, itemVariants }) => {
                   <span
                     className={`${product?.product_availability?.textColor} text-sm font-medium`}
                   >
-                    {product?.product_availability}
+                    {new Date(product?.product_availability).toLocaleDateString(
+                      "en-US",
+                      {
+                        month: "long",
+                        year: "numeric",
+                        day: "numeric",
+                      }
+                    )}
                   </span>
                 </div>
               </div>
@@ -174,17 +181,19 @@ const ProductDetails = ({ product, containerVariants, itemVariants }) => {
               <div className="flex flex-wrap gap-2 mb-2">
                 <div className="flex-1">
                   {/* Category Button */}
-                  {product?.product_category && (
-                    <Button
-                      variant="outline"
-                      className="bg-slate-800/50 hover:bg-slate-800 hover:text-white hover:scale-105 transition-all duration-300 border-slate-700 inline-flex w-full text-left justify-start mb-2"
-                    >
-                      <div className="flex items-center gap-2">
-                        <span className="whitespace-nowrap">Category:</span>
-                        <span className="text-gray-400">{product.product_category}</span>
-                      </div>
-                    </Button>
-                  )}
+                  {product?.product_category &&
+                    product?.product_category.map((cat, index) => (
+                      <Button
+                        key={index}
+                        variant="outline"
+                        className="bg-slate-800/50 hover:bg-slate-800 hover:text-white hover:scale-105 transition-all duration-300 border-slate-700 inline-flex w-full text-left justify-start mb-2"
+                      >
+                        <div className="flex items-center gap-2">
+                          <span className="whitespace-nowrap">Category:</span>
+                          <span className="text-gray-400">{cat?.name}</span>
+                        </div>
+                      </Button>
+                    ))}
 
                   {/* Includes Button */}
                   {product?.product_includes && (
@@ -194,24 +203,30 @@ const ProductDetails = ({ product, containerVariants, itemVariants }) => {
                     >
                       <div className="flex items-center gap-2">
                         <span className="whitespace-nowrap">Includes:</span>
-                        <span className="text-gray-400">{product.product_includes}</span>
+                        <span className="text-gray-400">
+                          {product.product_includes}
+                        </span>
                       </div>
                     </Button>
                   )}
                 </div>
 
                 {/* Collection Button */}
-                {product?.product_collection && (
-                  <Button
-                    variant="outline"
-                    className="bg-slate-800/50 hover:bg-slate-800 hover:text-white hover:scale-105 transition-all duration-300 border-slate-700 inline-flex w-auto text-left justify-start flex-1"
-                  >
-                    <div className="flex items-center gap-2">
-                      <span className="whitespace-nowrap">Collection:</span>
-                      <span className="text-gray-400">{product.product_collection}</span>
-                    </div>
-                  </Button>
-                )}
+                {product?.product_collection &&
+                  product?.product_collection.map((collection, index) => (
+                    <Button
+                      key={index}
+                      variant="outline"
+                      className="bg-slate-800/50 hover:bg-slate-800 hover:text-white hover:scale-105 transition-all duration-300 border-slate-700 inline-flex w-auto text-left justify-start flex-1"
+                    >
+                      <div className="flex items-center gap-2">
+                        <span className="whitespace-nowrap">Collection:</span>
+                        <span className="text-gray-400">
+                          {collection?.name}
+                        </span>
+                      </div>
+                    </Button>
+                  ))}
               </div>
             </div>
 

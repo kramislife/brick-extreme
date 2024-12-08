@@ -1,5 +1,5 @@
-import React from 'react';
-import { Box, Ruler, User, Dices } from 'lucide-react';
+import React from "react";
+import { Box, Ruler, User, Dices } from "lucide-react";
 
 const DEFAULT_SPECS = {
   pieceCount: {
@@ -28,13 +28,19 @@ const ProductSpecification = ({ product }) => {
   const specifications = [
     {
       ...DEFAULT_SPECS.pieceCount,
-      items: product?.product_piece_count ? [
-        `${product?.product_piece_count} ${product?.product_piece_count === 1 ? 'piece' : 'pieces'}`
-      ] : [],
+      items: product?.product_piece_count
+        ? [
+            `${product?.product_piece_count} ${
+              product?.product_piece_count === 1 ? "piece" : "pieces"
+            }`,
+          ]
+        : [],
     },
     {
       ...DEFAULT_SPECS.skillLevel,
-      items: product?.product_skill_level ? [product.product_skill_level] : [],
+      items: product?.product_skill_level
+        ? [product.product_skill_level?.name]
+        : [],
     },
     {
       ...DEFAULT_SPECS.dimensions,
@@ -46,9 +52,9 @@ const ProductSpecification = ({ product }) => {
     },
     {
       ...DEFAULT_SPECS.designer,
-      items: product?.product_designer ? [product.product_designer] : [],
+      items: product?.product_designer ? [product.product_designer?.name] : [],
     },
-  ].filter(spec => spec.items.some(item => item));
+  ].filter((spec) => spec.items.some((item) => item));
 
   return (
     <div className="bg-gradient-to-b from-brand-start to-brand-end py-20 px-4">
@@ -66,9 +72,7 @@ const ProductSpecification = ({ product }) => {
                 className="bg-brand/70 p-6 rounded-xl border border-gray-700/50 hover:border-gray-600/50 transition-all"
               >
                 <div className="flex items-center mb-4">
-                  <div
-                    className="p-3 rounded-lg bg-gray-800/50"
-                  >
+                  <div className="p-3 rounded-lg bg-gray-800/50">
                     {spec?.icon}
                   </div>
                   <h2 className="text-2xl font-semibold tracking-wide text-white drop-shadow-md pl-5">

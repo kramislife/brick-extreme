@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { motion } from "framer-motion";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import StarRating from "@/components/product/shared/StarRating";
@@ -8,10 +8,6 @@ const ProductCard = ({ product }) => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const category = searchParams.get("category");
-
-  useEffect(() => {
-    console.log("PRODUCT:", product);
-  }, []);
 
   const handleViewDetails = () => {
     if (category) {

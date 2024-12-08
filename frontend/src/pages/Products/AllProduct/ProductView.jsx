@@ -1,18 +1,23 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import ProductDetails from "@/components/product/shared/ProductDetails";
 import ProductRating from "@/components/product/shared/ProductRating";
 import ProductSpecification from "@/components/product/shared/ProductSpecification";
 import { Loader } from "lucide-react";
 import Metadata from "@/components/layout/Metadata/Metadata";
+import { useGetProductDetailsQuery } from "@/redux/api/productApi";
+import { toast } from "react-toastify";
+import LoadingSpinner from "@/components/layout/spinner/LoadingSpinner";
 
 const ProductView = () => {
   const { id } = useParams();
+  const { data, isLoading, isError, error } = useGetProductDetailsQuery(id);
 
-  // Fetch all products and find the specific one
-
-  // Find the specific product from the data
-  const product = data?.products?.find((p) => p._id === id);
+  useEffect(() => {
+    if (isError) {
+      toast.error(error?.data?.message);
+    }
+  }, [error, isError]);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -32,26 +37,22 @@ const ProductView = () => {
     },
   };
 
-  if (isLoading) {
-    return <Loader />;
-  }
-
-  if (!product) {
-    return <div>Product not found</div>;
-  }
-
   return (
     <>
-      <Metadata title={product?.product_name || "Product Details"} />
-      <div className="min-h-screen bg-brand-gradient">
-        <ProductDetails
-          product={product}
-          containerVariants={containerVariants}
-          itemVariants={itemVariants}
-        />
-        <ProductSpecification product={product} />
-        <ProductRating product={product} />
-      </div>
+      <Metadata title={data?.product?.product_name || "Product Details"} />
+      {isLoading ? (
+        <LoadingSpinner />
+      ) : (
+        <div className="min-h-screen bg-brand-gradient">
+          <ProductDetails
+            product={data?.product}
+            containerVariants={containerVariants}
+            itemVariants={itemVariants}
+          />
+          <ProductSpecification product={data?.product} />
+          <ProductRating product={data?.product} />
+        </div>
+      )}
     </>
   );
 };

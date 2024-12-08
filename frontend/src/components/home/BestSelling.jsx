@@ -29,7 +29,7 @@ const BestSelling = () => {
     error: productsError,
   } = useGetProductsQuery(
     bestSellerId ? { product_category: bestSellerId } : null,
-    { skip: !bestSellerId } // Skip the query if the ID is not set
+    { skip: !bestSellerId }
   );
 
   // Handle errors for category and products

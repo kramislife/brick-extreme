@@ -1,10 +1,8 @@
 import React from "react";
-import { motion } from "framer-motion"; 
+import { motion } from "framer-motion";
 import ProductCard from "./ProductCard";
 
 const ProductSection = ({ products }) => {
-  console.log("Product Section :", products);
-
   return (
     <div className="col-span-1 lg:col-span-3">
       <motion.div

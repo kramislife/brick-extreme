@@ -65,7 +65,11 @@ export const getBestSellerProduct = catchAsyncErrors(async (req, res, next) => {
 //------------------------------------  GET A PRODUCT BY ID  => GET /products/:id  ------------------------------------
 
 export const getProductById = catchAsyncErrors(async (req, res, next) => {
-  const product = await Product.findById(req?.params?.id);
+  const product = await Product.findById(req?.params?.id)
+    .populate("product_category", "name")
+    .populate("product_collection", "name")
+    .populate("product_designer", "name")
+    .populate("product_skill_level", "name");
 
   if (!product) {
     return next(new ErrorHandler("Product not found", 400));
