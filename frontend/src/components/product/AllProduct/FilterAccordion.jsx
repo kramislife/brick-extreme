@@ -9,11 +9,11 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { PRODUCTS } from "@/constant/productData";
 
 const FilterAccordion = ({ 
-  categories, 
-  openCategories, 
+  categories,
+  openCategories,
   onCategoriesChange,
   selectedFilters,
-  onFilterChange 
+  onFilterChange
 }) => {
   // Calculate counts for each filter option
   const filterCounts = useMemo(() => {

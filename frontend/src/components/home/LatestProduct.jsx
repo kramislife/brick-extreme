@@ -6,6 +6,7 @@ import {
   useGetProductsQuery,
 } from "@/redux/api/productApi";
 import LoadingSpinner from "../layout/spinner/LoadingSpinner";
+import { toast } from "react-toastify";
 // import { PRODUCTS } from "@/constant/productData";
 
 const LatestProduct = () => {

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import FilterAccordion from "@/components/product/AllProduct/FilterAccordion";
 import ProductSection from "@/components/product/AllProduct/ProductSection";
 import { FILTER_CATEGORIES } from "@/constant/productData";
@@ -18,14 +18,12 @@ import { toast } from "react-toastify";
 
 const Products = () => {
   const [searchParams] = useSearchParams();
-  // const paramsObject = Object.fromEntries(searchParams.entries());
-
-  // console.log(paramsObject);
 
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [openCategories, setOpenCategories] = useState(
     Object.keys(FILTER_CATEGORIES)
   );
+
   const [selectedFilters, setSelectedFilters] = useState({
     price: [],
     theme: [],
@@ -35,7 +33,7 @@ const Products = () => {
     designer: [],
   });
 
-  // Only fetch best seller products
+  // FETCH PRODUCTS BASED ON SEARCH PARAMETERS
   const { data, isLoading, isError, error } = useGetProductsQuery(
     searchParams.toString()
   );
@@ -44,7 +42,7 @@ const Products = () => {
     if (isError) {
       toast.error(error?.data?.message);
     }
-  }, [error]);
+  }, [error, isError]);
 
   if (isLoading) {
     return (
@@ -66,9 +64,11 @@ const Products = () => {
     });
   };
 
-  // Filter the best seller products
-  const filteredProducts = data?.products.filter((product) => {
-    // If no filters are selected, show all products
+  // FILTER PRODUCTS
+
+  const filteredProducts = data?.products?.filter((product) => {
+    // IF NO FILTER IS SELECTED
+
     if (
       Object.values(selectedFilters).every((filters) => filters.length === 0)
     ) {
@@ -78,6 +78,8 @@ const Products = () => {
     // Price filter
     if (selectedFilters.price.length > 0) {
       const price = product.price;
+      console.log("PRICE:", price);
+
       const matchesPrice = selectedFilters.price.some((range) => {
         const [min, max] = range.split("-").map(Number);
         if (max) {
@@ -93,6 +95,7 @@ const Products = () => {
 
   return (
     <>
+      <Metadata title={"Products"} />
       <div className="mx-auto p-4">
         {/* Mobile Filter */}
         <div className="lg:hidden mb-4">
