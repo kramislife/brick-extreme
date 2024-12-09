@@ -167,7 +167,6 @@ const Products = () => {
             break;
 
           case 'Categories':
-            // Check if product has any of the selected categories
             const hasCategory = product.product_category.some(cat => 
               selectedValues.includes(cat._id)
             );
@@ -175,19 +174,22 @@ const Products = () => {
             break;
 
           case 'collection':
-            if (selectedValues.length > 0 && !selectedValues.includes(product.collection)) {
-              return false;
-            }
+            const hasCollection = product.product_collection?.some(col => 
+              selectedValues.includes(col._id)
+            );
+            if (!hasCollection) return false;
             break;
 
           case 'skillLevel':
-            if (selectedValues.length > 0 && !selectedValues.includes(product.skillLevel)) {
+            if (!product.product_skill_level) return false;
+            if (!selectedValues.includes(product.product_skill_level._id)) {
               return false;
             }
             break;
 
           case 'designer':
-            if (selectedValues.length > 0 && !selectedValues.includes(product.designer)) {
+            if (!product.product_designer) return false;
+            if (!selectedValues.includes(product.product_designer._id)) {
               return false;
             }
             break;
