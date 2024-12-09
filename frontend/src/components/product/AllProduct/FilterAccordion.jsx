@@ -13,7 +13,7 @@ const getDisplayName = (key) => {
     Categories: "Product Categories",
     collection: "Collections",
     skillLevel: "Skill Level",
-    designer: "Designers"
+    designer: "Designers",
   };
   return displayNames[key] || key;
 };
@@ -58,44 +58,37 @@ const FilterAccordion = ({
       }
 
       // Categories
-      if (categories.Categories) {
+      if (categories.Categories && product.product_category) {
         product.product_category.forEach((category) => {
-          const matchingOption = categories.Categories.find(
-            (opt) => opt.value === category._id
-          );
-          if (matchingOption) {
-            counts.Categories[matchingOption.value]++;
+          if (counts.Categories[category._id] !== undefined) {
+            counts.Categories[category._id]++;
           }
         });
       }
 
-      // Collection
-      if (categories.collection && product.collection) {
-        const matchingCollection = categories.collection.find(
-          (opt) => opt.value === product.collection
-        );
-        if (matchingCollection) {
-          counts.collection[matchingCollection.value]++;
-        }
+      // Collections
+      if (categories.collection && product.product_collection) {
+        product.product_collection.forEach((collection) => {
+          if (counts.collection[collection._id] !== undefined) {
+            counts.collection[collection._id]++;
+          }
+        });
       }
-
       // Skill Level
-      if (categories.skillLevel && product.skillLevel) {
-        const matchingSkillLevel = categories.skillLevel.find(
-          (opt) => opt.value === product.skillLevel
-        );
-        if (matchingSkillLevel) {
-          counts.skillLevel[matchingSkillLevel.value]++;
+      if (categories.skillLevel && product.product_skill_level) {
+        const skillLevelId =
+          product.product_skill_level?._id ?? product.product_skill_level;
+        if (skillLevelId && counts.skillLevel[skillLevelId] !== undefined) {
+          counts.skillLevel[skillLevelId]++;
         }
       }
 
       // Designer
-      if (categories.designer && product.designer) {
-        const matchingDesigner = categories.designer.find(
-          (opt) => opt.value === product.designer
-        );
-        if (matchingDesigner) {
-          counts.designer[matchingDesigner.value]++;
+      if (categories.designer && product.product_designer) {
+        const designerId =
+          product.product_designer?._id ?? product.product_designer;
+        if (designerId && counts.designer[designerId] !== undefined) {
+          counts.designer[designerId]++;
         }
       }
     });
