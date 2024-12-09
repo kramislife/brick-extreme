@@ -182,14 +182,20 @@ const Products = () => {
 
           case 'skillLevel':
             if (!product.product_skill_level) return false;
-            if (!selectedValues.includes(product.product_skill_level._id)) {
+            const skillLevelId = typeof product.product_skill_level === 'string'
+              ? product.product_skill_level
+              : product.product_skill_level._id;
+            if (!selectedValues.includes(skillLevelId)) {
               return false;
             }
             break;
 
           case 'designer':
             if (!product.product_designer) return false;
-            if (!selectedValues.includes(product.product_designer._id)) {
+            const designerId = typeof product.product_designer === 'string'
+              ? product.product_designer
+              : product.product_designer._id;
+            if (!selectedValues.includes(designerId)) {
               return false;
             }
             break;

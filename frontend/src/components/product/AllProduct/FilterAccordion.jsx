@@ -13,7 +13,7 @@ const getDisplayName = (key) => {
     Categories: "Product Categories",
     collection: "Collections",
     skillLevel: "Skill Level",
-    designer: "Designers"
+    designer: "Designers",
   };
   return displayNames[key] || key;
 };
@@ -74,19 +74,20 @@ const FilterAccordion = ({
           }
         });
       }
-
       // Skill Level
       if (categories.skillLevel && product.product_skill_level) {
-        const skillLevelId = product.product_skill_level._id;
-        if (counts.skillLevel[skillLevelId] !== undefined) {
+        const skillLevelId =
+          product.product_skill_level?._id ?? product.product_skill_level;
+        if (skillLevelId && counts.skillLevel[skillLevelId] !== undefined) {
           counts.skillLevel[skillLevelId]++;
         }
       }
 
       // Designer
       if (categories.designer && product.product_designer) {
-        const designerId = product.product_designer._id;
-        if (counts.designer[designerId] !== undefined) {
+        const designerId =
+          product.product_designer?._id ?? product.product_designer;
+        if (designerId && counts.designer[designerId] !== undefined) {
           counts.designer[designerId]++;
         }
       }
