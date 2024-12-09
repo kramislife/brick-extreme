@@ -25,6 +25,14 @@ const ProductSpecification = ({ product }) => {
     return null;
   }
 
+  const formatDimensions = () => {
+    const dims = [];
+    if (product?.product_length) dims.push(`L: ${product.product_length}`);
+    if (product?.product_width) dims.push(`W: ${product.product_width}`);
+    if (product?.product_height) dims.push(`H: ${product.product_height}`);
+    return dims.length > 0 ? [dims.join(' × ')] : [];
+  };
+
   const specifications = [
     {
       ...DEFAULT_SPECS.pieceCount,
@@ -38,23 +46,21 @@ const ProductSpecification = ({ product }) => {
     },
     {
       ...DEFAULT_SPECS.skillLevel,
-      items: product?.product_skill_level
-        ? [product.product_skill_level?.name]
+      items: product?.product_skill_level?.name
+        ? [product.product_skill_level.name]
         : [],
     },
     {
       ...DEFAULT_SPECS.dimensions,
-      items: [
-        product?.product_length && `Length: ${product.product_length}`,
-        product?.product_width && `Width: ${product.product_width}`,
-        product?.product_height && `Height: ${product.product_height}`,
-      ].filter(Boolean),
+      items: formatDimensions(),
     },
     {
       ...DEFAULT_SPECS.designer,
-      items: product?.product_designer ? [product.product_designer?.name] : [],
+      items: product?.product_designer?.name
+        ? [product.product_designer.name]
+        : [],
     },
-  ].filter((spec) => spec.items.some((item) => item));
+  ].filter((spec) => spec.items.length > 0);
 
   return (
     <div className="bg-gradient-to-b from-brand-start to-brand-end py-20 px-4">
@@ -65,7 +71,7 @@ const ProductSpecification = ({ product }) => {
         </h2>
 
         {specifications.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mx-5">
             {specifications.map((spec, index) => (
               <div
                 key={index}
