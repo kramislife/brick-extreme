@@ -7,6 +7,17 @@ import {
 } from "@/components/ui/accordion";
 import { Checkbox } from "@/components/ui/checkbox";
 
+const getDisplayName = (key) => {
+  const displayNames = {
+    price: "Price Range",
+    Categories: "Product Categories",
+    collection: "Collections",
+    skillLevel: "Skill Level",
+    designer: "Designers"
+  };
+  return displayNames[key] || key;
+};
+
 const FilterAccordion = ({
   categories,
   openCategories,
@@ -107,7 +118,7 @@ const FilterAccordion = ({
         >
           <AccordionTrigger className="px-4 py-3 transition-colors group hover:no-underline rounded-md">
             <span className="font-semibold text-white group-hover:text-red-400">
-              {key}
+              {getDisplayName(key)}
             </span>
           </AccordionTrigger>
           <AccordionContent className="px-4 py-3 bg-darkBrand rounded-b-md">
