@@ -13,12 +13,14 @@ import ViewProducts from "@/components/admin/Products/ViewProducts";
 import ViewOrder from "@/components/admin/Products/ViewOrder";
 import ViewUsers from "@/components/admin/Products/ViewUsers";
 import ViewReviews from "@/components/admin/Products/ViewReviews";
+import CategoriesPage from "@/pages/Categories/CategoriesPage";
 
 const UserRoutes = (
 	<>
 		{/* Public Routes */}
 		<Route index element={<Home />} />
 		<Route path="products" element={<Products />} />
+		<Route path="categories" element={<CategoriesPage />} />
 		
 		{/* Product Routes with Categories */}
 		<Route path="products/best-selling/:id" element={<ProductView />} />

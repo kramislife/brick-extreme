@@ -7,6 +7,17 @@ import {
 } from "@/components/ui/accordion";
 import { Checkbox } from "@/components/ui/checkbox";
 
+const getDisplayName = (key) => {
+  const displayNames = {
+    price: "Price Range",
+    Categories: "Product Categories",
+    collection: "Collections",
+    skillLevel: "Skill Level",
+    designer: "Designers"
+  };
+  return displayNames[key] || key;
+};
+
 const FilterAccordion = ({
   categories,
   openCategories,
@@ -18,16 +29,12 @@ const FilterAccordion = ({
   const filterCounts = useMemo(() => {
     const counts = {};
 
-    // Initialize counts for each category and option
+    // Initialize counts
     Object.entries(categories).forEach(([categoryKey, category]) => {
-      console.log(categoryKey, "  category ", category);
-
       counts[categoryKey] = {};
       category.forEach((option) => {
-        counts[categoryKey][option.label] = 0;
+        counts[categoryKey][option.value] = 0;
       });
-
-      console.log(counts[categoryKey], " CODE AFTER ");
     });
 
     // Count products for each filter option
@@ -35,72 +42,60 @@ const FilterAccordion = ({
       // Price ranges
       const price = product.price;
       if (categories.price) {
-        if (price >= 0 && price <= 100) {
-          counts.price["0-100"]++;
-        } else if (price > 100 && price <= 500) {
-          counts.price["101-500"]++;
-        } else if (price > 500 && price <= 1000) {
-          counts.price["501-1000"]++;
-        } else if (price > 1000) {
-          counts.price["1000+"]++;
+        categories.price.forEach((range) => {
+          const [min, max] = range.value.split("-").map(Number);
+          if (max) {
+            if (price >= min && price <= max) {
+              counts.price[range.value]++;
+            }
+          } else {
+            // Handle "1000+" case
+            if (price > min) {
+              counts.price[range.value]++;
+            }
+          }
+        });
+      }
+
+      // Categories
+      if (categories.Categories) {
+        product.product_category.forEach((category) => {
+          const matchingOption = categories.Categories.find(
+            (opt) => opt.value === category._id
+          );
+          if (matchingOption) {
+            counts.Categories[matchingOption.value]++;
+          }
+        });
+      }
+
+      // Collection
+      if (categories.collection && product.collection) {
+        const matchingCollection = categories.collection.find(
+          (opt) => opt.value === product.collection
+        );
+        if (matchingCollection) {
+          counts.collection[matchingCollection.value]++;
         }
       }
 
-      // Categories (from product categories)
-      const productCategories = product.product_category || [];
-      productCategories.forEach((category) => {
-        if (
-          categories.categories &&
-          counts.categories?.hasOwnProperty(category.name)
-        ) {
-          counts.categories[category.name]++;
-        }
-      });
-
-      // Collection (from details)
-      const collectionDetail = product.product_collection?.find(
-        (detail) => detail.label === "Collection"
-      );
-      if (collectionDetail && categories.collection) {
-        const collectionValue = collectionDetail.value
-          .toLowerCase()
-          .replace(/\s+/g, "-");
-        if (counts.collection?.hasOwnProperty(collectionValue)) {
-          counts.collection[collectionValue]++;
+      // Skill Level
+      if (categories.skillLevel && product.skillLevel) {
+        const matchingSkillLevel = categories.skillLevel.find(
+          (opt) => opt.value === product.skillLevel
+        );
+        if (matchingSkillLevel) {
+          counts.skillLevel[matchingSkillLevel.value]++;
         }
       }
 
-      // Skill Level (from specifications)
-      const skillLevelSpec = product.specifications?.find(
-        (spec) => spec.type === "skillLevel"
-      );
-      if (
-        skillLevelSpec &&
-        skillLevelSpec.items.length > 0 &&
-        categories.skillLevel
-      ) {
-        const skillLevel = skillLevelSpec.items[0].toLowerCase();
-        if (counts.skillLevel?.hasOwnProperty(skillLevel)) {
-          counts.skillLevel[skillLevel]++;
-        }
-      }
-
-      // Designer (from specifications)
-      console.log("PRODUCT SPECIFICATION:", product);
-
-      const designerSpec = product.specifications?.find(
-        (spec) => spec.type === "designer"
-      );
-      if (
-        designerSpec &&
-        designerSpec.items.length > 0 &&
-        categories.designer
-      ) {
-        const designer = designerSpec.items[0]
-          .toLowerCase()
-          .replace(/\s+/g, "-");
-        if (counts.designer?.hasOwnProperty(designer)) {
-          counts.designer[designer]++;
+      // Designer
+      if (categories.designer && product.designer) {
+        const matchingDesigner = categories.designer.find(
+          (opt) => opt.value === product.designer
+        );
+        if (matchingDesigner) {
+          counts.designer[matchingDesigner.value]++;
         }
       }
     });
@@ -123,7 +118,7 @@ const FilterAccordion = ({
         >
           <AccordionTrigger className="px-4 py-3 transition-colors group hover:no-underline rounded-md">
             <span className="font-semibold text-white group-hover:text-red-400">
-              {key}
+              {getDisplayName(key)}
             </span>
           </AccordionTrigger>
           <AccordionContent className="px-4 py-3 bg-darkBrand rounded-b-md">

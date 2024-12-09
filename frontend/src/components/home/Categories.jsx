@@ -1,49 +1,19 @@
 import React from "react";
-import { Button } from "@/components/ui/button";
 import { Card, CardFooter } from "@/components/ui/card";
-import image1 from "@/assets/subscribeAssets/lightsaber.png";
 import { motion, useInView } from "framer-motion";
 import { categoryAnimations } from "@/hooks/animationConfig";
-
-const categories = [
-  {
-    id: 1,
-    title: "Lifestyle and Dino Eggs",
-    image: image1,
-  },
-  {
-    id: 2,
-    title: "Pocket Monsters",
-    image: image1,
-  },
-  {
-    id: 3,
-    title: "Pocket Monsters",
-    image: image1,
-  },
-  {
-    id: 4,
-    title: "Pocket Monsters",
-    image: image1,
-  },
-  {
-    id: 5,
-    title: "Pocket Monsters",
-    image: image1,
-  },
-  {
-    id: 6,
-    title: "Pocket Monsters",
-    image: image1,
-  },
-];
+import { useNavigate } from "react-router-dom";
+import { categories } from "@/pages/Categories/CategoriesPage";
 
 const Categories = () => {
+  const navigate = useNavigate();
   const ref = React.useRef(null);
   const isInView = useInView(ref, { 
     once: true, 
     amount: 0.2,
   });
+
+  const displayedCategories = categories.slice(0, 6);
 
   return (
     <div ref={ref} className="p-4">
@@ -62,13 +32,12 @@ const Categories = () => {
         transition={{ duration: 0.5, delay: 0.2 }}
         className="flex items-center justify-center pb-10"
       >
-        <motion.div
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          transition={{ type: "spring", stiffness: 400, damping: 17 }}
+        <button
+          className="py-2 px-6 rounded-md text-white font-semibold bg-red-600 hover:bg-red-700"
+          onClick={() => navigate('/categories')}
         >
-          <Button className="bg-red-600 hover:bg-red-700">View All</Button>
-        </motion.div>
+          View All 
+        </button>
       </motion.div>
 
       <motion.div
@@ -77,7 +46,7 @@ const Categories = () => {
         animate={isInView ? "visible" : "hidden"}
         className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 mx-auto mb-8"
       >
-        {categories.map((category, index) => (
+        {displayedCategories.map((category, index) => (
           <motion.div
             key={category.id}
             variants={categoryAnimations.cardVariants}
