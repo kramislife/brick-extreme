@@ -143,35 +143,59 @@ const Products = () => {
     );
   }, [filterOptions]);
 
-  const filteredProducts = productData?.products?.filter((product) => {
-    if (
-      Object.values(selectedFilters).every((filters) => filters.length === 0)
-    ) {
-      return true;
-    }
-
-    // Price filter
-    if (selectedFilters.price.length > 0) {
-      const price = product.price;
-      const matchesPrice = selectedFilters.price.some((range) => {
-        const [min, max] = range.split("-").map(Number);
-        return max ? price >= min && price <= max : price > min;
-      });
-      if (!matchesPrice) return false;
-    }
-
-    // Other filters
-    for (const key of ["theme", "collection", "skillLevel", "designer"]) {
-      if (
-        selectedFilters[key]?.length > 0 &&
-        !selectedFilters[key].includes(product[key])
-      ) {
-        return false;
+  const filteredProducts = useMemo(() => {
+    if (!productData?.products) return [];
+    
+    return productData.products.filter((product) => {
+      // If no filters are selected, show all products
+      if (Object.values(selectedFilters).every((filters) => filters.length === 0)) {
+        return true;
       }
-    }
 
-    return true;
-  });
+      // Check each filter category
+      for (const [key, selectedValues] of Object.entries(selectedFilters)) {
+        if (selectedValues.length === 0) continue;
+
+        switch (key) {
+          case 'price':
+            const price = product.price;
+            const matchesPrice = selectedValues.some((range) => {
+              const [min, max] = range.split("-").map(Number);
+              return max ? price >= min && price <= max : price > min;
+            });
+            if (!matchesPrice) return false;
+            break;
+
+          case 'Categories':
+            // Check if product has any of the selected categories
+            const hasCategory = product.product_category.some(cat => 
+              selectedValues.includes(cat._id)
+            );
+            if (!hasCategory) return false;
+            break;
+
+          case 'collection':
+            if (selectedValues.length > 0 && !selectedValues.includes(product.collection)) {
+              return false;
+            }
+            break;
+
+          case 'skillLevel':
+            if (selectedValues.length > 0 && !selectedValues.includes(product.skillLevel)) {
+              return false;
+            }
+            break;
+
+          case 'designer':
+            if (selectedValues.length > 0 && !selectedValues.includes(product.designer)) {
+              return false;
+            }
+            break;
+        }
+      }
+      return true;
+    });
+  }, [productData?.products, selectedFilters]);
 
   if (isProductLoading) {
     return (
