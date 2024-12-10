@@ -2,6 +2,11 @@ import React from "react";
 import { ChevronLeft, ChevronRight, MoreHorizontal } from "lucide-react";
 
 const CustomPagination = ({ currentPage, totalPages, onPageChange }) => {
+  // Don't render pagination if there's only one page or no pages
+  if (totalPages <= 1) {
+    return null;
+  }
+
   const renderPaginationItems = () => {
     const items = [];
     const maxVisiblePages = 5;
@@ -13,8 +18,8 @@ const CustomPagination = ({ currentPage, totalPages, onPageChange }) => {
         onClick={() => onPageChange(1)}
         className={`h-9 w-9 rounded-md text-sm transition-colors 
           ${currentPage === 1 
-            ? "bg-red-600  text-white" 
-            : "hover:bg-red-600/80 text-white"}`}
+            ? "bg-red-600 text-white" 
+            : "hover:bg-red-600/80 text-gray-400"}`}
       >
         1
       </button>
@@ -49,8 +54,8 @@ const CustomPagination = ({ currentPage, totalPages, onPageChange }) => {
           onClick={() => onPageChange(i)}
           className={`h-9 w-9 rounded-md text-sm transition-colors 
             ${currentPage === i 
-              ? " bg-red-600  text-white" 
-              : "hover:bg-red-600/80"}`}
+              ? "bg-red-600 text-white" 
+              : "hover:bg-red-600/80 text-gray-400"}`}
         >
           {i}
         </button>
@@ -77,8 +82,8 @@ const CustomPagination = ({ currentPage, totalPages, onPageChange }) => {
           onClick={() => onPageChange(totalPages)}
           className={`h-9 w-9 rounded-md text-sm transition-colors 
             ${currentPage === totalPages 
-              ? " bg-red-600  text-white" 
-              : "hover:bg-red-600/80"}`}
+              ? "bg-red-600 text-white" 
+              : "hover:bg-red-600/80 text-gray-400"}`}
         >
           {totalPages}
         </button>
@@ -89,7 +94,7 @@ const CustomPagination = ({ currentPage, totalPages, onPageChange }) => {
   };
 
   return (
-    <nav className="mx-auto flex w-full justify-center mb-4 lg:ml-24">
+    <nav className="mx-auto flex w-full justify-center my-4">
       <div className="flex flex-row items-center gap-1">
         {/* Previous Button */}
         <button
@@ -97,8 +102,8 @@ const CustomPagination = ({ currentPage, totalPages, onPageChange }) => {
           disabled={currentPage === 1}
           className={`flex items-center gap-1 rounded-md px-3 py-2 text-sm transition-colors
             ${currentPage === 1 
-              ? "pointer-events-none text-gray-400" 
-              : "hover:bg-red-600/80"}`}
+              ? "pointer-events-none" 
+              : "text-gray-400 hover:bg-red-600/80 hover:text-white"}`}
         >
           <ChevronLeft className="h-4 w-4" />
           <span>Previous</span>
@@ -115,8 +120,8 @@ const CustomPagination = ({ currentPage, totalPages, onPageChange }) => {
           disabled={currentPage === totalPages}
           className={`flex items-center gap-1 rounded-md px-3 py-2 text-sm transition-colors
             ${currentPage === totalPages 
-              ? "pointer-events-none text-gray-400" 
-              : "hover:bg-red-600/80"}`}
+              ? "pointer-events-none" 
+              : "text-gray-400 hover:bg-red-600/80 hover:text-white"}`}
         >
           <span>Next</span>
           <ChevronRight className="h-4 w-4" />
