@@ -310,7 +310,7 @@ const Products = () => {
         </div>
 
         {/* Add pagination at the bottom */}
-        <div className="flex justify-center mt-8">
+        <div className="flex justify-center">
           <CustomPagination
             currentPage={currentPage}
             totalPages={productData?.totalPages || 1}
