@@ -111,22 +111,22 @@ const Products = () => {
         { label: "$501-$1000", value: "501-1000" },
         { label: "$1000+", value: "1000+" },
       ],
-      Categories:
+      product_category:
         categoriesData?.categories?.map((category) => ({
           label: category.name,
           value: category._id,
         })) || [],
-      collection:
+      product_collection:
         collectionsData?.collections?.map((collection) => ({
           label: collection.name,
           value: collection._id,
         })) || [],
-      skillLevel:
+      product_skill_level:
         skillLevelsData?.skillLevels?.map((level) => ({
           label: level.name,
           value: level._id,
         })) || [],
-      designer:
+      product_designer:
         designersData?.designers?.map((designer) => ({
           label: designer.name,
           value: designer._id,
@@ -148,7 +148,7 @@ const Products = () => {
   // Handle pagination changes by updating URL search params and scrolling to top
   const handlePageChange = (page) => {
     if (page < 1 || page > productData?.totalPages) return;
-    
+
     const newSearchParams = new URLSearchParams(searchParams);
     newSearchParams.set("page", page);
     setSearchParams(newSearchParams);
@@ -158,7 +158,7 @@ const Products = () => {
   // Handle filter changes by updating URL search params and selected filters state
   const handleFilterChange = (category, value) => {
     const newSearchParams = new URLSearchParams(searchParams);
-    
+
     setSelectedFilters((prev) => {
       const updated = {
         ...prev,
@@ -169,13 +169,13 @@ const Products = () => {
 
       Object.entries(updated).forEach(([key, values]) => {
         if (values && values.length > 0) {
-          newSearchParams.set(key, values.join(','));
+          newSearchParams.set(key, values.join(","));
         } else {
           newSearchParams.delete(key);
         }
       });
 
-      newSearchParams.delete('page');
+      newSearchParams.delete("page");
       setSearchParams(newSearchParams);
 
       return updated;

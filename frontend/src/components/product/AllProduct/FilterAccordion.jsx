@@ -1,4 +1,3 @@
-
 import React, { useEffect, useMemo } from "react";
 import {
   Accordion,
@@ -11,10 +10,10 @@ import { Checkbox } from "@/components/ui/checkbox";
 const getDisplayName = (key) => {
   const displayNames = {
     price: "Price Range",
-    Categories: "Product Categories",
-    collection: "Collections",
-    skillLevel: "Skill Level",
-    designer: "Designers",
+    product_category: "Product Categories",
+    product_collection: "Collections",
+    product_skill_level: "Skill Level",
+    product_designer: "Designers",
   };
   return displayNames[key] || key;
 };
@@ -36,6 +35,7 @@ const FilterAccordion = ({
       category.forEach((option) => {
         counts[categoryKey][option.value] = 0;
       });
+      // console.log(counts, " check ");
     });
 
     // Count products for each filter option
@@ -59,37 +59,43 @@ const FilterAccordion = ({
       }
 
       // Categories
-      if (categories.Categories && product.product_category) {
+      {
+        console.log(categories.product_category);
+      }
+      if (categories.product_category && product.product_category) {
         product.product_category.forEach((category) => {
-          if (counts.Categories[category._id] !== undefined) {
-            counts.Categories[category._id]++;
+          if (counts.product_category[category._id] !== undefined) {
+            counts.product_category[category._id]++;
           }
         });
       }
 
       // Collections
-      if (categories.collection && product.product_collection) {
+      if (categories.product_collection && product.product_collection) {
         product.product_collection.forEach((collection) => {
-          if (counts.collection[collection._id] !== undefined) {
-            counts.collection[collection._id]++;
+          if (counts.product_collection[collection._id] !== undefined) {
+            counts.product_collection[collection._id]++;
           }
         });
       }
       // Skill Level
-      if (categories.skillLevel && product.product_skill_level) {
+      if (categories.product_skill_level && product.product_skill_level) {
         const skillLevelId =
           product.product_skill_level?._id ?? product.product_skill_level;
-        if (skillLevelId && counts.skillLevel[skillLevelId] !== undefined) {
-          counts.skillLevel[skillLevelId]++;
+        if (
+          skillLevelId &&
+          counts.product_skill_level[skillLevelId] !== undefined
+        ) {
+          counts.product_skill_level[skillLevelId]++;
         }
       }
 
       // Designer
-      if (categories.designer && product.product_designer) {
+      if (categories.product_designer && product.product_designer) {
         const designerId =
           product.product_designer?._id ?? product.product_designer;
-        if (designerId && counts.designer[designerId] !== undefined) {
-          counts.designer[designerId]++;
+        if (designerId && counts.product_designer[designerId] !== undefined) {
+          counts.product_designer[designerId]++;
         }
       }
     });

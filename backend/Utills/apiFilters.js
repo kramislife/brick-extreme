@@ -38,17 +38,18 @@ class API_Filters {
   filters() {
     const queryCopy = { ...this.queryStr };
 
+    // Fields to exclude from the filters
     const fieldsToRemove = ["keyword", "page"];
     fieldsToRemove.forEach((element) => delete queryCopy[element]);
 
-    // Arrays to store OR conditions for product_category and product_collection
+    // Arrays to store OR conditions for specific fields
     const categoryConditions = [];
     const collectionConditions = [];
     const otherConditions = [];
 
     for (let key in queryCopy) {
       if (queryCopy[key]) {
-        // If the filter contains multiple values separated by commas, split them into an array
+        // Handle filters with multiple values (comma-separated)
         if (
           typeof queryCopy[key] === "string" &&
           queryCopy[key].includes(",")
@@ -58,7 +59,7 @@ class API_Filters {
             .map((value) => value.trim());
         }
 
-        // Handle product_category filters (with OR between multiple values)
+        // Handle product_category filters (with OR logic)
         if (key === "product_category") {
           if (Array.isArray(queryCopy[key])) {
             queryCopy[key].forEach((value) => {
@@ -68,7 +69,7 @@ class API_Filters {
             categoryConditions.push({ [key]: queryCopy[key] });
           }
         }
-        // Handle product_collection filters (with OR between multiple values)
+        // Handle product_collection filters (with OR logic)
         else if (key === "product_collection") {
           if (Array.isArray(queryCopy[key])) {
             queryCopy[key].forEach((value) => {
@@ -78,32 +79,46 @@ class API_Filters {
             collectionConditions.push({ [key]: queryCopy[key] });
           }
         }
-        // For other filters, handle using $in
+        // Handle multiple price ranges
+        else if (key === "price") {
+          const priceRanges = Array.isArray(queryCopy[key])
+            ? queryCopy[key]
+            : [queryCopy[key]];
+
+          priceRanges.forEach((range) => {
+            const [minPrice, maxPrice] = range.split("-").map(parseFloat);
+            if (!isNaN(minPrice) && !isNaN(maxPrice)) {
+              otherConditions.push({
+                price: { $gte: minPrice, $lte: maxPrice },
+              });
+            }
+          });
+        }
+        // Handle other filters using $in
         else {
           otherConditions.push({ [key]: { $in: queryCopy[key] } });
         }
       }
     }
 
-    // Combine all conditions with $or logic
+    // Combine conditions with $or and $and logic
     const orConditions = [];
 
     if (categoryConditions.length > 0) {
-      orConditions.push({ $or: categoryConditions }); // $or for product_category
+      orConditions.push({ $or: categoryConditions });
     }
 
     if (collectionConditions.length > 0) {
-      orConditions.push({ $or: collectionConditions }); // $or for product_collection
+      orConditions.push({ $or: collectionConditions });
     }
 
-    // If there are other conditions (like price, rating, etc.), include them
     if (otherConditions.length > 0) {
-      orConditions.push(...otherConditions); // $or for other filters like price
+      orConditions.push(...otherConditions);
     }
 
-    // Apply the $or conditions if any
+    // Apply the query
     if (orConditions.length > 0) {
-      this.query = this.query.find({ $or: orConditions });
+      this.query = this.query.find({ $and: orConditions });
     }
 
     return this;
