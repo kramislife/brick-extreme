@@ -145,87 +145,41 @@ const Products = () => {
     );
   }, [filterOptions]);
 
-  const filteredProducts = useMemo(() => {
-    if (!productData?.products) return [];
-    
-    return productData.products.filter((product) => {
-      // If no filters are selected, show all products
-      if (Object.values(selectedFilters).every((filters) => filters.length === 0)) {
-        return true;
-      }
-
-      // Check each filter category
-      for (const [key, selectedValues] of Object.entries(selectedFilters)) {
-        if (selectedValues.length === 0) continue;
-
-        switch (key) {
-          case 'price':
-            const price = product.price;
-            const matchesPrice = selectedValues.some((range) => {
-              const [min, max] = range.split("-").map(Number);
-              return max ? price >= min && price <= max : price > min;
-            });
-            if (!matchesPrice) return false;
-            break;
-
-          case 'Categories':
-            const hasCategory = product.product_category.some(cat => 
-              selectedValues.includes(cat._id)
-            );
-            if (!hasCategory) return false;
-            break;
-
-          case 'collection':
-            const hasCollection = product.product_collection?.some(col => 
-              selectedValues.includes(col._id)
-            );
-            if (!hasCollection) return false;
-            break;
-
-          case 'skillLevel':
-            if (!product.product_skill_level) return false;
-            const skillLevelId = typeof product.product_skill_level === 'string'
-              ? product.product_skill_level
-              : product.product_skill_level._id;
-            if (!selectedValues.includes(skillLevelId)) {
-              return false;
-            }
-            break;
-
-          case 'designer':
-            if (!product.product_designer) return false;
-            const designerId = typeof product.product_designer === 'string'
-              ? product.product_designer
-              : product.product_designer._id;
-            if (!selectedValues.includes(designerId)) {
-              return false;
-            }
-            break;
-        }
-      }
-      return true;
-    });
-  }, [productData?.products, selectedFilters]);
-
+  // Handle pagination changes by updating URL search params and scrolling to top
   const handlePageChange = (page) => {
     if (page < 1 || page > productData?.totalPages) return;
     
     const newSearchParams = new URLSearchParams(searchParams);
     newSearchParams.set("page", page);
+    setSearchParams(newSearchParams);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  // Handle filter changes by updating URL search params and selected filters state
+  const handleFilterChange = (category, value) => {
+    const newSearchParams = new URLSearchParams(searchParams);
     
-    // Preserve existing filters when changing pages
-    if (selectedFilters) {
-      Object.entries(selectedFilters).forEach(([key, values]) => {
+    setSelectedFilters((prev) => {
+      const updated = {
+        ...prev,
+        [category]: prev[category]?.includes(value)
+          ? prev[category].filter((v) => v !== value)
+          : [...(prev[category] || []), value],
+      };
+
+      Object.entries(updated).forEach(([key, values]) => {
         if (values && values.length > 0) {
           newSearchParams.set(key, values.join(','));
         } else {
           newSearchParams.delete(key);
         }
       });
-    }
-    
-    setSearchParams(newSearchParams);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+
+      newSearchParams.delete('page');
+      setSearchParams(newSearchParams);
+
+      return updated;
+    });
   };
 
   if (isProductLoading) {
@@ -264,14 +218,7 @@ const Products = () => {
                   openCategories={openCategories}
                   onCategoriesChange={setOpenCategories}
                   selectedFilters={selectedFilters}
-                  onFilterChange={(category, value) => {
-                    setSelectedFilters((prev) => ({
-                      ...prev,
-                      [category]: prev[category]?.includes(value)
-                        ? prev[category].filter((v) => v !== value)
-                        : [...(prev[category] || []), value],
-                    }));
-                  }}
+                  onFilterChange={handleFilterChange}
                   products={productData?.products || []}
                 />
               </div>
@@ -292,21 +239,14 @@ const Products = () => {
                 openCategories={openCategories}
                 onCategoriesChange={setOpenCategories}
                 selectedFilters={selectedFilters}
-                onFilterChange={(category, value) => {
-                  setSelectedFilters((prev) => ({
-                    ...prev,
-                    [category]: prev[category]?.includes(value)
-                      ? prev[category].filter((v) => v !== value)
-                      : [...(prev[category] || []), value],
-                  }));
-                }}
+                onFilterChange={handleFilterChange}
                 products={productData?.products || []}
               />
             </div>
           </div>
 
           {/* Products Grid */}
-          <ProductSection products={filteredProducts || []} />
+          <ProductSection products={productData?.products || []} />
         </div>
 
         {/* Add pagination at the bottom */}
