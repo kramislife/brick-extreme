@@ -20,12 +20,14 @@ import {
 } from "@/components/ui/sheet";
 import LoadingSpinner from "@/components/layout/spinner/LoadingSpinner";
 import { toast } from "react-toastify";
+import CustomPagination from "@/components/product/shared/CustomPagination";
 
 const Products = () => {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [openCategories, setOpenCategories] = useState([]);
   const [selectedFilters, setSelectedFilters] = useState({});
+  const currentPage = Number(searchParams.get("page")) || 1;
 
   // Fetch data for products and filters
   const {
@@ -205,6 +207,27 @@ const Products = () => {
     });
   }, [productData?.products, selectedFilters]);
 
+  const handlePageChange = (page) => {
+    if (page < 1 || page > productData?.totalPages) return;
+    
+    const newSearchParams = new URLSearchParams(searchParams);
+    newSearchParams.set("page", page);
+    
+    // Preserve existing filters when changing pages
+    if (selectedFilters) {
+      Object.entries(selectedFilters).forEach(([key, values]) => {
+        if (values && values.length > 0) {
+          newSearchParams.set(key, values.join(','));
+        } else {
+          newSearchParams.delete(key);
+        }
+      });
+    }
+    
+    setSearchParams(newSearchParams);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   if (isProductLoading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
@@ -284,6 +307,15 @@ const Products = () => {
 
           {/* Products Grid */}
           <ProductSection products={filteredProducts || []} />
+        </div>
+
+        {/* Add pagination at the bottom */}
+        <div className="flex justify-center mt-8">
+          <CustomPagination
+            currentPage={currentPage}
+            totalPages={productData?.totalPages || 1}
+            onPageChange={handlePageChange}
+          />
         </div>
       </div>
     </>

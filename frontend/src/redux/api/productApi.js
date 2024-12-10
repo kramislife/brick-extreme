@@ -1,3 +1,4 @@
+
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const productApi = createApi({
@@ -7,10 +8,24 @@ export const productApi = createApi({
   }),
   endpoints: (builder) => ({
     getProducts: builder.query({
-      query: (params) => {
-        const queryParams = new URLSearchParams(params).toString();
-        return `/products?${queryParams}`;
+      query: (queryString) => {
+        // If queryString is an object, convert it to string
+        if (typeof queryString === 'object') {
+          const params = new URLSearchParams();
+          Object.entries(queryString).forEach(([key, value]) => {
+            if (Array.isArray(value)) {
+              params.append(key, value.join(','));
+            } else {
+              params.append(key, value);
+            }
+          });
+          queryString = params.toString();
+        }
+        
+        return `/products?${queryString}`;
       },
+      // Add tags for cache invalidation if needed
+      providesTags: ['Products'],
     }),
 
     getCategory: builder.query({
@@ -47,3 +62,4 @@ export const {
   useGetCategoryByKeyQuery,
   useGetProductDetailsQuery,
 } = productApi;
+
