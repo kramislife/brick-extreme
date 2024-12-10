@@ -1,3 +1,4 @@
+
 import catchAsyncErrors from "../middlewares/catchAsyncErrors.js";
 import Category from "../models/category.model.js";
 import Product from "../models/product.model.js";
@@ -7,26 +8,27 @@ import ErrorHandler from "../Utills/customErrorHandler.js";
 //------------------------------------  GET ALL PRODUCT => GET /products  ------------------------------------
 
 export const getProduct = catchAsyncErrors(async (req, res, next) => {
-  // API Filters & Search
-
   const resPerPage = 9;
+  const currentPage = Number(req.query.page) || 1;
 
   const apiFilters = new API_Filters(Product, req.query).search().filters();
 
-  let products = await apiFilters.query;
-
-  if (!products) {
-    return next(new ErrorHandler("Product not found", 404));
-  }
-
-  let filteredProductCount = products?.length;
-
+  // Get total count before pagination
+  const totalProducts = await apiFilters.query.clone();
+  const filteredProductCount = totalProducts.length;
+  
+  // Apply pagination
   apiFilters.pagination(resPerPage);
+  const products = await apiFilters.query.clone();
 
-  products = await apiFilters.query.clone();
+  // Calculate total pages
+  const totalPages = Math.ceil(filteredProductCount / resPerPage);
 
   res.status(200).json({
     resPerPage,
+    currentPage,
+    totalPages,
+    filteredProductCount,
     message: `${filteredProductCount} Products retrieved successfully`,
     products,
   });

@@ -63,14 +63,14 @@ const ProductDetails = ({ product, containerVariants, itemVariants }) => {
               className="relative flex flex-col-reverse md:flex-row gap-4"
             >
               {/* Thumbnails */}
-              <div className="w-full md:w-[130px] h-[130px] md:h-[640px] overflow-x-auto md:overflow-y-auto overflow-y-hidden scrollbar-none">
+              <div className="w-full md:w-[130px] overflow-x-auto md:overflow-y-auto scrollbar-none">
                 <div className="flex flex-row md:flex-col gap-2">
                   {product.product_images.map((image, index) => (
                     <button
                       id={`thumbnail-${index}`}
                       key={index}
                       onClick={() => selectImage(index)}
-                      className={`min-w-[130px] md:min-w-0 h-[130px] rounded-lg overflow-hidden border-2 transition-all ${
+                      className={`min-w-[130px] md:min-w-0 aspect-square rounded-lg overflow-hidden border-2 transition-all ${
                         currentImageIndex === index
                           ? "border-red-600 border-4"
                           : "border-transparent"
@@ -79,7 +79,7 @@ const ProductDetails = ({ product, containerVariants, itemVariants }) => {
                       <img
                         src={image.url}
                         alt={`Thumbnail ${index + 1}`}
-                        className="w-full h-full aspect-square hover:scale-110 transition-transform duration-300"
+                        className="w-full h-full object-fill hover:scale-110 transition-transform duration-300"
                       />
                     </button>
                   ))}
@@ -87,13 +87,13 @@ const ProductDetails = ({ product, containerVariants, itemVariants }) => {
               </div>
 
               {/* Main Image Display */}
-              <div className="flex-1 relative h-[640px] bg-blue-950 rounded-lg overflow-hidden">
+              <div className="flex-1 relative bg-blue-950 rounded-lg overflow-hidden aspect-square">
                 <AnimatePresence mode="wait">
                   <motion.img
                     key={currentImageIndex}
                     src={product.product_images[currentImageIndex].url}
                     alt={`Product view ${currentImageIndex + 1}`}
-                    className="w-full h-full aspect-square"
+                    className="w-full h-full object-fill"
                     initial={{ opacity: 0, x: 100 }}
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: -100 }}
@@ -237,6 +237,7 @@ const ProductDetails = ({ product, containerVariants, itemVariants }) => {
                   {product.product_description_1}
                 </p>
               )}
+              
               {product?.product_description_1 && (
                 <p className="text-gray-300 mb-3 leading-loose">
                   {product.product_description_1}
