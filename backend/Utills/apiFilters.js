@@ -166,27 +166,27 @@ class API_Filters {
   }
 
   // method to handle sorting
-  sort() {
-    if (this.queryStr.sort) {
-      const [field, direction] = this.queryStr.sort.split('_');
-      const sortOrder = direction === 'asc' ? 1 : -1;
+  // sort() {
+  //   if (this.queryStr.sort) {
+  //     const [field, direction] = this.queryStr.sort.split('_');
+  //     const sortOrder = direction === 'asc' ? 1 : -1;
       
-      switch (field) {
-        case 'name':
-          this.query = this.query.sort({ product_name: sortOrder });
-          break;
-        case 'price':
-          this.query = this.query.sort({ price: sortOrder });
-          break;
-        case 'date':
-          this.query = this.query.sort({ createdAt: sortOrder });
-          break;
-        default:
-          this.query = this.query.sort({ createdAt: -1 }); // Default sort
-      }
-    }
-    return this;
-  }
+  //     switch (field) {
+  //       case 'name':
+  //         this.query = this.query.sort({ product_name: sortOrder });
+  //         break;
+  //       case 'price':
+  //         this.query = this.query.sort({ price: sortOrder });
+  //         break;
+  //       case 'date':
+  //         this.query = this.query.sort({ createdAt: sortOrder });
+  //         break;
+  //       default:
+  //         this.query = this.query.sort({ createdAt: -1 }); // Default sort
+  //     }
+  //   }
+  //   return this;
+  // }
 }
 
 export default API_Filters;

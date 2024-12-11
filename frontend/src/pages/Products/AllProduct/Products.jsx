@@ -24,6 +24,32 @@ import CustomPagination from "@/components/product/shared/CustomPagination";
 import ProductSort from "@/components/product/shared/ProductSort";
 import useScrollToTop from "@/hooks/useScrollToTop";
 
+const sortProducts = (products, sortType) => {
+  const sortedProducts = [...products];
+  
+  // Helper function to calculate discounted price
+  const getDiscountedPrice = (product) => {
+    return product.price - (product.price * (product.discount || 0)) / 100;
+  };
+
+  switch (sortType) {
+    case 'name_asc':
+      return sortedProducts.sort((a, b) => a.product_name.localeCompare(b.product_name));
+    case 'name_desc':
+      return sortedProducts.sort((a, b) => b.product_name.localeCompare(a.product_name));
+    case 'price_asc':
+      return sortedProducts.sort((a, b) => getDiscountedPrice(a) - getDiscountedPrice(b));
+    case 'price_desc':
+      return sortedProducts.sort((a, b) => getDiscountedPrice(b) - getDiscountedPrice(a));
+    case 'date_asc':
+      return sortedProducts.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+    case 'date_desc':
+      return sortedProducts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    default:
+      return sortedProducts;
+  }
+};
+
 const Products = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -156,6 +182,19 @@ const Products = () => {
     );
   }, [filterOptions]);
 
+  // Create a memoized sorted products array
+  const sortedProducts = useMemo(() => {
+    return sortProducts(productData?.allProducts || [], currentSort);
+  }, [productData?.allProducts, currentSort]);
+
+  // Calculate paginated products
+  const paginatedProducts = useMemo(() => {
+    const itemsPerPage = 9; 
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return sortedProducts.slice(startIndex, endIndex);
+  }, [sortedProducts, currentPage]);
+
   // Separated page change handler
   const handlePageChange = (page) => {
     if (page < 1 || page > productData?.totalPages) return;
@@ -166,13 +205,13 @@ const Products = () => {
     scrollToTop();
   };
 
-  // Separated sort change handler
+  // Update handleSortChange to just update the sort state
   const handleSortChange = (value) => {
-    const newSearchParams = new URLSearchParams(searchParams);
-    newSearchParams.set("sort", value);
-    newSearchParams.delete("page");
-    setSearchParams(newSearchParams);
     setCurrentSort(value);
+    // Reset to first page when sorting changes
+    const newSearchParams = new URLSearchParams(searchParams);
+    newSearchParams.set("page", "1");
+    setSearchParams(newSearchParams);
     scrollToTop();
   };
 
@@ -292,7 +331,7 @@ const Products = () => {
                 onSortChange={handleSortChange}
               />
             </div>
-            <ProductSection products={productData?.products || []} />
+            <ProductSection products={paginatedProducts} />
           </div>
         </div>
 
