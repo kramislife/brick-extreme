@@ -59,7 +59,7 @@ export const createOrder = catchAsyncErrors(async (req, res, next) => {
   }
 
   // CREATE NEW ORDER
-  const newOrder = new Order({
+  const newOrder = await Order({
     user: req.user.user_id,
     shippingAddress,
     billingAddress,
