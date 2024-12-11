@@ -8,8 +8,8 @@ import {
   generateCookies,
 } from "../Utills/generateToken.js";
 import { getResetPasswordTemplate } from "../Utills/Emails/ResetEmailTemplate.js";
-import sendEmail from "../Utills/sendEmail.js";
 import Address from "../models/userAddress.model.js";
+import sendVerificationEmail from "../Utills/sendEmail.js";
 
 // --------------------------------------- REGISTER USER --------------------------------------- //
 export const registerUser = catchAsyncErrors(async (req, res, next) => {
@@ -45,12 +45,13 @@ export const registerUser = catchAsyncErrors(async (req, res, next) => {
   const verificationLink = `http://localhost:3000/verify/${token}`;
 
   // 7. SEND THE VERIFICATION LINK TO THE USER'S EMAIL
-  //await sendVerificationEmail(new_user, verificationLink);
+  await sendVerificationEmail(new_user, verificationLink);
 
   // 8. SEND RESPONSE TO THE USER
   res.status(201).json({
     status: "success",
-    message: "User created successfully",
+    message:
+      "User registered successfully. Please visit your email to verify your account",
     new_user,
   });
 });

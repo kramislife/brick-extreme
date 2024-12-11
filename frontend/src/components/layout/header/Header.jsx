@@ -19,11 +19,27 @@ import {
 import logo from "@/assets/logo.png";
 import { NavLink, useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useGetMeQuery } from "@/redux/api/userApi";
+import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
 
 const Header = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
+
+  const { isError, error, isLoading } = useGetMeQuery();
+  const { user } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    if (isError) {
+      toast.error(error?.data?.message);
+    }
+  }, [isError, error]);
+
+  if (isLoading) {
+    return;
+  }
 
   // Mock data - Replace with actual data from your backend
   const recentSearches = [
@@ -42,6 +58,20 @@ const Header = () => {
   const handleSearch = (e) => {
     e.preventDefault();
     console.log("Searching for:", searchQuery);
+  };
+
+  const handleLoginClick = () => {
+    if (user) {
+      toast.success("User Logged in ");
+      if (user.role === "admin" || user.role === "employee") {
+        toast.success(`Welcome ${user.name}`);
+        navigate("/admin");
+      } else {
+        navigate("/products");
+      }
+    } else {
+      navigate("/login");
+    }
   };
 
   return (
@@ -82,8 +112,8 @@ const Header = () => {
               <div className="h-full px-6 py-8">
                 {/* Header */}
                 <div className="flex items-center justify-between mb-8">
-                  <h2 className="text-3xl font-bold text-white bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
-                    Discover Products
+                  <h2 className="text-2xl font-semibold text-white bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
+                    Search
                   </h2>
                 </div>
 
@@ -123,7 +153,10 @@ const Header = () => {
                           >
                             <Search size={14} className="text-gray-400" />
                             <span className="flex-1 text-left">{search}</span>
-                            <ArrowRight size={14} className="opacity-0 group-hover:opacity-100 transition-all duration-200 transform group-hover:translate-x-1" />
+                            <ArrowRight
+                              size={14}
+                              className="opacity-0 group-hover:opacity-100 transition-all duration-200 transform group-hover:translate-x-1"
+                            />
                           </button>
                         </li>
                       ))}
@@ -136,22 +169,26 @@ const Header = () => {
                       <div className="p-2 bg-purple-500/20 rounded-lg">
                         <Sparkles size={20} className="text-purple-400" />
                       </div>
-                      <h3 className="text-xl font-semibold">Popular Categories</h3>
+                      <h3 className="text-xl font-semibold">
+                        Popular Categories
+                      </h3>
                     </div>
                     <ul className="space-y-4">
                       {popularCategories.map((category, index) => (
                         <li key={index}>
                           <button
-                            onClick={() => navigate(`/category/${category.toLowerCase()}`)}
+                            onClick={() =>
+                              navigate(`/category/${category.toLowerCase()}`)
+                            }
                             className="w-full p-2 rounded-lg hover:bg-white/5 transition-all duration-200 group"
                           >
                             <div className="flex items-center justify-between">
                               <span className="text-gray-300 group-hover:text-white transition-colors duration-200">
                                 {category}
                               </span>
-                              <ArrowRight 
-                                size={16} 
-                                className="text-gray-400 transform transition-all duration-200 group-hover:translate-x-1 group-hover:text-white" 
+                              <ArrowRight
+                                size={16}
+                                className="text-gray-400 transform transition-all duration-200 group-hover:translate-x-1 group-hover:text-white"
                               />
                             </div>
                           </button>
@@ -203,7 +240,7 @@ const Header = () => {
           {/* User Dropdown - Only visible on desktop */}
           <div className="relative hidden md:block">
             <button
-              onClick={() => navigate("/login")}
+              onClick={handleLoginClick}
               className="text-white hover:text-gray-200"
             >
               <User size={24} />

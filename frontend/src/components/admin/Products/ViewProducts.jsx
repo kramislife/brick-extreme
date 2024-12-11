@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import {
   useReactTable,
   getCoreRowModel,
@@ -8,68 +8,42 @@ import {
 } from "@tanstack/react-table";
 import { Edit2, Trash2 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import SearchBar from '@/components/admin/table/SearchBar';
-import ShowEntries from '@/components/admin/table/ShowEntries';
-import TableLayout from '@/components/admin/table/TableLayout';
-import Pagination from '@/components/admin/table/Pagination';
+import SearchBar from "@/components/admin/table/SearchBar";
+import ShowEntries from "@/components/admin/table/ShowEntries";
+import TableLayout from "@/components/admin/table/TableLayout";
+import Pagination from "@/components/admin/table/Pagination";
+import { useGetProductsQuery } from "@/redux/api/productApi";
+import LoadingSpinner from "@/components/layout/spinner/LoadingSpinner";
 
 const ViewProducts = () => {
-  // Sample data with added status
-  const [data, setData] = useState([
-    {
-      id: 1,
-      name: "Wireless Headphones",
-      price: 129.99,
-      category: "Electronics",
-      stock: 100,
-      status: "Active",
-    },
-    {
-      id: 2,
-      name: "Smart Watch",
-      price: 199.5,
-      category: "Wearables",
-      stock: 50,
-      status: "Low Stock",
-    },
-    {
-      id: 3,
-      name: "Portable Speaker",
-      price: 79.99,
-      category: "Audio",
-      stock: 0,
-      status: "Out of Stock",
-    },
-    {
-      id: 4,
-      name: "Portable Speaker",
-      price: 79.99,
-      category: "Audio",
-      stock: 0,
-      status: "Out of Stock",
-    },
-    {
-      id: 5,
-      name: "Portable Speaker",
-      price: 79.99,
-      category: "Audio",
-      stock: 0,
-      status: "Out of Stock",
-    },
-  ]);
+  const { data: productData, isLoading, error } = useGetProductsQuery();
 
+  // Extract product data or fallback to an empty array if not available
+  const products =
+    productData?.allProducts?.map((product, index) => ({
+      product_id: product?._id,
+      id: index + 1,
+      name: product?.product_name,
+      price: product?.price,
+      category: product?.product_category
+        .map((category) => category?.name)
+        .join(", "),
+      collection: product?.product_collection
+        .map((collection) => collection.name)
+        .join(", "),
+      stock: product?.stock,
+      status:
+        product?.stock > 50
+          ? "Active"
+          : product?.stock > 0
+          ? "Low Stock"
+          : "Out of Stock",
+    })) || [];
+
+  // Global filter state
   const [globalFilter, setGlobalFilter] = useState("");
 
-  // Handle delete product
-  const handleDelete = (id) => {
-    setData((prevData) => prevData.filter((product) => product.id !== id));
-  };
-
-  // Handle edit product (placeholder)
-  const handleEdit = (product) => {
-    console.log("Edit product:", product);
-  };
-
+  // Table columns
   const columns = useMemo(
     () => [
       {
@@ -88,6 +62,10 @@ const ViewProducts = () => {
       {
         header: "Category",
         accessorKey: "category",
+      },
+      {
+        header: "Collection",
+        accessorKey: "collection",
       },
       {
         header: "Stock",
@@ -125,7 +103,7 @@ const ViewProducts = () => {
               <Edit2 size={18} />
             </button>
             <button
-              onClick={() => handleDelete(row.original.id)}
+              onClick={() => handleDelete(row.original.product_id)}
               className="text-red-600 hover:text-red-800 p-1 rounded-full hover:bg-red-100 transition-colors"
               title="Delete Product"
             >
@@ -138,17 +116,54 @@ const ViewProducts = () => {
     []
   );
 
+  // Table configuration
+  {
+    console.log("PRODUCTS: ", products);
+  }
   const table = useReactTable({
-    data,
+    data: products,
     columns,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
+    getPaginationRowModel: getPaginationRowModel({
+      pageCount: Math.ceil(products.length / 10), // Calculates page count based on 10 rows per page
+    }),
     getFilteredRowModel: getFilteredRowModel(),
     state: {
       globalFilter,
     },
     onGlobalFilterChange: setGlobalFilter,
   });
+
+  // Handle loading and error states
+  if (isLoading) {
+    return <LoadingSpinner />;
+  }
+
+  if (error) {
+    return <div>Error loading products</div>;
+  }
+
+  // Handle delete product
+  const handleDelete = async (product_id) => {
+    try {
+      const response = await fetch(`/api/products/${product_id}`, {
+        method: "DELETE",
+      });
+      if (response.ok) {
+        console.log(`Deleted product with ID: ${product_id}`);
+      } else {
+        console.error("Failed to delete product.");
+      }
+    } catch (err) {
+      console.error("Error deleting product:", err);
+    }
+  };
+
+  // Handle edit product (placeholder)
+  const handleEdit = (product) => {
+    console.log("Edit product:", product);
+    // Add your edit logic here
+  };
 
   return (
     <div className="container mx-auto py-6 px-4">
@@ -160,22 +175,22 @@ const ViewProducts = () => {
           Manage your product inventory
         </p>
       </div>
-      
+
       <Card className="bg-darkBrand border-none">
         <CardContent className="p-10">
           <div className="flex flex-col md:flex-row justify-between gap-6 mb-10">
-            <ShowEntries 
+            <ShowEntries
               value={table.getState().pagination.pageSize}
               onChange={table.setPageSize}
             />
-            <SearchBar 
+            <SearchBar
               value={globalFilter}
               onChange={setGlobalFilter}
               placeholder="Search products..."
             />
           </div>
 
-          <TableLayout 
+          <TableLayout
             headerGroups={table.getHeaderGroups()}
             rows={table.getRowModel().rows}
             flexRender={flexRender}

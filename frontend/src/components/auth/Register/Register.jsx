@@ -1,11 +1,78 @@
-import { Link } from "react-router-dom";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import { useRegisterMutation } from "@/redux/api/authApi";
 import RegisterImg from "@/assets/authAssets/Register.png";
 import { registerAnimations } from "@/hooks/animationConfig";
 
 const Register = () => {
+  const [formData, setFormData] = useState({
+    fullname: "",
+    email: "",
+    username: "",
+    password: "",
+    confirmPassword: "",
+    contact: "",
+  });
+
+  const navigate = useNavigate();
+  const [register, { isLoading, isError, error, data, isSuccess }] =
+    useRegisterMutation();
+
+  useEffect(() => {
+    if (isError) {
+      const errorMessage =
+        error?.data?.message || "An error occurred. Please try again.";
+      toast.error(errorMessage);
+    }
+
+    if (isSuccess) {
+      toast.success(data?.message);
+      navigate("/login");
+    }
+  }, [isError, error, isSuccess, data, navigate]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const submitHandler = (e) => {
+    e.preventDefault();
+
+    if (
+      !formData.fullname ||
+      !formData.email ||
+      !formData.username ||
+      !formData.contact
+    ) {
+      return toast.error("All fields are required!");
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      return toast.error("Invalid email format.");
+    }
+
+    if (formData.password.length < 6) {
+      return toast.error("Password should be at least 6 characters long.");
+    }
+
+    if (formData.password !== formData.confirmPassword) {
+      return toast.error("Password and Confirm password should match.");
+    }
+
+    const signUpData = {
+      name: formData.fullname,
+      email: formData.email,
+      username: formData.username,
+      password: formData.password,
+      contact_number: formData.contact,
+    };
+
+    register(signUpData);
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-brand-gradient px-4 py-10">
       <div className="w-full max-w-7xl flex gap-12 items-center">
@@ -39,17 +106,25 @@ const Register = () => {
               </h1>
             </motion.div>
 
-            <form className="space-y-6">
+            <form className="space-y-6" onSubmit={submitHandler}>
               {/* Full Name Input */}
               <motion.div
                 {...registerAnimations.getInputVariants(0.6)}
                 className="space-y-4"
               >
+                <label htmlFor="fullname" className="sr-only">
+                  Full Name
+                </label>
                 <input
+                  id="fullname"
                   type="text"
+                  name="fullname"
                   placeholder="Full Name"
-                  className="bg-darkBrand/50 w-full px-3 border-white/20 text-white placeholder:text-gray-400 h-14 rounded-xl focus:ring-2 focus:ring-light/40 focus:border-light/40 transition-all duration-300 text-md"
+                  value={formData.fullname}
+                  onChange={handleChange}
                   required
+                  className="bg-darkBrand/50 w-full px-3 border-white/20 text-white placeholder:text-gray-400 h-14 rounded-xl focus:ring-2 focus:ring-light/40 focus:border-light/40 transition-all duration-300 text-md"
+                  aria-label="Full Name"
                 />
               </motion.div>
 
@@ -58,11 +133,19 @@ const Register = () => {
                 {...registerAnimations.getInputVariants(0.7)}
                 className="space-y-4"
               >
+                <label htmlFor="username" className="sr-only">
+                  Username
+                </label>
                 <input
+                  id="username"
                   type="text"
+                  name="username"
                   placeholder="Username"
-                  className="bg-darkBrand/50 w-full px-3 border-white/20 text-white placeholder:text-gray-400 h-14 rounded-xl focus:ring-2 focus:ring-light/40 focus:border-light/40 transition-all duration-300 text-md"
+                  value={formData.username}
+                  onChange={handleChange}
                   required
+                  className="bg-darkBrand/50 w-full px-3 border-white/20 text-white placeholder:text-gray-400 h-14 rounded-xl focus:ring-2 focus:ring-light/40 focus:border-light/40 transition-all duration-300 text-md"
+                  aria-label="Username"
                 />
               </motion.div>
 
@@ -71,11 +154,19 @@ const Register = () => {
                 {...registerAnimations.getInputVariants(0.8)}
                 className="space-y-4"
               >
+                <label htmlFor="contact" className="sr-only">
+                  Contact Number
+                </label>
                 <input
+                  id="contact"
                   type="tel"
+                  name="contact"
                   placeholder="Contact Number"
-                  className="bg-darkBrand/50 border-white/20 w-full px-3 text-white placeholder:text-gray-400 h-14 rounded-xl focus:ring-2 focus:ring-light/40 focus:border-light/40 transition-all duration-300 text-md"
+                  value={formData.contact}
+                  onChange={handleChange}
                   required
+                  className="bg-darkBrand/50 border-white/20 w-full px-3 text-white placeholder:text-gray-400 h-14 rounded-xl focus:ring-2 focus:ring-light/40 focus:border-light/40 transition-all duration-300 text-md"
+                  aria-label="Contact Number"
                 />
               </motion.div>
 
@@ -84,11 +175,19 @@ const Register = () => {
                 {...registerAnimations.getInputVariants(0.9)}
                 className="space-y-4"
               >
+                <label htmlFor="email" className="sr-only">
+                  Email Address
+                </label>
                 <input
+                  id="email"
                   type="email"
+                  name="email"
                   placeholder="Email Address"
-                  className="bg-darkBrand/50 border-white/20 w-full px-3 text-white placeholder:text-gray-400 h-14 rounded-xl focus:ring-2 focus:ring-light/40 focus:border-light/40 transition-all duration-300 text-md"
+                  value={formData.email}
+                  onChange={handleChange}
                   required
+                  className="bg-darkBrand/50 border-white/20 w-full px-3 text-white placeholder:text-gray-400 h-14 rounded-xl focus:ring-2 focus:ring-light/40 focus:border-light/40 transition-all duration-300 text-md"
+                  aria-label="Email Address"
                 />
               </motion.div>
 
@@ -97,11 +196,19 @@ const Register = () => {
                 {...registerAnimations.getInputVariants(1.0)}
                 className="space-y-4"
               >
+                <label htmlFor="password" className="sr-only">
+                  Password
+                </label>
                 <input
+                  id="password"
                   type="password"
+                  name="password"
                   placeholder="Password"
-                  className="bg-darkBrand/50 border-white/20 text-white w-full px-3 placeholder:text-gray-400 h-14 rounded-xl focus:ring-2 focus:ring-light/40 focus:border-light/40 transition-all duration-300 text-md  "
+                  value={formData.password}
+                  onChange={handleChange}
                   required
+                  className="bg-darkBrand/50 border-white/20 text-white w-full px-3 placeholder:text-gray-400 h-14 rounded-xl focus:ring-2 focus:ring-light/40 focus:border-light/40 transition-all duration-300 text-md"
+                  aria-label="Password"
                 />
               </motion.div>
 
@@ -110,11 +217,19 @@ const Register = () => {
                 {...registerAnimations.getInputVariants(1.1)}
                 className="space-y-4"
               >
+                <label htmlFor="confirmPassword" className="sr-only">
+                  Confirm Password
+                </label>
                 <input
+                  id="confirmPassword"
                   type="password"
+                  name="confirmPassword"
                   placeholder="Confirm Password"
-                  className="bg-darkBrand/50 border-white/20 text-white w-full px-3 placeholder:text-gray-400 h-14 rounded-xl focus:ring-2 focus:ring-light/40 focus:border-light/40 transition-all duration-300 text-md"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
                   required
+                  className="bg-darkBrand/50 border-white/20 text-white w-full px-3 placeholder:text-gray-400 h-14 rounded-xl focus:ring-2 focus:ring-light/40 focus:border-light/40 transition-all duration-300 text-md"
+                  aria-label="Confirm Password"
                 />
               </motion.div>
 
@@ -122,9 +237,12 @@ const Register = () => {
               <motion.div {...registerAnimations.buttonVariants}>
                 <button
                   type="submit"
-                  className="w-full bg-gradient-r border border-brand hover:bg-brand-gradient text-white h-14 rounded-xl text-md shadow-lg transition-all duration-300 relative overflow-hidden group"
+                  className="w-full bg-gradient-loop from-brand-start to-brand-end text-white h-14 rounded-xl text-md shadow-lg hover:scale-105 transition-transform duration-300 relative overflow-hidden group"
+                  disabled={isLoading}
                 >
-                  <span className="relative z-10">Register</span>
+                  <span className="relative z-10">
+                    {isLoading ? "Registering..." : "Register"}
+                  </span>
                 </button>
               </motion.div>
             </form>
@@ -134,10 +252,10 @@ const Register = () => {
               {...registerAnimations.loginLinkVariants}
               className="text-light/90 text-md"
             >
-              Already have an account?{" "}
+              Already have an account?
               <Link
                 to="/login"
-                className="text-blue hover:text-white transition-colors duration-300 font-md"
+                className="text-red-500 hover:text-white transition-colors duration-300 font-md underline px-2"
               >
                 Login Now
               </Link>

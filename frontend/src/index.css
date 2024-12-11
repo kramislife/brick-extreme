@@ -15,7 +15,6 @@ html::-webkit-scrollbar {
   height: 0 !important;
 }
 
-
 * {
   scrollbar-color: #c4dbf3 transparent;
 }
@@ -74,7 +73,7 @@ html::-webkit-scrollbar {
     --chart-2: 160 60% 45%;
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%
+    --chart-5: 340 75% 55%;
   }
 }
 @layer base {
@@ -84,4 +83,13 @@ html::-webkit-scrollbar {
   body {
     @apply bg-background text-foreground;
   }
+}
+
+.bg-gradient-loop {
+  background: linear-gradient(
+    to bottom,
+    var(--tw-gradient-from),
+    var(--tw-gradient-to),
+    var(--tw-gradient-from)
+  );
 }

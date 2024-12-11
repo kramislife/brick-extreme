@@ -16,35 +16,35 @@ import ViewReviews from "@/components/admin/Products/ViewReviews";
 import CategoriesPage from "@/pages/Categories/CategoriesPage";
 
 const UserRoutes = (
-	<>
-		{/* Public Routes */}
-		<Route index element={<Home />} />
-		<Route path="products" element={<Products />} />
-		<Route path="categories" element={<CategoriesPage />} />
-		
-		{/* Product Routes with Categories */}
-		<Route path="products/best-selling/:id" element={<ProductView />} />
-		<Route path="products/latest/:id" element={<ProductView />} />
-		<Route path="products/:id" element={<ProductView />} />
+  <>
+    {/* Public Routes */}
+    <Route index element={<Home />} />
+    <Route path="products" element={<Products />} />
+    <Route path="categories" element={<CategoriesPage />} />
 
-		{/* Auth Routes */}
-		<Route path="login" element={<Login />} />
-		<Route path="register" element={<Register />} />
+    {/* Product Routes with Categories */}
+    <Route path="products/best-selling/:id" element={<ProductView />} />
+    <Route path="products/latest/:id" element={<ProductView />} />
+    <Route path="products/:id" element={<ProductView />} />
 
-		{/* Other Routes */}
-		<Route path="about" element={<About />} />
-		<Route path="contact" element={<Contact />} />
+    {/* Auth Routes */}
+    <Route path="login" element={<Login />} />
+    <Route path="register" element={<Register />} />
 
-		{/* Admin Routes */}
-		<Route path="admin" element={<AdminView />}>
-			<Route index element={<Dashboard />} />
-			<Route path="new-product" element={<AddProduct />} />
-			<Route path="products" element={<ViewProducts />} />
-			<Route path="orders" element={<ViewOrder />} />
-			<Route path="users" element={<ViewUsers />} />
-			<Route path="reviews" element={<ViewReviews />} />
-		</Route>
-	</>
+    {/* Other Routes */}
+    <Route path="about" element={<About />} />
+    <Route path="contact" element={<Contact />} />
+
+    {/* Admin Routes */}
+    <Route path="admin" element={<AdminView />}>
+      <Route index element={<Dashboard />} />
+      <Route path="new-product" element={<AddProduct />} />
+      <Route path="products" element={<ViewProducts />} />
+      <Route path="orders" element={<ViewOrder />} />
+      <Route path="users" element={<ViewUsers />} />
+      <Route path="reviews" element={<ViewReviews />} />
+    </Route>
+  </>
 );
 
 export default UserRoutes;
