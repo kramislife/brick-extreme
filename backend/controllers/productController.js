@@ -1,4 +1,3 @@
-
 import catchAsyncErrors from "../middlewares/catchAsyncErrors.js";
 import Category from "../models/category.model.js";
 import Product from "../models/product.model.js";
@@ -11,15 +10,29 @@ export const getProduct = catchAsyncErrors(async (req, res, next) => {
   const resPerPage = 9;
   const currentPage = Number(req.query.page) || 1;
 
+  // Create API filters instance
   const apiFilters = new API_Filters(Product, req.query).search().filters();
 
-  // Get total count before pagination
-  const totalProducts = await apiFilters.query.clone();
-  const filteredProductCount = totalProducts.length;
-  
-  // Apply pagination
+  // Get all filtered products for counting (without pagination)
+  const allFilteredProducts = await apiFilters.query
+    .clone()
+    .populate("product_category", "name")
+    .populate("product_collection", "name")
+    .populate("product_skill_level", "name")
+    .populate("product_designer", "name");
+
+  const filteredProductCount = allFilteredProducts.length;
+
+  // Apply pagination for display products
   apiFilters.pagination(resPerPage);
-  const products = await apiFilters.query.clone();
+  
+  // Get paginated products for display
+  const paginatedProducts = await apiFilters.query
+    .clone()
+    .populate("product_category", "name")
+    .populate("product_collection", "name")
+    .populate("product_skill_level", "name")
+    .populate("product_designer", "name");
 
   // Calculate total pages
   const totalPages = Math.ceil(filteredProductCount / resPerPage);
@@ -30,7 +43,8 @@ export const getProduct = catchAsyncErrors(async (req, res, next) => {
     totalPages,
     filteredProductCount,
     message: `${filteredProductCount} Products retrieved successfully`,
-    products,
+    products: paginatedProducts,
+    allProducts: allFilteredProducts, // Send all products for accurate counting
   });
 });
 //------------------------------------  GET BEST SELLER PRODUCTS  => GET /products/best-seller  ------------------------------------
