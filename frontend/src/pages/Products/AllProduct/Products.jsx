@@ -10,7 +10,7 @@ import {
   useGetSkillLevelsQuery,
   useGetDesignersQuery,
 } from "@/redux/api/productApi";
-import { Filter, Star } from "lucide-react";
+import { Filter } from "lucide-react";
 import {
   Sheet,
   SheetContent,
