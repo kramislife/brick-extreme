@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import catchAsyncErrors from "../middlewares/catchAsyncErrors.js";
-import Order from "../models/Order.model.js";
+import Order from "../models/order.model.js";
 import Product from "../models/product.model.js";
 import ErrorHandler from "../Utills/customErrorHandler.js";
 import { getOrderUpdateEmailTemplate } from "../Utills/Emails/UpdateEmailTemplate.js";
@@ -330,7 +330,11 @@ export const updateOrderForAdmin = catchAsyncErrors(async (req, res, next) => {
       const options = {
         to: order.user.email,
         subject: `Order #${order._id} Status Update`,
-        html: getOrderUpdateEmailTemplate(order.user.name, order._id, order.orderStatus),
+        html: getOrderUpdateEmailTemplate(
+          order.user.name,
+          order._id,
+          order.orderStatus
+        ),
       };
       sendEmail(options);
     }
