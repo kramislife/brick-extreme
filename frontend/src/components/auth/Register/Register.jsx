@@ -34,12 +34,9 @@ const Register = () => {
               {...registerAnimations.headerVariants}
               className="space-y-3"
             >
-              <h1 className="text-4xl font-bold text-white tracking-tight">
-                Create Account
+              <h1 className="text-4xl font-semibold text-white tracking-tight">
+                Register Account
               </h1>
-              <p className="text-light/90 text-md tracking-wide font-light">
-                Enter your details below to Register
-              </p>
             </motion.div>
 
             <form className="space-y-6">
@@ -48,10 +45,10 @@ const Register = () => {
                 {...registerAnimations.getInputVariants(0.6)}
                 className="space-y-4"
               >
-                <Input
+                <input
                   type="text"
                   placeholder="Full Name"
-                  className="bg-darkBrand/50 border-white/20 text-white placeholder:text-gray-400 h-14 rounded-xl focus:ring-2 focus:ring-light/40 focus:border-light/40 transition-all duration-300 text-lg"
+                  className="bg-darkBrand/50 w-full px-3 border-white/20 text-white placeholder:text-gray-400 h-14 rounded-xl focus:ring-2 focus:ring-light/40 focus:border-light/40 transition-all duration-300 text-md"
                   required
                 />
               </motion.div>
@@ -61,10 +58,10 @@ const Register = () => {
                 {...registerAnimations.getInputVariants(0.7)}
                 className="space-y-4"
               >
-                <Input
+                <input
                   type="text"
                   placeholder="Username"
-                  className="bg-darkBrand/50 border-white/20 text-white placeholder:text-gray-400 h-14 rounded-xl focus:ring-2 focus:ring-light/40 focus:border-light/40 transition-all duration-300 text-lg"
+                  className="bg-darkBrand/50 w-full px-3 border-white/20 text-white placeholder:text-gray-400 h-14 rounded-xl focus:ring-2 focus:ring-light/40 focus:border-light/40 transition-all duration-300 text-md"
                   required
                 />
               </motion.div>
@@ -74,10 +71,10 @@ const Register = () => {
                 {...registerAnimations.getInputVariants(0.8)}
                 className="space-y-4"
               >
-                <Input
+                <input
                   type="tel"
                   placeholder="Contact Number"
-                  className="bg-darkBrand/50 border-white/20 text-white placeholder:text-gray-400 h-14 rounded-xl focus:ring-2 focus:ring-light/40 focus:border-light/40 transition-all duration-300 text-lg"
+                  className="bg-darkBrand/50 border-white/20 w-full px-3 text-white placeholder:text-gray-400 h-14 rounded-xl focus:ring-2 focus:ring-light/40 focus:border-light/40 transition-all duration-300 text-md"
                   required
                 />
               </motion.div>
@@ -87,10 +84,10 @@ const Register = () => {
                 {...registerAnimations.getInputVariants(0.9)}
                 className="space-y-4"
               >
-                <Input
+                <input
                   type="email"
                   placeholder="Email Address"
-                  className="bg-darkBrand/50 border-white/20 text-white placeholder:text-gray-400 h-14 rounded-xl focus:ring-2 focus:ring-light/40 focus:border-light/40 transition-all duration-300 text-lg"
+                  className="bg-darkBrand/50 border-white/20 w-full px-3 text-white placeholder:text-gray-400 h-14 rounded-xl focus:ring-2 focus:ring-light/40 focus:border-light/40 transition-all duration-300 text-md"
                   required
                 />
               </motion.div>
@@ -100,10 +97,10 @@ const Register = () => {
                 {...registerAnimations.getInputVariants(1.0)}
                 className="space-y-4"
               >
-                <Input
+                <input
                   type="password"
                   placeholder="Password"
-                  className="bg-darkBrand/50 border-white/20 text-white placeholder:text-gray-400 h-14 rounded-xl focus:ring-2 focus:ring-light/40 focus:border-light/40 transition-all duration-300 text-lg"
+                  className="bg-darkBrand/50 border-white/20 text-white w-full px-3 placeholder:text-gray-400 h-14 rounded-xl focus:ring-2 focus:ring-light/40 focus:border-light/40 transition-all duration-300 text-md  "
                   required
                 />
               </motion.div>
@@ -113,22 +110,22 @@ const Register = () => {
                 {...registerAnimations.getInputVariants(1.1)}
                 className="space-y-4"
               >
-                <Input
+                <input
                   type="password"
                   placeholder="Confirm Password"
-                  className="bg-darkBrand/50 border-white/20 text-white placeholder:text-gray-400 h-14 rounded-xl focus:ring-2 focus:ring-light/40 focus:border-light/40 transition-all duration-300 text-lg"
+                  className="bg-darkBrand/50 border-white/20 text-white w-full px-3 placeholder:text-gray-400 h-14 rounded-xl focus:ring-2 focus:ring-light/40 focus:border-light/40 transition-all duration-300 text-md"
                   required
                 />
               </motion.div>
 
               {/* Register Button */}
               <motion.div {...registerAnimations.buttonVariants}>
-                <Button
+                <button
                   type="submit"
                   className="w-full bg-gradient-r border border-brand hover:bg-brand-gradient text-white h-14 rounded-xl text-md shadow-lg transition-all duration-300 relative overflow-hidden group"
                 >
                   <span className="relative z-10">Register</span>
-                </Button>
+                </button>
               </motion.div>
             </form>
 

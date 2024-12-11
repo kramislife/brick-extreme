@@ -2,10 +2,42 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import LoginImg from "@/assets/authAssets/Login.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { loginAnimations } from "@/hooks/animationConfig";
+import { useEffect, useState } from "react";
+import { useLoginMutation } from "@/redux/api/authApi";
+import { toast } from "react-toastify";
 
 const Login = () => {
+  const [email_username, setEmail_username] = useState("");
+  const [password, setPassword] = useState("");
+
+  const navigate = useNavigate();
+
+  const [login, { data, isLoading, isError, error }] = useLoginMutation();
+
+  const submitHandler = (e) => {
+    e.preventDefault();
+
+    const loginData = {
+      email_username,
+      password,
+    };
+
+    login(loginData);
+  };
+
+  useEffect(() => {
+    if (data) {
+      toast.success(data.message);
+      navigate("/");
+    }
+
+    if (isError) {
+      toast.error(error?.data?.message);
+    }
+  }, [isError, error, data]);
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-brand-gradient p-4">
       <div className="w-full max-w-7xl flex gap-12 items-center">
@@ -34,7 +66,7 @@ const Login = () => {
               className="space-y-3"
             >
               <h1 className="text-4xl font-bold text-white tracking-tight">
-                Welcome Back
+                Login
               </h1>
               <p className="text-light/90 text-md tracking-wide font-light">
                 Enter your details below to Sign-in
@@ -47,11 +79,14 @@ const Login = () => {
                 transition={loginAnimations.emailInputTransition}
                 className="space-y-4"
               >
-                <Input
+                <input
                   type="text"
                   placeholder="Email Address or Username"
-                  className="bg-darkBrand/50 border-white/20 text-white placeholder:text-gray-400 h-14 rounded-xl focus:ring-2 focus:ring-light/40 focus:border-light/40 transition-all duration-300 text-lg"
+                  className="bg-darkBrand/50 border-white/20 text-white placeholder:text-gray-400 h-14 w-full rounded-xl focus:ring-2 focus:ring-light/40 focus:border-light/40 transition-all duration-300 text-md px-3"
                   required
+                  onChange={(e) => {
+                    setEmail_username(e.target.value);
+                  }}
                 />
               </motion.div>
 
@@ -60,11 +95,14 @@ const Login = () => {
                 transition={loginAnimations.passwordInputTransition}
                 className="space-y-4"
               >
-                <Input
+                <input
                   type="password"
                   placeholder="Password"
-                  className="bg-darkBrand/50 border-white/20 text-white placeholder:text-gray-400 h-14 rounded-xl focus:ring-2 focus:ring-light/40 focus:border-light/40 transition-all duration-300 text-lg"
+                  className="bg-darkBrand/50 border-white/20 text-white placeholder:text-gray-400 h-14 rounded-xl focus:ring-2 focus:ring-light/40 focus:border-light/40 transition-all duration-300 text-md w-full px-3"
                   required
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                  }}
                 />
               </motion.div>
 
@@ -74,21 +112,22 @@ const Login = () => {
               >
                 <Link
                   to="/forgot_password"
-                  className="text-sm text-light hover:text-blue transition-colors duration-300 font-md"
+                  className="text-sm hover:text-blue transition-colors duration-300 font-md underline tracking-widest text-red-500 hover:text-white"
                 >
                   Forgot Password?
                 </Link>
               </motion.div>
 
-              <motion.div
-                {...loginAnimations.buttonVariants}
-              >
-                <Button
+              <motion.div {...loginAnimations.buttonVariants}>
+                <button
                   type="submit"
-                  className="w-full bg-gradient-r border border-brand hover:bg-brand-gradient text-white h-14 rounded-xl text-md shadow-lg transition-all duration-300 relative overflow-hidden group"
+                  className="w-full bg-gradient-r border border-brand hover:bg-brand-gradient text-white h-14 rounded-xl text-md shadow-lg transition-all duration-300 relative overflow-hidden group tracking-wider"
+                  onClick={submitHandler}
                 >
-                  <span className="relative z-10">Log In</span>
-                </Button>
+                  <span className="relative z-10">
+                    {isLoading ? "Loading.." : "Log in"}
+                  </span>
+                </button>
               </motion.div>
             </form>
 
@@ -96,10 +135,10 @@ const Login = () => {
               {...loginAnimations.registerLinkVariants}
               className="text-light/90 text-md"
             >
-              Don't have an account?{" "}
+              Don't have an account?
               <Link
                 to="/register"
-                className="text-blue hover:text-white transition-colors duration-300 font-md"
+                className="text-blue hover:text-white transition-colors duration-300 font-md underline text-red-500 tracking-wider px-2"
               >
                 Register Now
               </Link>
