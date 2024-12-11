@@ -63,9 +63,6 @@ const FilterAccordion = ({
       }
 
       // Categories
-      {
-        console.log(categories.product_category);
-      }
       if (categories.product_category && product.product_category) {
         product.product_category.forEach((category) => {
           if (counts.product_category[category._id] !== undefined) {

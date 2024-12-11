@@ -214,37 +214,52 @@ const Products = () => {
   return (
     <>
       <Metadata title="Products" />
-      <div className="mx-auto p-4">
-        {/* Mobile Filter */}
-        <div className="lg:hidden mb-4">
-          <Sheet open={isFilterOpen} onOpenChange={setIsFilterOpen}>
-            <SheetTrigger asChild>
-              <button className="flex items-center space-x-2 bg-brand px-4 py-2 rounded-lg">
-                <Filter className="h-5 w-5" />
-                <span>Filters</span>
-              </button>
-            </SheetTrigger>
-            <SheetContent
-              side="left"
-              className="w-[350px] bg-darkBrand border-gray-800"
-            >
-              <SheetHeader>
-                <SheetTitle className="text-white text-left">
-                  Filters
-                </SheetTitle>
-              </SheetHeader>
-              <div className="mt-6 overflow-y-auto scrollbar-none h-full">
-                <FilterAccordion
-                  categories={filterOptions}
-                  openCategories={openCategories}
-                  onCategoriesChange={setOpenCategories}
-                  selectedFilters={selectedFilters}
-                  onFilterChange={handleFilterChange}
-                  products={productData?.allProducts || []}
-                />
-              </div>
-            </SheetContent>
-          </Sheet>
+      <div className="mx-auto px-4 py-8">
+        {/* Mobile Filter and Sort */}
+        <div className="lg:hidden mb-4 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Sheet open={isFilterOpen} onOpenChange={setIsFilterOpen}>
+              <SheetTrigger asChild>
+                <button className="flex items-center gap-2 bg-transparent">
+                  <Filter className="h-5 w-5" />
+                  <span>Filters</span>
+                </button>
+              </SheetTrigger>
+              <SheetContent
+                side="left"
+                className="w-[350px] bg-darkBrand border-gray-800"
+              >
+                <SheetHeader>
+                  <SheetTitle className="text-white text-left">
+                    Filters
+                  </SheetTitle>
+                </SheetHeader>
+                <div className="mt-6 overflow-y-auto scrollbar-none h-full">
+                  <FilterAccordion
+                    categories={filterOptions}
+                    openCategories={openCategories}
+                    onCategoriesChange={setOpenCategories}
+                    selectedFilters={selectedFilters}
+                    onFilterChange={handleFilterChange}
+                    products={productData?.allProducts || []}
+                  />
+                </div>
+              </SheetContent>
+            </Sheet>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <span className="text-sm">Sort by:</span>
+            <ProductSort
+              totalProducts={productData?.filteredProductCount || 0}
+              currentProducts={productData?.products?.length || 0}
+              currentSort={currentSort}
+              onSortChange={handleSortChange}
+              className="!mb-0"
+              hideProductCount={true}
+              minimal={true}
+            />
+          </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 py-2">
@@ -268,12 +283,15 @@ const Products = () => {
 
           {/* Products Grid with Sort */}
           <div className="col-span-1 lg:col-span-3">
-            <ProductSort
-              totalProducts={productData?.filteredProductCount || 0}
-              currentProducts={productData?.products?.length || 0}
-              currentSort={currentSort}
-              onSortChange={handleSortChange}
-            />
+            {/* Desktop Sort - hidden on mobile */}
+            <div className="hidden lg:block">
+              <ProductSort
+                totalProducts={productData?.filteredProductCount || 0}
+                currentProducts={productData?.products?.length || 0}
+                currentSort={currentSort}
+                onSortChange={handleSortChange}
+              />
+            </div>
             <ProductSection products={productData?.products || []} />
           </div>
         </div>

@@ -7,7 +7,15 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-const ProductSort = ({ totalProducts, currentProducts, currentSort, onSortChange }) => {
+const ProductSort = ({
+  totalProducts,
+  currentProducts,
+  currentSort,
+  onSortChange,
+  className,
+  hideProductCount = false,
+  minimal = false,
+}) => {
   const sortOptions = [
     { value: "name_asc", label: "Name: A to Z" },
     { value: "name_desc", label: "Name: Z to A" },
@@ -18,19 +26,19 @@ const ProductSort = ({ totalProducts, currentProducts, currentSort, onSortChange
   ];
 
   return (
-    // Showing number of products
-    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-      <div className="text-gray-300">
-        Showing{" "}
-        <span className="font-semibold text-white">{currentProducts}</span>
-        {" of "}
-        <span className="font-semibold text-white">{totalProducts}</span>
-        {" products"}
-      </div>
-    
-       {/* Sorting a products */}
-      <div className="flex items-center gap-2">
-        <span className="text-gray-300">Sort by:</span>
+    <div
+      className={`flex items-center justify-between ${
+        !minimal && "mb-4"
+      } ${className}`}
+    >
+      {!hideProductCount && (
+        <div className="text-md text-gray-400">
+          Showing <span className="text-white">{currentProducts}</span> of{" "}
+          <span className="text-white">{totalProducts}</span> products
+        </div>
+      )}
+      <div className={`flex items-center ${!minimal && "gap-2"}`}>
+        {!minimal && <span className="text-sm">Sort by:</span>}
         <Select value={currentSort} onValueChange={onSortChange}>
           <SelectTrigger className="w-[220px] bg-darkBrand border-gray-700 text-gray-300">
             <SelectValue placeholder="Select sorting" />
