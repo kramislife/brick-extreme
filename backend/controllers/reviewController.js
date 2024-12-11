@@ -1,5 +1,5 @@
 import catchAsyncErrors from "../middlewares/catchAsyncErrors.js";
-import Order from "../models/Order.model.js";
+import Order from "../models/order.model.js";
 import Product from "../models/product.model.js";
 import ProductReview from "../models/review.model.js";
 import ErrorHandler from "../Utills/customErrorHandler.js";
