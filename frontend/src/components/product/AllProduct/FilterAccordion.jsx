@@ -47,8 +47,9 @@ const FilterAccordion = ({
         categories.price.forEach((range) => {
           const [min, maxStr] = range.value.split("-");
           const minPrice = Number(min);
-          
-          if (range.value === "1000+") {  // Explicitly check for "1000+" case
+
+          if (range.value === "1000+") {
+            // Explicitly check for "1000+" case
             if (price >= 1000) {
               counts.price[range.value]++;
             }
@@ -114,7 +115,10 @@ const FilterAccordion = ({
             }
           } else {
             // For other ratings, count products within their range (e.g., 4.0-4.9)
-            if (product.ratings >= ratingValue && product.ratings < ratingValue + 1) {
+            if (
+              product.ratings >= ratingValue &&
+              product.ratings < ratingValue + 1
+            ) {
               counts.rating[ratingOption.value]++;
             }
           }
@@ -127,9 +131,10 @@ const FilterAccordion = ({
 
   return (
     <Accordion
-      type="multiple"
-      value={openCategories}
-      onValueChange={onCategoriesChange}
+      type="single" 
+      defaultValue="price" // Added defaultValue
+      value={openCategories[0]} // Changed to first value since it's single
+      onValueChange={(value) => onCategoriesChange(value ? [value] : [])}
       className="space-y-2"
     >
       {Object.entries(categories).map(([key, category]) => (

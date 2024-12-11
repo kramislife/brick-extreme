@@ -21,6 +21,8 @@ import {
 import LoadingSpinner from "@/components/layout/spinner/LoadingSpinner";
 import { toast } from "react-toastify";
 import CustomPagination from "@/components/product/shared/CustomPagination";
+import ProductSort from "@/components/product/shared/ProductSort";
+import useScrollToTop from "@/hooks/useScrollToTop";
 
 const Products = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -28,6 +30,8 @@ const Products = () => {
   const [openCategories, setOpenCategories] = useState([]);
   const [selectedFilters, setSelectedFilters] = useState({});
   const currentPage = Number(searchParams.get("page")) || 1;
+  const [currentSort, setCurrentSort] = useState("date_desc");
+  const scrollToTop = useScrollToTop();
 
   // Fetch data for products and filters
   const {
@@ -152,14 +156,24 @@ const Products = () => {
     );
   }, [filterOptions]);
 
-  // Handle pagination changes by updating URL search params and scrolling to top
+  // Separated page change handler
   const handlePageChange = (page) => {
     if (page < 1 || page > productData?.totalPages) return;
 
     const newSearchParams = new URLSearchParams(searchParams);
     newSearchParams.set("page", page);
     setSearchParams(newSearchParams);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    scrollToTop();
+  };
+
+  // Separated sort change handler
+  const handleSortChange = (value) => {
+    const newSearchParams = new URLSearchParams(searchParams);
+    newSearchParams.set("sort", value);
+    newSearchParams.delete("page");
+    setSearchParams(newSearchParams);
+    setCurrentSort(value);
+    scrollToTop();
   };
 
   // Handle filter changes by updating URL search params and selected filters state
@@ -252,11 +266,19 @@ const Products = () => {
             </div>
           </div>
 
-          {/* Products Grid */}
-          <ProductSection products={productData?.products || []} />
+          {/* Products Grid with Sort */}
+          <div className="col-span-1 lg:col-span-3">
+            <ProductSort
+              totalProducts={productData?.filteredProductCount || 0}
+              currentProducts={productData?.products?.length || 0}
+              currentSort={currentSort}
+              onSortChange={handleSortChange}
+            />
+            <ProductSection products={productData?.products || []} />
+          </div>
         </div>
 
-        {/* Add pagination at the bottom */}
+        {/* Pagination */}
         <div className="flex justify-center">
           <CustomPagination
             currentPage={currentPage}
