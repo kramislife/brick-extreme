@@ -15,7 +15,8 @@ import ProductDesigner from "./components/ProductDesigner";
 import ProductStatus from "./components/ProductStatus";
 
 const AddProduct = () => {
-  const { formData, handleChange, handleCheckboxChange, handleSubmit } = useProductForm();
+  const { formData, handleChange, handleCheckboxChange, handleSubmit } =
+    useProductForm();
 
   return (
     <div className="mx-auto py-6 space-y-8">
@@ -24,27 +25,33 @@ const AddProduct = () => {
           <CardHeader>
             <CardTitle className="text-2xl">Add New Product</CardTitle>
           </CardHeader>
-          
+
           <CardContent className="p-6 space-y-8">
             <BasicInformation formData={formData} onChange={handleChange} />
             <ProductDescriptions formData={formData} onChange={handleChange} />
-            <ProductSpecifications formData={formData} onChange={handleChange} />
-            <AdditionalInformation formData={formData} onChange={handleChange} />
-            <ProductCategories 
-              formData={formData} 
-              onCheckboxChange={handleCheckboxChange} 
+            <ProductSpecifications
+              formData={formData}
+              onChange={handleChange}
+            />
+            <AdditionalInformation
+              formData={formData}
+              onChange={handleChange}
+            />
+            <ProductCategories
+              formData={formData}
+              onCheckboxChange={handleCheckboxChange}
             />
             <ProductCollections formData={formData} onChange={handleChange} />
-            <ProductIncludes 
-              formData={formData} 
-              onCheckboxChange={handleCheckboxChange} 
+            <ProductIncludes
+              formData={formData}
+              onCheckboxChange={handleCheckboxChange}
             />
             <SkillLevel formData={formData} onChange={handleChange} />
             <ProductDesigner formData={formData} onChange={handleChange} />
-            <ProductStatus 
-              formData={formData} 
+            <ProductStatus
+              formData={formData}
               onChange={handleChange}
-              onCheckboxChange={handleCheckboxChange} 
+              onCheckboxChange={handleCheckboxChange}
             />
 
             <div className="flex justify-end space-x-4 pt-6 border-t">

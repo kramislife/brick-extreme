@@ -1,41 +1,53 @@
-import React from 'react';
+import React, { useEffect } from "react";
 import { Label } from "@/components/ui/label";
+import { useGetSkillLevelsQuery } from "@/redux/api/productApi";
+import { toast } from "react-toastify";
 
-const SKILL_LEVELS = ['Beginner', 'Intermediate', 'Professional'];
+const SKILL_LEVELS = ["Beginner", "Intermediate", "Professional"];
 
 const ACTIVE_COLORS = {
-  Beginner: 'bg-green-500 text-white',
-  Intermediate: 'bg-yellow-500 text-white',
-  Professional: 'bg-red-500 text-white',
+  0: "bg-green-500 text-white",
 };
 
-const DEFAULT_COLOR = 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300';
+const DEFAULT_COLOR =
+  "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300";
 
 const SkillLevel = ({ formData, onChange }) => {
+  const { data, isError, error } = useGetSkillLevelsQuery();
+
+  useEffect(() => {
+    if (isError) {
+      toast.error(error?.data?.message);
+    }
+
+    if (data) {
+      console.log(data);
+    }
+  }, [isError, error, data]);
   return (
     <section className="space-y-6">
       <Label className="text-lg font-semibold">Skill Level</Label>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        {SKILL_LEVELS.map((level) => (
+        {data?.skillLevels?.map((skillLevel) => (
           <label
-            key={level}
-            htmlFor={level}
+            key={skillLevel._id}
+            htmlFor={skillLevel}
             className={`flex items-center justify-center p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer ${
-              formData.skillLevel === level
-                ? ACTIVE_COLORS[level]
+              formData.skillLevel === skillLevel._id
+                ? ACTIVE_COLORS[0]
                 : DEFAULT_COLOR
             }`}
           >
             <input
               type="radio"
-              id={level}
+              id={skillLevel._id}
               name="skillLevel"
-              value={level}
-              checked={formData.skillLevel === level}
+              value={skillLevel._id}
+              checked={formData.skillLevel === skillLevel._id}
               onChange={onChange}
               className="hidden"
             />
-            <span className="text-sm font-medium">{level}</span>
+            <span className="text-sm font-medium">{skillLevel.name}</span>
           </label>
         ))}
       </div>
