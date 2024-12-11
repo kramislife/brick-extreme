@@ -21,6 +21,8 @@ import {
 import LoadingSpinner from "@/components/layout/spinner/LoadingSpinner";
 import { toast } from "react-toastify";
 import CustomPagination from "@/components/product/shared/CustomPagination";
+import ProductSort from "@/components/product/shared/ProductSort";
+import useScrollToTop from "@/hooks/useScrollToTop";
 
 const Products = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -28,6 +30,8 @@ const Products = () => {
   const [openCategories, setOpenCategories] = useState([]);
   const [selectedFilters, setSelectedFilters] = useState({});
   const currentPage = Number(searchParams.get("page")) || 1;
+  const [currentSort, setCurrentSort] = useState("date_desc");
+  const scrollToTop = useScrollToTop();
 
   // Fetch data for products and filters
   const {
@@ -111,6 +115,13 @@ const Products = () => {
         { label: "$501-$1000", value: "501-1000" },
         { label: "$1000+", value: "1000+" },
       ],
+      rating: [
+        { label: "5 Stars", value: "5", stars: 5 },
+        { label: "4 to 4.9 Stars", value: "4", stars: 4 },
+        { label: "3 to 3.9 Stars", value: "3", stars: 3 },
+        { label: "2 to 2.9 Stars", value: "2", stars: 2 },
+        { label: "1 to 1.9 Stars", value: "1", stars: 1 },
+      ],
       product_category:
         categoriesData?.categories?.map((category) => ({
           label: category.name,
@@ -145,14 +156,24 @@ const Products = () => {
     );
   }, [filterOptions]);
 
-  // Handle pagination changes by updating URL search params and scrolling to top
+  // Separated page change handler
   const handlePageChange = (page) => {
     if (page < 1 || page > productData?.totalPages) return;
 
     const newSearchParams = new URLSearchParams(searchParams);
     newSearchParams.set("page", page);
     setSearchParams(newSearchParams);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    scrollToTop();
+  };
+
+  // Separated sort change handler
+  const handleSortChange = (value) => {
+    const newSearchParams = new URLSearchParams(searchParams);
+    newSearchParams.set("sort", value);
+    newSearchParams.delete("page");
+    setSearchParams(newSearchParams);
+    setCurrentSort(value);
+    scrollToTop();
   };
 
   // Handle filter changes by updating URL search params and selected filters state
@@ -193,37 +214,52 @@ const Products = () => {
   return (
     <>
       <Metadata title="Products" />
-      <div className="mx-auto p-4">
-        {/* Mobile Filter */}
-        <div className="lg:hidden mb-4">
-          <Sheet open={isFilterOpen} onOpenChange={setIsFilterOpen}>
-            <SheetTrigger asChild>
-              <button className="flex items-center space-x-2 bg-brand px-4 py-2 rounded-lg">
-                <Filter className="h-5 w-5" />
-                <span>Filters</span>
-              </button>
-            </SheetTrigger>
-            <SheetContent
-              side="left"
-              className="w-[350px] bg-darkBrand border-gray-800"
-            >
-              <SheetHeader>
-                <SheetTitle className="text-white text-left">
-                  Filters
-                </SheetTitle>
-              </SheetHeader>
-              <div className="mt-6 overflow-y-auto scrollbar-none h-full">
-                <FilterAccordion
-                  categories={filterOptions}
-                  openCategories={openCategories}
-                  onCategoriesChange={setOpenCategories}
-                  selectedFilters={selectedFilters}
-                  onFilterChange={handleFilterChange}
-                  products={productData?.products || []}
-                />
-              </div>
-            </SheetContent>
-          </Sheet>
+      <div className="mx-auto px-4 py-8">
+        {/* Mobile Filter and Sort */}
+        <div className="lg:hidden mb-4 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Sheet open={isFilterOpen} onOpenChange={setIsFilterOpen}>
+              <SheetTrigger asChild>
+                <button className="flex items-center gap-2 bg-transparent">
+                  <Filter className="h-5 w-5" />
+                  <span>Filters</span>
+                </button>
+              </SheetTrigger>
+              <SheetContent
+                side="left"
+                className="w-[350px] bg-darkBrand border-gray-800"
+              >
+                <SheetHeader>
+                  <SheetTitle className="text-white text-left">
+                    Filters
+                  </SheetTitle>
+                </SheetHeader>
+                <div className="mt-6 overflow-y-auto scrollbar-none h-full">
+                  <FilterAccordion
+                    categories={filterOptions}
+                    openCategories={openCategories}
+                    onCategoriesChange={setOpenCategories}
+                    selectedFilters={selectedFilters}
+                    onFilterChange={handleFilterChange}
+                    products={productData?.allProducts || []}
+                  />
+                </div>
+              </SheetContent>
+            </Sheet>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <span className="text-sm">Sort by:</span>
+            <ProductSort
+              totalProducts={productData?.filteredProductCount || 0}
+              currentProducts={productData?.products?.length || 0}
+              currentSort={currentSort}
+              onSortChange={handleSortChange}
+              className="!mb-0"
+              hideProductCount={true}
+              minimal={true}
+            />
+          </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 py-2">
@@ -240,16 +276,27 @@ const Products = () => {
                 onCategoriesChange={setOpenCategories}
                 selectedFilters={selectedFilters}
                 onFilterChange={handleFilterChange}
-                products={productData?.products || []}
+                products={productData?.allProducts || []}
               />
             </div>
           </div>
 
-          {/* Products Grid */}
-          <ProductSection products={productData?.products || []} />
+          {/* Products Grid with Sort */}
+          <div className="col-span-1 lg:col-span-3">
+            {/* Desktop Sort - hidden on mobile */}
+            <div className="hidden lg:block">
+              <ProductSort
+                totalProducts={productData?.filteredProductCount || 0}
+                currentProducts={productData?.products?.length || 0}
+                currentSort={currentSort}
+                onSortChange={handleSortChange}
+              />
+            </div>
+            <ProductSection products={productData?.products || []} />
+          </div>
         </div>
 
-        {/* Add pagination at the bottom */}
+        {/* Pagination */}
         <div className="flex justify-center">
           <CustomPagination
             currentPage={currentPage}

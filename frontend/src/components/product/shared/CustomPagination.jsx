@@ -94,7 +94,7 @@ const CustomPagination = ({ currentPage, totalPages, onPageChange }) => {
   };
 
   return (
-    <nav className="mx-auto lg:ml-24 flex w-full justify-center my-4 mt-8">
+    <nav className="mx-auto lg:ml-36 flex w-full justify-center my-4 mt-8">
       <div className="flex flex-row items-center gap-1">
         {/* Previous Button */}
         <button

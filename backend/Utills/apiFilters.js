@@ -85,14 +85,49 @@ class API_Filters {
             ? queryCopy[key]
             : [queryCopy[key]];
 
-          priceRanges.forEach((range) => {
+          const priceConditions = priceRanges.map(range => {
+            if (range === "1000+") {
+              return { price: { $gte: 1000 } };
+            }
+            
             const [minPrice, maxPrice] = range.split("-").map(parseFloat);
-            if (!isNaN(minPrice) && !isNaN(maxPrice)) {
-              otherConditions.push({
-                price: { $gte: minPrice, $lte: maxPrice },
-              });
+            return {
+              price: { 
+                $gte: minPrice, 
+                $lte: maxPrice 
+              }
+            };
+          });
+
+          if (priceConditions.length > 0) {
+            otherConditions.push({ $or: priceConditions });
+          }
+        }
+        // Handle rating filter
+        else if (key === "rating") {
+          const ratingValues = Array.isArray(queryCopy[key])
+            ? queryCopy[key]
+            : [queryCopy[key]];
+
+          const ratingConditions = ratingValues.map(rating => {
+            const ratingNum = parseInt(rating);
+            if (ratingNum === 5) {
+              // For 5 stars, get ratings >= 5
+              return { ratings: { $gte: 5 } };
+            } else {
+              // For other ratings, get within range (e.g., 4.0-4.9)
+              return {
+                ratings: { 
+                  $gte: ratingNum,
+                  $lt: ratingNum + 1
+                }
+              };
             }
           });
+          
+          if (ratingConditions.length > 0) {
+            otherConditions.push({ $or: ratingConditions });
+          }
         }
         // Handle other filters using $in
         else {
@@ -128,6 +163,29 @@ class API_Filters {
     const currentPage = this.queryStr.page || 1;
     const skip = resPerPage * (currentPage - 1);
     this.query = this.query.skip(skip).limit(resPerPage);
+  }
+
+  // method to handle sorting
+  sort() {
+    if (this.queryStr.sort) {
+      const [field, direction] = this.queryStr.sort.split('_');
+      const sortOrder = direction === 'asc' ? 1 : -1;
+      
+      switch (field) {
+        case 'name':
+          this.query = this.query.sort({ product_name: sortOrder });
+          break;
+        case 'price':
+          this.query = this.query.sort({ price: sortOrder });
+          break;
+        case 'date':
+          this.query = this.query.sort({ createdAt: sortOrder });
+          break;
+        default:
+          this.query = this.query.sort({ createdAt: -1 }); // Default sort
+      }
+    }
+    return this;
   }
 }
 

@@ -1,4 +1,3 @@
-
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const productApi = createApi({
@@ -13,7 +12,10 @@ export const productApi = createApi({
         if (typeof queryString === 'object') {
           const params = new URLSearchParams();
           Object.entries(queryString).forEach(([key, value]) => {
-            if (Array.isArray(value)) {
+            if (key === 'rating') {
+              // Handle rating parameter specifically
+              params.append(key, Array.isArray(value) ? value.join(',') : value);
+            } else if (Array.isArray(value)) {
               params.append(key, value.join(','));
             } else {
               params.append(key, value);

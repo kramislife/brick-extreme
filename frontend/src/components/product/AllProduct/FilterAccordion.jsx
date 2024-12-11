@@ -14,6 +14,7 @@ const getDisplayName = (key) => {
     product_collection: "Collections",
     product_skill_level: "Skill Level",
     product_designer: "Designers",
+    rating: "Rating",
   };
   return displayNames[key] || key;
 };
@@ -44,14 +45,17 @@ const FilterAccordion = ({
       const price = product.price;
       if (categories.price) {
         categories.price.forEach((range) => {
-          const [min, max] = range.value.split("-").map(Number);
-          if (max) {
-            if (price >= min && price <= max) {
+          const [min, maxStr] = range.value.split("-");
+          const minPrice = Number(min);
+
+          if (range.value === "1000+") {
+            // Explicitly check for "1000+" case
+            if (price >= 1000) {
               counts.price[range.value]++;
             }
           } else {
-            // Handle "1000+" case
-            if (price > min) {
+            const maxPrice = Number(maxStr);
+            if (price >= minPrice && price <= maxPrice) {
               counts.price[range.value]++;
             }
           }
@@ -59,9 +63,6 @@ const FilterAccordion = ({
       }
 
       // Categories
-      {
-        console.log(categories.product_category);
-      }
       if (categories.product_category && product.product_category) {
         product.product_category.forEach((category) => {
           if (counts.product_category[category._id] !== undefined) {
@@ -98,6 +99,28 @@ const FilterAccordion = ({
           counts.product_designer[designerId]++;
         }
       }
+
+      // Rating counts
+      if (categories.rating) {
+        categories.rating.forEach((ratingOption) => {
+          const ratingValue = parseInt(ratingOption.value);
+          // Count products with rating within the specific range
+          if (ratingValue === 5) {
+            // For 5 stars, count only products with rating >= 5
+            if (product.ratings >= 5) {
+              counts.rating[ratingOption.value]++;
+            }
+          } else {
+            // For other ratings, count products within their range (e.g., 4.0-4.9)
+            if (
+              product.ratings >= ratingValue &&
+              product.ratings < ratingValue + 1
+            ) {
+              counts.rating[ratingOption.value]++;
+            }
+          }
+        });
+      }
     });
 
     return counts;
@@ -105,9 +128,10 @@ const FilterAccordion = ({
 
   return (
     <Accordion
-      type="multiple"
-      value={openCategories}
-      onValueChange={onCategoriesChange}
+      type="single" 
+      defaultValue="price" // Added defaultValue
+      value={openCategories[0]} // Changed to first value since it's single
+      onValueChange={(value) => onCategoriesChange(value ? [value] : [])}
       className="space-y-2"
     >
       {Object.entries(categories).map(([key, category]) => (
