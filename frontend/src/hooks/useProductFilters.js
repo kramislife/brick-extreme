@@ -71,6 +71,19 @@ export const useProductFilters = (filterData) => {
     }
   }, [categoriesIsError, collectionsIsError, skillLevelsIsError, designerIsError]);
 
+  // Initialize filters from URL parameters
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const categoryFromUrl = urlParams.get('product_category');
+    
+    if (categoryFromUrl) {
+      setSelectedFilters(prev => ({
+        ...prev,
+        product_category: [categoryFromUrl]
+      }));
+    }
+  }, []);
+
   const handleFilterChange = (category, value) => {
     const newSearchParams = new URLSearchParams(searchParams);
 

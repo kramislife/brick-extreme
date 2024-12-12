@@ -13,14 +13,10 @@ const ProductDesigner = ({ formData, onChange }) => {
   const { data, isError, error } = useGetDesignersQuery();
 
   useEffect(() => {
-    if (data) {
-      console.log(data);
-    }
-
     if (isError) {
       toast.error(error?.data?.message);
     }
-  }, [isError, error, data]);
+  }, [isError, error]);
 
   return (
     <section className="space-y-6">
@@ -29,7 +25,7 @@ const ProductDesigner = ({ formData, onChange }) => {
         {data?.designers?.map((designer) => (
           <label
             key={designer._id}
-            htmlFor={designer}
+            htmlFor={designer._id}
             className={`flex items-center justify-center p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer ${
               formData.productDesigner === designer._id
                 ? ACTIVE_COLOR

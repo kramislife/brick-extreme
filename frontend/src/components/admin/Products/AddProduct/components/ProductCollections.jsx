@@ -13,17 +13,13 @@ const DEFAULT_COLOR =
   "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300";
 
 const ProductCollections = ({ formData, onChange }) => {
-  const { data, isError, error, isLoading } = useGetCollectionQuery();
+  const { data, isError, error } = useGetCollectionQuery();
 
   useEffect(() => {
     if (isError) {
       toast.error(error?.data?.message);
     }
-
-    if (data) {
-      console.log(data);
-    }
-  }, [error, isError, data]);
+  }, [isError, error]);
 
   return (
     <section className="space-y-6">
@@ -32,7 +28,7 @@ const ProductCollections = ({ formData, onChange }) => {
         {data?.collections?.map((collection) => (
           <label
             key={collection._id}
-            htmlFor={collection}
+            htmlFor={collection._id}
             className={`flex items-center justify-center p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer ${
               formData.productCollections === collection._id
                 ? ACTIVE_COLORS[0]

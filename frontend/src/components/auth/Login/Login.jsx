@@ -1,5 +1,3 @@
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import LoginImg from "@/assets/authAssets/Login.png";
 import { Link, useNavigate } from "react-router-dom";

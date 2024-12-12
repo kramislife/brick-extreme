@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { toast } from "react-hot-toast";
 
 const useProductForm = () => {
   const [formData, setFormData] = useState({
@@ -13,11 +14,13 @@ const useProductForm = () => {
     description2: "",
     description3: "",
 
-    // Specifications
-    length: "",
-    width: "",
-    height: "",
-    piece_count: "",
+    // Specifications as array of objects
+    specifications: [
+      { name: 'length', value: '' },
+      { name: 'width', value: '' },
+      { name: 'height', value: '' },
+      { name: 'piece_count', value: '' }
+    ],
 
     // Additional Information
     manufacturer: "",
@@ -33,15 +36,27 @@ const useProductForm = () => {
     isActive: "",
     availability: "",
     preorder: false,
+    images: [],
   });
 
   const handleChange = (e) => {
     const { id, value, type, name } = e.target;
     const fieldName = type === "radio" ? name : id;
-    setFormData((prev) => ({
-      ...prev,
-      [fieldName]: value,
-    }));
+    
+    // Handle specification fields differently
+    if (['length', 'width', 'height', 'piece_count'].includes(fieldName)) {
+      setFormData(prev => ({
+        ...prev,
+        specifications: prev.specifications.map(spec => 
+          spec.name === fieldName ? { ...spec, value } : spec
+        )
+      }));
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [fieldName]: value,
+      }));
+    }
   };
 
   const handleCheckboxChange = (field, value, isChecked) => {
@@ -71,11 +86,33 @@ const useProductForm = () => {
       useCreateProductsMutation(formData);
   };
 
+  const handleImageChange = (e) => {
+    const files = Array.from(e.target.files);
+    if (files.length + formData.images.length > 10) {
+      toast.error("Maximum 10 images allowed");
+      return;
+    }
+    
+    setFormData(prev => ({
+      ...prev,
+      images: [...prev.images, ...files].slice(0, 10)
+    }));
+  };
+
+  const handleRemoveImage = (index) => {
+    setFormData(prev => ({
+      ...prev,
+      images: prev.images.filter((_, i) => i !== index)
+    }));
+  };
+
   return {
     formData,
     handleChange,
     handleCheckboxChange,
     handleSubmit,
+    handleImageChange,
+    handleRemoveImage,
   };
 };
 
