@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -24,6 +24,7 @@ const AddProduct = () => {
     handleSubmit,
     handleImageChange,
     handleRemoveImage,
+    isLoading,
   } = useProductForm();
 
   return (
@@ -37,50 +38,50 @@ const AddProduct = () => {
           <CardContent className="p-6 space-y-8">
             <BasicInformation formData={formData} onChange={handleChange} />
             <Separator className="my-6" />
-            
+
             <ProductDescriptions formData={formData} onChange={handleChange} />
             <Separator className="my-6" />
-            
+
             <ProductSpecifications
               formData={formData}
               onChange={handleChange}
             />
             <Separator className="my-6" />
-            
+
             <AdditionalInformation
               formData={formData}
               onChange={handleChange}
             />
             <Separator className="my-6" />
-            
+
             <ProductCategories
               formData={formData}
               onCheckboxChange={handleCheckboxChange}
             />
             <Separator className="my-6" />
-            
+
             <ProductCollections formData={formData} onChange={handleChange} />
             <Separator className="my-6" />
-            
+
             <ProductIncludes
               formData={formData}
               onCheckboxChange={handleCheckboxChange}
             />
             <Separator className="my-6" />
-            
+
             <SkillLevel formData={formData} onChange={handleChange} />
             <Separator className="my-6" />
-            
+
             <ProductDesigner formData={formData} onChange={handleChange} />
             <Separator className="my-6" />
-            
+
             <ProductImages
               formData={formData}
               onImageChange={handleImageChange}
               onRemoveImage={handleRemoveImage}
             />
             <Separator className="my-6" />
-            
+
             <ProductStatus
               formData={formData}
               onChange={handleChange}
@@ -93,7 +94,7 @@ const AddProduct = () => {
                 className="bg-gradient-to-r from-blue-600 to-purple-600 text-white flex items-center gap-2 hover:from-blue-700 hover:to-purple-700"
               >
                 <Save className="h-4 w-4" />
-                Create Product
+                {isLoading ? "Creating... " : "Create Product"}
               </Button>
             </div>
           </CardContent>

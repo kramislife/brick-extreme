@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Minus, Plus, ChevronLeft, ChevronRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -8,6 +8,10 @@ import StarRating from "@/components/product/shared/StarRating";
 const ProductDetails = ({ product, containerVariants, itemVariants }) => {
   const [quantity, setQuantity] = useState(1);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  useEffect(() => {
+    console.log("Product Description > ", product);
+  }, []);
 
   // Only render image gallery if there are images
   const hasImages =
@@ -145,7 +149,7 @@ const ProductDetails = ({ product, containerVariants, itemVariants }) => {
                   ).toFixed(2)}
                 </span>
                 {product?.discount > 0 && (
-                  <span className="text-md text-gray-400 line-through">
+                  <span className="text-2xl text-red-500 line-through ">
                     ${product?.price?.toFixed(2)}
                   </span>
                 )}
@@ -160,16 +164,25 @@ const ProductDetails = ({ product, containerVariants, itemVariants }) => {
                     className={`w-2 h-2 rounded-full ${product?.product_availability?.dotColor}`}
                   ></span>
                   <span
-                    className={`${product?.product_availability?.textColor} text-sm font-medium`}
+                    className={`${
+                      product?.stock > 10
+                        ? "text-green-500"
+                        : product.stock > 0 && product.stock < 10
+                        ? "text-yellow-500"
+                        : "text-red-500"
+                    } text-md font-medium `}
                   >
-                    {new Date(product?.product_availability).toLocaleDateString(
-                      "en-US",
-                      {
-                        month: "long",
-                        year: "numeric",
-                        day: "numeric",
-                      }
-                    )}
+                    {product.stock > 10
+                      ? "In Stock"
+                      : product.stock > 0 && product.stock < 10
+                      ? `${product.stock} remaining`
+                      : new Date(
+                          product?.product_availability
+                        ).toLocaleDateString("en-US", {
+                          month: "long",
+                          year: "numeric",
+                          day: "numeric",
+                        })}
                   </span>
                 </div>
               </div>
@@ -188,8 +201,8 @@ const ProductDetails = ({ product, containerVariants, itemVariants }) => {
                         variant="outline"
                         className="bg-slate-800/50 hover:bg-slate-800 hover:text-white hover:scale-105 transition-all duration-300 border-slate-700 inline-flex w-full text-left justify-start mb-2"
                       >
+                        <span className="whitespace-nowrap">Category:</span>
                         <div className="flex items-center gap-2">
-                          <span className="whitespace-nowrap">Category:</span>
                           <span className="text-gray-400">{cat?.name}</span>
                         </div>
                       </Button>
@@ -237,15 +250,15 @@ const ProductDetails = ({ product, containerVariants, itemVariants }) => {
                   {product.product_description_1}
                 </p>
               )}
-              
-              {product?.product_description_1 && (
+
+              {product?.product_description_2 && (
                 <p className="text-gray-300 mb-3 leading-loose">
-                  {product.product_description_1}
+                  {product.product_description_2}
                 </p>
               )}
-              {product?.product_description_1 && (
+              {product?.product_description_3 && (
                 <p className="text-gray-300 leading-loose">
-                  {product.product_description_1}
+                  {product.product_description_3}
                 </p>
               )}
             </div>

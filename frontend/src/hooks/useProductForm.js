@@ -1,7 +1,24 @@
-import { useState } from "react";
+import { useCreateProductMutation } from "@/redux/api/productApi";
+import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const useProductForm = () => {
+  const { user } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
+  const [createProduct, { data, isLoading, isError, error, isSuccess }] =
+    useCreateProductMutation();
+
+  useEffect(() => {
+    if (isSuccess) {
+      navigate("/admin/products");
+    }
+    if (isError) {
+      console.log(error?.data?.message);
+    }
+  }, [data, isError, error]);
+
   const [formData, setFormData] = useState({
     // Basic Information
     name: "",
@@ -16,10 +33,10 @@ const useProductForm = () => {
 
     // Specifications as array of objects
     specifications: [
-      { name: 'length', value: '' },
-      { name: 'width', value: '' },
-      { name: 'height', value: '' },
-      { name: 'piece_count', value: '' }
+      { name: "length", value: "" },
+      { name: "width", value: "" },
+      { name: "height", value: "" },
+      { name: "piece_count", value: "" },
     ],
 
     // Additional Information
@@ -42,17 +59,17 @@ const useProductForm = () => {
   const handleChange = (e) => {
     const { id, value, type, name } = e.target;
     const fieldName = type === "radio" ? name : id;
-    
+
     // Handle specification fields differently
-    if (['length', 'width', 'height', 'piece_count'].includes(fieldName)) {
-      setFormData(prev => ({
+    if (["length", "width", "height", "piece_count"].includes(fieldName)) {
+      setFormData((prev) => ({
         ...prev,
-        specifications: prev.specifications.map(spec => 
+        specifications: prev.specifications.map((spec) =>
           spec.name === fieldName ? { ...spec, value } : spec
-        )
+        ),
       }));
     } else {
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
         [fieldName]: value,
       }));
@@ -81,9 +98,53 @@ const useProductForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    const newProduct = {
+      product_name: formData.name,
+      price: parseFloat(formData.price),
+      discount: parseFloat(formData.discount),
+      stock: parseInt(formData.stock, 10),
+      product_description_1: formData.description1,
+      product_description_2: formData.description2 || "",
+      product_description_3: formData.description3 || "",
+      product_images: formData.images || [],
+      product_category: formData.productCategories,
+      product_collection: formData.productCollections,
+      product_piece_count: parseInt(
+        formData.specifications.find((spec) => spec.name === "piece_count")
+          ?.value || 0,
+        10
+      ),
+      product_availability:
+        formData.availability === "In Stock"
+          ? new Date().toISOString().split("T")[0] // Current date in YYYY-MM-DD format
+          : "Unavailable",
+      product_length: parseFloat(
+        formData.specifications.find((spec) => spec.name === "length")?.value ||
+          0
+      ),
+      product_width: parseFloat(
+        formData.specifications.find((spec) => spec.name === "width")?.value ||
+          0
+      ),
+      product_height: parseFloat(
+        formData.specifications.find((spec) => spec.name === "height")?.value ||
+          0
+      ),
+      product_includes: formData.productIncludes.join(", "),
+      product_skill_level: formData.skillLevel,
+      product_designer: formData.productDesigner,
+      ratings: 0, // Default value
+      seller: formData.seller || "Brick Extreme",
+      tags: formData.tags.split(",").map((tag) => tag.trim()) || [],
+      is_active: formData.isActive === "yes" ? true : false,
+      manufacturer: formData.manufacturer || "Unknown", // Fallback to "Unknown" if manufacturer is empty
+      is_preorder: formData?.preorder[0],
+      createdBy: user?._id,
+    };
+
+    createProduct(newProduct);
     console.log("Form submitted with data:", formData);
-    const [createProduct, { isLoading, isError, error }] =
-      useCreateProductsMutation(formData);
   };
 
   const handleImageChange = (e) => {
@@ -92,17 +153,17 @@ const useProductForm = () => {
       toast.error("Maximum 10 images allowed");
       return;
     }
-    
-    setFormData(prev => ({
+
+    setFormData((prev) => ({
       ...prev,
-      images: [...prev.images, ...files].slice(0, 10)
+      images: [...prev.images, ...files].slice(0, 10),
     }));
   };
 
   const handleRemoveImage = (index) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      images: prev.images.filter((_, i) => i !== index)
+      images: prev.images.filter((_, i) => i !== index),
     }));
   };
 
@@ -113,6 +174,7 @@ const useProductForm = () => {
     handleSubmit,
     handleImageChange,
     handleRemoveImage,
+    isLoading,
   };
 };
 
