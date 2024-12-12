@@ -1,6 +1,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import { Save } from "lucide-react";
 import useProductForm from "@/hooks/useProductForm";
 import BasicInformation from "./components/BasicInformation";
@@ -13,10 +14,17 @@ import ProductIncludes from "./components/ProductIncludes";
 import SkillLevel from "./components/SkillLevel";
 import ProductDesigner from "./components/ProductDesigner";
 import ProductStatus from "./components/ProductStatus";
+import ProductImages from "./components/ProductImages";
 
 const AddProduct = () => {
-  const { formData, handleChange, handleCheckboxChange, handleSubmit } =
-    useProductForm();
+  const {
+    formData,
+    handleChange,
+    handleCheckboxChange,
+    handleSubmit,
+    handleImageChange,
+    handleRemoveImage,
+  } = useProductForm();
 
   return (
     <div className="mx-auto py-6 space-y-8">
@@ -28,26 +36,51 @@ const AddProduct = () => {
 
           <CardContent className="p-6 space-y-8">
             <BasicInformation formData={formData} onChange={handleChange} />
+            <Separator className="my-6" />
+            
             <ProductDescriptions formData={formData} onChange={handleChange} />
+            <Separator className="my-6" />
+            
             <ProductSpecifications
               formData={formData}
               onChange={handleChange}
             />
+            <Separator className="my-6" />
+            
             <AdditionalInformation
               formData={formData}
               onChange={handleChange}
             />
+            <Separator className="my-6" />
+            
             <ProductCategories
               formData={formData}
               onCheckboxChange={handleCheckboxChange}
             />
+            <Separator className="my-6" />
+            
             <ProductCollections formData={formData} onChange={handleChange} />
+            <Separator className="my-6" />
+            
             <ProductIncludes
               formData={formData}
               onCheckboxChange={handleCheckboxChange}
             />
+            <Separator className="my-6" />
+            
             <SkillLevel formData={formData} onChange={handleChange} />
+            <Separator className="my-6" />
+            
             <ProductDesigner formData={formData} onChange={handleChange} />
+            <Separator className="my-6" />
+            
+            <ProductImages
+              formData={formData}
+              onImageChange={handleImageChange}
+              onRemoveImage={handleRemoveImage}
+            />
+            <Separator className="my-6" />
+            
             <ProductStatus
               formData={formData}
               onChange={handleChange}

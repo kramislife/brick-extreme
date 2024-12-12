@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { toast } from "react-hot-toast";
 
 const useProductForm = () => {
   const [formData, setFormData] = useState({
@@ -35,6 +36,7 @@ const useProductForm = () => {
     isActive: "",
     availability: "",
     preorder: false,
+    images: [],
   });
 
   const handleChange = (e) => {
@@ -84,11 +86,33 @@ const useProductForm = () => {
       useCreateProductsMutation(formData);
   };
 
+  const handleImageChange = (e) => {
+    const files = Array.from(e.target.files);
+    if (files.length + formData.images.length > 10) {
+      toast.error("Maximum 10 images allowed");
+      return;
+    }
+    
+    setFormData(prev => ({
+      ...prev,
+      images: [...prev.images, ...files].slice(0, 10)
+    }));
+  };
+
+  const handleRemoveImage = (index) => {
+    setFormData(prev => ({
+      ...prev,
+      images: prev.images.filter((_, i) => i !== index)
+    }));
+  };
+
   return {
     formData,
     handleChange,
     handleCheckboxChange,
     handleSubmit,
+    handleImageChange,
+    handleRemoveImage,
   };
 };
 

@@ -6,7 +6,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { User, LogOut, Settings } from "lucide-react";
+import { User, LogOut, Settings, LayoutDashboard } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setUser, setisAuthenticated } from "@/redux/features/userSlice";
@@ -23,9 +23,11 @@ const UserDropdown = ({ user }) => {
     navigate("/login");
   };
 
+  // Check if the user is an admin or employee
+  const isAdminOrEmployee = user?.role === "admin" || user?.role === "employee";
+
   return (
     <DropdownMenu>
-
       {/* User Avatar */}
       <DropdownMenuTrigger className="focus:outline-none">
         <div className="w-8 h-8 rounded-full bg-red-500 flex items-center justify-center text-white hover:bg-red-600 transition-colors">
@@ -33,8 +35,7 @@ const UserDropdown = ({ user }) => {
         </div>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent className="w-60 mt-2 mr-3 bg-darkBrand border-gray-800 text-white">
-
+      <DropdownMenuContent className="w-60 mt-2 mr-3 bg-darkBrand border-gray-800 text-white z-[101]">
         {/* User Name and Email */}
         <DropdownMenuLabel>
           <div className="flex flex-col space-y-2">
@@ -44,7 +45,7 @@ const UserDropdown = ({ user }) => {
         </DropdownMenuLabel>
         <DropdownMenuSeparator className="bg-gray-600" />
 
-        {/* Profile and Settings */}
+        {/* Profile, Dashboard and Settings */}
         <div className="flex flex-col gap-2">
           <DropdownMenuItem
             className="focus:bg-white cursor-pointer"
@@ -53,6 +54,18 @@ const UserDropdown = ({ user }) => {
             <User className="mr-2 h-4 w-4" />
             <span>Profile</span>
           </DropdownMenuItem>
+
+          {/* Show Dashboard only for admin/employee */}
+          {isAdminOrEmployee && (
+            <DropdownMenuItem
+              className="focus:bg-white cursor-pointer"
+              onClick={() => navigate("/admin")}
+            >
+              <LayoutDashboard className="mr-2 h-4 w-4" />
+              <span>Dashboard</span>
+            </DropdownMenuItem>
+          )}
+
           <DropdownMenuItem
             className="focus:bg-white cursor-pointer"
             onClick={() => navigate("/settings")}
