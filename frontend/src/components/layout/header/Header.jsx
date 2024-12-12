@@ -22,10 +22,13 @@ import { Input } from "@/components/ui/input";
 import { useEffect, useState } from "react";
 import { useGetMeQuery } from "@/redux/api/userApi";
 import { toast } from "react-toastify";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { setUser, setisAuthenticated } from "@/redux/features/userSlice";
+import UserDropdown from "./UserDropdown";
 
 const Header = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [searchQuery, setSearchQuery] = useState("");
 
   const { isError, error, isLoading } = useGetMeQuery();
@@ -60,19 +63,21 @@ const Header = () => {
     console.log("Searching for:", searchQuery);
   };
 
-  const handleLoginClick = () => {
-    if (user) {
-      toast.success("User Logged in ");
-      if (user.role === "admin" || user.role === "employee") {
-        toast.success(`Welcome ${user.name}`);
-        navigate("/admin");
-      } else {
-        navigate("/products");
-      }
-    } else {
-      navigate("/login");
-    }
-  };
+
+  // const handleLoginClick = () => {
+  //   if (user) {
+  //     toast.success("User Logged in ");
+  //     if (user.role === "admin" || user.role === "employee") {
+  //       toast.success(`Welcome ${user.name}`);
+  //       navigate("/admin");
+  //     } else {
+  //       navigate("/products");
+  //     }
+  //   } else {
+  //     navigate("/login");
+  //   }
+  // };
+
 
   return (
     <nav className="bg-brand-gradient sticky top-0 z-50 py-3">
@@ -239,12 +244,16 @@ const Header = () => {
 
           {/* User Dropdown - Only visible on desktop */}
           <div className="relative hidden md:block">
-            <button
-              onClick={handleLoginClick}
-              className="text-white hover:text-gray-200"
-            >
-              <User size={24} />
-            </button>
+            {user ? (
+              <UserDropdown user={user} />
+            ) : (
+              <button
+                onClick={() => navigate("/login")}
+                className="text-white hover:text-gray-200"
+              >
+                <User size={24} />
+              </button>
+            )}
           </div>
 
           {/* Mobile Menu */}
@@ -255,10 +264,22 @@ const Header = () => {
             <SheetContent className="w-[300px] bg-brand-gradient p-0">
               <div className="flex flex-col h-full">
                 <div className="px-6 py-10">
-                  <div className="flex items-center mb-6">
-                    <User size={24} className="text-white mr-2" />
-                    <span className="text-white font-medium">Account</span>
-                  </div>
+                  {user ? (
+                    <div className="flex items-center gap-3 mb-6 p-4 bg-darkBrand/20 rounded-xl">
+                      <div className="w-10 h-10 rounded-full bg-red-500 flex items-center justify-center text-white">
+                        {user.name.charAt(0).toUpperCase()}
+                      </div>
+                      <div>
+                        <p className="text-white font-medium">{user.name}</p>
+                        <p className="text-sm text-gray-400">{user.email}</p>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex items-center mb-6">
+                      <User size={24} className="text-white mr-2" />
+                      <span className="text-white font-medium">Account</span>
+                    </div>
+                  )}
                   <nav className="space-y-4">
                     {navItems.map((item) => (
                       <NavLink
@@ -274,12 +295,26 @@ const Header = () => {
                       </NavLink>
                     ))}
                     <div className="pt-4 border-t border-white/20">
-                      <button
-                        onClick={() => navigate("/login")}
-                        className="text-white hover:text-gray-300 transition-colors duration-200"
-                      >
-                        Login
-                      </button>
+                      {user ? (
+                        <button
+                          onClick={() => {
+                            dispatch(setUser(null));
+                            dispatch(setisAuthenticated(false));
+                            toast.success("Logged out successfully");
+                            navigate("/login");
+                          }}
+                          className="text-red-500 hover:text-red-400 transition-colors duration-200"
+                        >
+                          Logout
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => navigate("/login")}
+                          className="text-white hover:text-gray-300 transition-colors duration-200"
+                        >
+                          Login
+                        </button>
+                      )}
                     </div>
                   </nav>
                 </div>
