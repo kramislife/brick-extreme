@@ -19,11 +19,8 @@ const SkillLevel = ({ formData, onChange }) => {
     if (isError) {
       toast.error(error?.data?.message);
     }
+  }, [isError, error]);
 
-    if (data) {
-      console.log(data);
-    }
-  }, [isError, error, data]);
   return (
     <section className="space-y-6">
       <Label className="text-lg font-semibold">Skill Level</Label>
@@ -31,7 +28,7 @@ const SkillLevel = ({ formData, onChange }) => {
         {data?.skillLevels?.map((skillLevel) => (
           <label
             key={skillLevel._id}
-            htmlFor={skillLevel}
+            htmlFor={skillLevel._id}
             className={`flex items-center justify-center p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer ${
               formData.skillLevel === skillLevel._id
                 ? ACTIVE_COLORS[0]

@@ -21,7 +21,7 @@ const ProductIncludes = ({ formData, onCheckboxChange }) => {
           return (
             <div
               key={item}
-              className={`flex items-center space-x-3 p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer ${
+              className={`flex items-center space-x-3 p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow ${
                 isChecked ? (INCLUDES_COLORS[item] || DEFAULT_COLOR) : DEFAULT_COLOR
               }`}
             >
@@ -35,7 +35,7 @@ const ProductIncludes = ({ formData, onCheckboxChange }) => {
               />
               <Label
                 htmlFor={item}
-                className="text-sm font-medium"
+                className="text-sm font-medium cursor-pointer flex-1"
               >
                 {item}
               </Label>

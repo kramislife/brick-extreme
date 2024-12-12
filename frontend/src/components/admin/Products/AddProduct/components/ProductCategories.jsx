@@ -39,11 +39,14 @@ const ProductCategories = ({ formData, onCheckboxChange }) => {
                 id={category._id}
                 checked={isChecked}
                 onCheckedChange={(checked) =>
-                  onCheckboxChange("productCategories", category, checked)
+                  onCheckboxChange("productCategories", category._id, checked)
                 }
                 className="w-5 h-5 border-gray-300 rounded focus:ring focus:ring-opacity-50"
               />
-              <Label htmlFor={category} className="text-sm font-medium">
+              <Label 
+                htmlFor={category._id} 
+                className="text-sm font-medium cursor-pointer flex-1"
+              >
                 {category.name}
               </Label>
             </div>

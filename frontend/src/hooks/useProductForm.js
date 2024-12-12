@@ -13,11 +13,13 @@ const useProductForm = () => {
     description2: "",
     description3: "",
 
-    // Specifications
-    length: "",
-    width: "",
-    height: "",
-    piece_count: "",
+    // Specifications as array of objects
+    specifications: [
+      { name: 'length', value: '' },
+      { name: 'width', value: '' },
+      { name: 'height', value: '' },
+      { name: 'piece_count', value: '' }
+    ],
 
     // Additional Information
     manufacturer: "",
@@ -38,10 +40,21 @@ const useProductForm = () => {
   const handleChange = (e) => {
     const { id, value, type, name } = e.target;
     const fieldName = type === "radio" ? name : id;
-    setFormData((prev) => ({
-      ...prev,
-      [fieldName]: value,
-    }));
+    
+    // Handle specification fields differently
+    if (['length', 'width', 'height', 'piece_count'].includes(fieldName)) {
+      setFormData(prev => ({
+        ...prev,
+        specifications: prev.specifications.map(spec => 
+          spec.name === fieldName ? { ...spec, value } : spec
+        )
+      }));
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [fieldName]: value,
+      }));
+    }
   };
 
   const handleCheckboxChange = (field, value, isChecked) => {
