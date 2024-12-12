@@ -17,9 +17,11 @@ const ProductGrid = ({ title, products, baseUrl }) => {
 
   // return a best-selling or latest-product category
   const handleViewAll = () => {
-    console.log("Base URL: ", baseUrl);
-
-    navigate(`/products?${baseUrl.replace("/", "")}`);
+    // Extract the category ID from the baseUrl
+    const categoryId = baseUrl.split('=')[1];
+    
+    // Navigate with the proper query parameter
+    navigate(`/products?product_category=${categoryId}`);
   };
 
   return (
