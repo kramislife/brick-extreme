@@ -17,9 +17,12 @@ import LoadingSpinner from "@/components/layout/spinner/LoadingSpinner";
 
 const ViewProducts = () => {
   const { data: productData, isLoading, error } = useGetProductsQuery();
+  const [globalFilter, setGlobalFilter] = useState("");
+  const [pageSize, setPageSize] = useState(10);
+  const [pageIndex, setPageIndex] = useState(0);
 
   // Extract product data or fallback to an empty array if not available
-  const products =
+  const products = useMemo(() => 
     productData?.allProducts?.map((product, index) => ({
       product_id: product?._id,
       id: index + 1,
@@ -38,10 +41,9 @@ const ViewProducts = () => {
           : product?.stock > 0
           ? "Low Stock"
           : "Out of Stock",
-    })) || [];
-
-  // Global filter state
-  const [globalFilter, setGlobalFilter] = useState("");
+    })) || [],
+    [productData]
+  );
 
   // Table columns
   const columns = useMemo(
@@ -117,21 +119,35 @@ const ViewProducts = () => {
   );
 
   // Table configuration
-  {
-    console.log("PRODUCTS: ", products);
-  }
   const table = useReactTable({
     data: products,
     columns,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel({
-      pageCount: Math.ceil(products.length / 10), // Calculates page count based on 10 rows per page
-    }),
+    getPaginationRowModel: getPaginationRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     state: {
       globalFilter,
+      pagination: {
+        pageSize,
+        pageIndex,
+      },
     },
     onGlobalFilterChange: setGlobalFilter,
+    onPaginationChange: (updater) => {
+      if (typeof updater === 'function') {
+        const newState = updater({
+          pageIndex,
+          pageSize,
+        });
+        setPageIndex(newState.pageIndex);
+        setPageSize(newState.pageSize);
+      } else {
+        setPageIndex(updater.pageIndex);
+        setPageSize(updater.pageSize);
+      }
+    },
+    pageCount: Math.ceil(products.length / pageSize),
+    manualPagination: false,
   });
 
   // Handle loading and error states
@@ -180,12 +196,12 @@ const ViewProducts = () => {
         <CardContent className="p-10">
           <div className="flex flex-col md:flex-row justify-between gap-6 mb-10">
             <ShowEntries
-              value={table.getState().pagination.pageSize}
-              onChange={table.setPageSize}
+              value={pageSize}
+              onChange={setPageSize}
             />
             <SearchBar
-              value={globalFilter}
-              onChange={setGlobalFilter}
+              value={globalFilter ?? ""}
+              onChange={value => setGlobalFilter(String(value))}
               placeholder="Search products..."
             />
           </div>
