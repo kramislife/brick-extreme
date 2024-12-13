@@ -27,7 +27,7 @@ const UserDropdown = ({ user }) => {
   const isAdminOrEmployee = user?.role === "admin" || user?.role === "employee";
 
   return (
-    <DropdownMenu>
+    <DropdownMenu modal={false}>
       {/* User Avatar */}
       <DropdownMenuTrigger className="focus:outline-none">
         <div className="w-8 h-8 rounded-full bg-red-500 flex items-center justify-center text-white hover:bg-red-600 transition-colors">
@@ -35,7 +35,13 @@ const UserDropdown = ({ user }) => {
         </div>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent className="w-60 mt-2 mr-3 bg-darkBrand border-gray-800 text-white z-[101]">
+      <DropdownMenuContent
+        className="w-60 mt-2 mr-3 bg-darkBrand border-gray-800 text-white z-[1001]"
+        sideOffset={5}
+        align="end"
+        forceMount
+        style={{ position: "relative", zIndex: 1001 }}
+      >
         {/* User Name and Email */}
         <DropdownMenuLabel>
           <div className="flex flex-col space-y-2">
