@@ -15,8 +15,11 @@ import { User } from "lucide-react";
 const Header = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
-  const { isError, error, isLoading } = useGetMeQuery();
   const { user } = useSelector((state) => state.auth);
+
+  const { isError, error, isLoading } = useGetMeQuery(undefined, {
+    skip: !user,
+  });
 
   useEffect(() => {
     if (isError) {
