@@ -1,8 +1,8 @@
-import { Button } from '@/components/ui/button';
-import { ChevronsLeft, ChevronsRight } from 'lucide-react';
-import { adminNavigation } from '@/constant/adminNavigation';
-import { useLocation } from 'react-router-dom';
-import NavigationItem from './NavigationItem';
+import { Button } from "@/components/ui/button";
+import { ChevronsLeft, ChevronsRight } from "lucide-react";
+import { adminNavigation } from "@/constant/adminNavigation";
+import { useLocation } from "react-router-dom";
+import NavigationItem from "./NavigationItem";
 
 const DesktopSidebar = ({ isMinimized, toggleMinimize }) => {
   const location = useLocation();
@@ -12,7 +12,7 @@ const DesktopSidebar = ({ isMinimized, toggleMinimize }) => {
       className={`
         bg-darkBrand/30 border-r border-white/20 hidden lg:block h-screen shadow-sm 
         transition-all duration-300 ease-in-out
-        ${isMinimized ? 'w-24' : 'w-72'}
+        ${isMinimized ? "w-24" : "w-72"}
       `}
     >
       <div className="sticky top-0 h-full">
@@ -38,12 +38,12 @@ const DesktopSidebar = ({ isMinimized, toggleMinimize }) => {
         <nav
           className={`
             p-4 space-y-3 overflow-y-auto h-full
-            ${isMinimized ? 'flex flex-col items-center' : ''}
+            ${isMinimized ? "flex flex-col items-center" : ""}
           `}
         >
-          {adminNavigation.map((item) => (
+          {adminNavigation.map((item, index) => (
             <NavigationItem
-              key={item.path}
+              key={index}
               item={item}
               isActive={location.pathname === item.path}
               isMinimized={isMinimized}

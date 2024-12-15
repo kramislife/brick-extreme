@@ -13,16 +13,37 @@ export const adminNavigation = [
     label: "Dashboard",
     path: "/admin",
   },
-  {
-    icon: PackagePlus,
-    label: "New Product",
-    path: "/admin/new-product",
-  },
+  // {
+  //   icon: PackagePlus,
+  //   label: "New Product",
+  //   path: "",
+  // },
   {
     icon: Package,
     label: "Products",
     path: "/admin/products",
   },
+  {
+    icon: Package,
+    label: "Categories",
+    path: "/admin/categories",
+  },
+  {
+    icon: Package,
+    label: "Collections",
+    path: "/admin/collections",
+  },
+  {
+    icon: Package,
+    label: "Skills",
+    path: "/admin/skills",
+  },
+  {
+    icon: Package,
+    label: "Designers",
+    path: "/admin/designers",
+  },
+
   {
     icon: ShoppingCart,
     label: "Orders",
