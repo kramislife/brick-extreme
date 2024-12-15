@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -14,7 +14,6 @@ import ProductIncludes from "./components/ProductIncludes";
 import SkillLevel from "./components/SkillLevel";
 import ProductDesigner from "./components/ProductDesigner";
 import ProductStatus from "./components/ProductStatus";
-import ProductImages from "./components/ProductImages";
 
 const AddProduct = () => {
   const {
@@ -22,9 +21,8 @@ const AddProduct = () => {
     handleChange,
     handleCheckboxChange,
     handleSubmit,
-    handleImageChange,
-    handleRemoveImage,
     isLoading,
+    handleDateChange, // <-- Ensure this is returned
   } = useProductForm();
 
   return (
@@ -75,17 +73,11 @@ const AddProduct = () => {
             <ProductDesigner formData={formData} onChange={handleChange} />
             <Separator className="my-6" />
 
-            <ProductImages
-              formData={formData}
-              onImageChange={handleImageChange}
-              onRemoveImage={handleRemoveImage}
-            />
-            <Separator className="my-6" />
-
             <ProductStatus
               formData={formData}
               onChange={handleChange}
               onCheckboxChange={handleCheckboxChange}
+              onDateChange={handleDateChange} // <--  Add this line
             />
 
             <div className="flex justify-end space-x-4 pt-6 border-t">

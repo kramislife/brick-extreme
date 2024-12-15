@@ -51,11 +51,12 @@ const useProductForm = () => {
     skillLevel: "",
     productDesigner: "",
     isActive: "",
-    availability: "",
+    availability: null,
     preorder: false,
-    images: [],
+    preorderDate: null, // Add this for pre-order date
   });
 
+  // Handle changes to input fields
   const handleChange = (e) => {
     const { id, value, type, name } = e.target;
     const fieldName = type === "radio" ? name : id;
@@ -76,6 +77,7 @@ const useProductForm = () => {
     }
   };
 
+  // Handle checkbox changes for categories, collections, includes
   const handleCheckboxChange = (field, value, isChecked) => {
     setFormData((prev) => {
       if (isChecked) {
@@ -96,6 +98,15 @@ const useProductForm = () => {
     });
   };
 
+  // Handle date change for pre-order availability
+  const handleDateChange = (field, date) => {
+    setFormData((prev) => ({
+      ...prev,
+      [field]: date,
+    }));
+  };
+
+  // Submit form data
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -107,7 +118,6 @@ const useProductForm = () => {
       product_description_1: formData.description1,
       product_description_2: formData.description2 || "",
       product_description_3: formData.description3 || "",
-      product_images: formData.images || [],
       product_category: formData.productCategories,
       product_collection: formData.productCollections,
       product_piece_count: parseInt(
@@ -117,8 +127,10 @@ const useProductForm = () => {
       ),
       product_availability:
         formData.availability === "In Stock"
-          ? new Date().toISOString().split("T")[0] // Current date in YYYY-MM-DD format
-          : "Unavailable",
+          ? null
+          : formData.preorder_availability_date ||
+            new Date().toISOString().split("T")[0],
+
       product_length: parseFloat(
         formData.specifications.find((spec) => spec.name === "length")?.value ||
           0
@@ -139,7 +151,10 @@ const useProductForm = () => {
       tags: formData.tags.split(",").map((tag) => tag.trim()) || [],
       is_active: formData.isActive === "yes" ? true : false,
       manufacturer: formData.manufacturer || "Unknown", // Fallback to "Unknown" if manufacturer is empty
-      is_preorder: formData?.preorder[0],
+      is_preorder: formData.preorder,
+      preorder_date: formData.preorderDate
+        ? formData.preorderDate.toISOString().split("T")[0]
+        : null, // Format date for preorder
       createdBy: user?._id,
     };
 
@@ -147,28 +162,12 @@ const useProductForm = () => {
     console.log("Form submitted with data:", formData);
   };
 
-  const handleImageChange = (e) => {
-    const files = Array.from(e.target.files);
-    if (files.length + formData.images.length > 10) {
-      toast.error("Maximum 10 images allowed");
-      return;
-    }
-  };
-
-  const handleRemoveImage = (index) => {
-    setFormData((prev) => ({
-      ...prev,
-      images: prev.images.filter((_, i) => i !== index),
-    }));
-  };
-
   return {
     formData,
     handleChange,
     handleCheckboxChange,
     handleSubmit,
-    handleImageChange,
-    handleRemoveImage,
+    handleDateChange, // Return handleDateChange
     isLoading,
   };
 };

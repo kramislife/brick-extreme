@@ -6,7 +6,7 @@ import {
   getFilteredRowModel,
   flexRender,
 } from "@tanstack/react-table";
-import { Edit2, Trash2 } from "lucide-react";
+import { Edit2, Trash2, Image } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import SearchBar from "@/components/admin/table/SearchBar";
 import ShowEntries from "@/components/admin/table/ShowEntries";
@@ -49,10 +49,30 @@ const ViewProducts = () => {
     [productData]
   );
 
-  // Handle edit product (placeholder)
+  // Handle edit product
   const handleEdit = (product) => {
     navigate(`/admin/update-product/${product.product_id}`);
-    // Add your edit logic here
+  };
+
+  // Handle view gallery
+  const handleViewGallery = (product_id) => {
+    navigate(`/admin/product-gallery/${product_id}`);
+  };
+
+  // Handle delete product
+  const handleDelete = async (product_id) => {
+    try {
+      const response = await fetch(`/api/products/${product_id}`, {
+        method: "DELETE",
+      });
+      if (response.ok) {
+        console.log(`Deleted product with ID: ${product_id}`);
+      } else {
+        console.error("Failed to delete product.");
+      }
+    } catch (err) {
+      console.error("Error deleting product:", err);
+    }
   };
 
   // Table columns
@@ -115,6 +135,13 @@ const ViewProducts = () => {
               <Edit2 size={18} />
             </button>
             <button
+              onClick={() => handleViewGallery(row.original.product_id)}
+              className="text-purple-600 hover:text-purple-800 p-1 rounded-full hover:bg-purple-100 transition-colors"
+              title="View Image Gallery"
+            >
+              <Image size={18} />
+            </button>
+            <button
               onClick={() => handleDelete(row.original.product_id)}
               className="text-red-600 hover:text-red-800 p-1 rounded-full hover:bg-red-100 transition-colors"
               title="Delete Product"
@@ -169,31 +196,23 @@ const ViewProducts = () => {
     return <div>Error loading products</div>;
   }
 
-  // Handle delete product
-  const handleDelete = async (product_id) => {
-    try {
-      const response = await fetch(`/api/products/${product_id}`, {
-        method: "DELETE",
-      });
-      if (response.ok) {
-        console.log(`Deleted product with ID: ${product_id}`);
-      } else {
-        console.error("Failed to delete product.");
-      }
-    } catch (err) {
-      console.error("Error deleting product:", err);
-    }
-  };
-
   return (
     <div className="container mx-auto py-6 px-4">
-      <div className="mb-8 space-y-2">
-        <h1 className="text-3xl font-bold text-light tracking-tight">
-          Products Management
-        </h1>
-        <p className="text-gray-200/70 text-md">
-          Manage your product inventory
-        </p>
+      <div className="mb-8 flex justify-between items-center">
+        <div>
+          <h1 className="text-3xl font-bold text-light tracking-tight">
+            Products Management
+          </h1>
+          <p className="text-gray-200/70 text-md">
+            Manage your product inventory
+          </p>
+        </div>
+        <button
+          onClick={() => navigate("/admin/new-product")}
+          className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+        >
+          Add New Product
+        </button>
       </div>
 
       <Card className="bg-darkBrand border-none">
