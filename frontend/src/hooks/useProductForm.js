@@ -153,11 +153,6 @@ const useProductForm = () => {
       toast.error("Maximum 10 images allowed");
       return;
     }
-
-    setFormData((prev) => ({
-      ...prev,
-      images: [...prev.images, ...files].slice(0, 10),
-    }));
   };
 
   const handleRemoveImage = (index) => {

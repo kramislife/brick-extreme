@@ -14,6 +14,7 @@ import TableLayout from "@/components/admin/table/TableLayout";
 import Pagination from "@/components/admin/table/Pagination";
 import { useGetProductsQuery } from "@/redux/api/productApi";
 import LoadingSpinner from "@/components/layout/spinner/LoadingSpinner";
+import { useNavigate } from "react-router-dom";
 
 const ViewProducts = () => {
   const { data: productData, isLoading, error } = useGetProductsQuery();
@@ -21,29 +22,38 @@ const ViewProducts = () => {
   const [pageSize, setPageSize] = useState(10);
   const [pageIndex, setPageIndex] = useState(0);
 
+  const navigate = useNavigate();
+
   // Extract product data or fallback to an empty array if not available
-  const products = useMemo(() => 
-    productData?.allProducts?.map((product, index) => ({
-      product_id: product?._id,
-      id: index + 1,
-      name: product?.product_name,
-      price: product?.price,
-      category: product?.product_category
-        .map((category) => category?.name)
-        .join(", "),
-      collection: product?.product_collection
-        .map((collection) => collection.name)
-        .join(", "),
-      stock: product?.stock,
-      status:
-        product?.stock > 50
-          ? "Active"
-          : product?.stock > 0
-          ? "Low Stock"
-          : "Out of Stock",
-    })) || [],
+  const products = useMemo(
+    () =>
+      productData?.allProducts?.map((product, index) => ({
+        product_id: product?._id,
+        id: index + 1,
+        name: product?.product_name,
+        price: product?.price,
+        category: product?.product_category
+          .map((category) => category?.name)
+          .join(", "),
+        collection: product?.product_collection
+          .map((collection) => collection.name)
+          .join(", "),
+        stock: product?.stock,
+        status:
+          product?.stock > 50
+            ? "Active"
+            : product?.stock > 0
+            ? "Low Stock"
+            : "Out of Stock",
+      })) || [],
     [productData]
   );
+
+  // Handle edit product (placeholder)
+  const handleEdit = (product) => {
+    navigate(`/admin/update-product/${product.product_id}`);
+    // Add your edit logic here
+  };
 
   // Table columns
   const columns = useMemo(
@@ -134,7 +144,7 @@ const ViewProducts = () => {
     },
     onGlobalFilterChange: setGlobalFilter,
     onPaginationChange: (updater) => {
-      if (typeof updater === 'function') {
+      if (typeof updater === "function") {
         const newState = updater({
           pageIndex,
           pageSize,
@@ -175,12 +185,6 @@ const ViewProducts = () => {
     }
   };
 
-  // Handle edit product (placeholder)
-  const handleEdit = (product) => {
-    console.log("Edit product:", product);
-    // Add your edit logic here
-  };
-
   return (
     <div className="container mx-auto py-6 px-4">
       <div className="mb-8 space-y-2">
@@ -195,13 +199,10 @@ const ViewProducts = () => {
       <Card className="bg-darkBrand border-none">
         <CardContent className="p-10">
           <div className="flex flex-col md:flex-row justify-between gap-6 mb-10">
-            <ShowEntries
-              value={pageSize}
-              onChange={setPageSize}
-            />
+            <ShowEntries value={pageSize} onChange={setPageSize} />
             <SearchBar
               value={globalFilter ?? ""}
-              onChange={value => setGlobalFilter(String(value))}
+              onChange={(value) => setGlobalFilter(String(value))}
               placeholder="Search products..."
             />
           </div>

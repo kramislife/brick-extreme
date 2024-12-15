@@ -2,6 +2,7 @@ import catchAsyncErrors from "../middlewares/catchAsyncErrors.js";
 import Category from "../models/category.model.js";
 import Product from "../models/product.model.js";
 import API_Filters from "../Utills/apiFilters.js";
+import { upload_file } from "../Utills/cloudinary.js";
 import ErrorHandler from "../Utills/customErrorHandler.js";
 
 //------------------------------------  GET ALL PRODUCT => GET /products  ------------------------------------
@@ -25,7 +26,7 @@ export const getProduct = catchAsyncErrors(async (req, res, next) => {
 
   // Apply pagination for display products
   apiFilters.pagination(resPerPage);
-  
+
   // Get paginated products for display
   const paginatedProducts = await apiFilters.query
     .clone()
@@ -102,6 +103,8 @@ export const getProductById = catchAsyncErrors(async (req, res, next) => {
 //------------------------------------  CREATE NEW PRODUCT BY ADMIN => POST  /admin/newProduct  ------------------------------------
 
 export const newProduct = catchAsyncErrors(async (req, res, next) => {
+  console.log("Product : ", req.body);
+
   const product = await Product.create(req.body);
 
   if (!product) {
@@ -159,4 +162,21 @@ export const deleteAllProducts = catchAsyncErrors(async (req, res, next) => {
   res.status(200).json({
     message: "All Products Deleted Successfully",
   });
+});
+
+// ------------------------------- UPLOAD PRODUCT IMAGE  ------------------------------------
+export const uploadProductImage = catchAsyncErrors(async (req, res, next) => {
+  let product = await Product.findById(req?.params?.id);
+
+  if (!product) {
+    return next(new ErrorHandler("Product not found", 404));
+  }
+
+  const uploader = async (image) =>
+    upload_file(image, "brick_extreme//products");
+
+  const urls = (await Promise.all(req?.body.images)).map(uploader);
+
+  product?.images?.push(...urls);
+  await product?.save();
 });

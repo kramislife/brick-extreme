@@ -17,10 +17,8 @@ import {
 } from "@/components/ui/sheet";
 import { NavLink, useNavigate } from "react-router-dom";
 import { navItems } from "@/constant/navigation";
-import { useDispatch } from "react-redux";
-import { setUser, setisAuthenticated } from "@/redux/features/userSlice";
-import { toast } from "react-toastify";
 import { useViewport } from "@/hooks/useViewport";
+import { useSelector } from "react-redux";
 
 // Map icons to nav items
 const navIcons = {
@@ -30,18 +28,11 @@ const navIcons = {
   about: Info,
 };
 
-const MobileMenu = ({ user }) => {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const [isOpen, setIsOpen] = useViewport();
+const MobileMenu = () => {
+  const { user } = useSelector((state) => state.auth);
 
-  const handleLogout = () => {
-    dispatch(setUser(null));
-    dispatch(setisAuthenticated(false));
-    toast.success("Logged out successfully");
-    navigate("/login");
-    setIsOpen(false);
-  };
+  const navigate = useNavigate();
+  const [isOpen, setIsOpen] = useViewport();
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -115,7 +106,7 @@ const MobileMenu = ({ user }) => {
           <div className="px-6 py-6 border-t border-white/10 mt-auto">
             {user ? (
               <button
-                onClick={handleLogout}
+                onClick=""
                 className="flex items-center gap-3 text-red-500 transition-colors duration-200 w-full px-4 py-3 rounded-xl hover:bg-gray-500/10"
               >
                 <LogOut size={20} />

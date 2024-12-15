@@ -6,25 +6,41 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useLazyLogoutQuery } from "@/redux/api/authApi";
 import { User, LogOut, Settings, LayoutDashboard } from "lucide-react";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { setUser, setisAuthenticated } from "@/redux/features/userSlice";
 import { toast } from "react-toastify";
 
-const UserDropdown = ({ user }) => {
+const UserDropdown = () => {
+  //
+
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth);
+  const [logout, { data, isError, error, isSuccess, isLoading }] =
+    useLazyLogoutQuery();
+
+  const isAdminOrEmployee = ["admin", "employee", "superAdmin"].includes(
+    user.role
+  );
+
+  useEffect(() => {
+    if (isError) {
+      toast.error(error?.data?.message || "An error occoured during logout");
+    }
+
+    if (isSuccess) {
+      toast.success(data?.message);
+      setTimeout(() => {
+        navigate(0);
+      }, 2000);
+    }
+  }, [isError, error, isLoading, isSuccess, data]);
 
   const handleLogout = () => {
-    dispatch(setUser(null));
-    dispatch(setisAuthenticated(false));
-    toast.success("Logged out successfully");
-    navigate("/login");
+    logout();
   };
-
-  // Check if the user is an admin or employee
-  const isAdminOrEmployee = user?.role === "admin" || user?.role === "employee";
 
   return (
     <DropdownMenu modal={false}>
@@ -87,7 +103,7 @@ const UserDropdown = ({ user }) => {
           className="focus:bg-white cursor-pointer text-red-500 focus:text-red-500"
           onClick={handleLogout}
         >
-          <LogOut className="mr-2 h-4 w-4" />
+          <LogOut className="mr-2 h-4 w-4 " />
           <span>Logout</span>
         </DropdownMenuItem>
       </DropdownMenuContent>

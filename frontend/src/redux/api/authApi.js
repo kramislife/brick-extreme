@@ -16,13 +16,11 @@ export const authApi = createApi({
     }),
 
     login: builder.mutation({
-      query(body) {
-        return {
-          url: "/login",
-          method: "POST",
-          body,
-        };
-      },
+      query: (body) => ({
+        url: "/login",
+        method: "POST",
+        body,
+      }),
       async onQueryStarted(args, { dispatch, queryFulfilled }) {
         try {
           await queryFulfilled;
@@ -32,7 +30,16 @@ export const authApi = createApi({
         }
       },
     }),
+    logout: builder.query({
+      query: () => {
+        return {
+          url: "/logout",
+          method: "POST",
+        };
+      },
+    }),
   }),
 });
 
-export const { useLoginMutation, useRegisterMutation } = authApi;
+export const { useLoginMutation, useRegisterMutation, useLazyLogoutQuery } =
+  authApi;
