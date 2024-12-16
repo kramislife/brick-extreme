@@ -4,6 +4,7 @@ import {
   getCoreRowModel,
   getPaginationRowModel,
   getFilteredRowModel,
+  getSortedRowModel,
   flexRender,
 } from "@tanstack/react-table";
 import { Edit2, Trash2, Image } from "lucide-react";
@@ -21,61 +22,10 @@ const ViewProducts = () => {
   const [globalFilter, setGlobalFilter] = useState("");
   const [pageSize, setPageSize] = useState(10);
   const [pageIndex, setPageIndex] = useState(0);
+  const [sorting, setSorting] = useState([{ id: "createdAt", desc: true }]);
 
   const navigate = useNavigate();
 
-  // Extract product data or fallback to an empty array if not available
-  const products = useMemo(
-    () =>
-      productData?.allProducts?.map((product, index) => ({
-        product_id: product?._id,
-        id: index + 1,
-        name: product?.product_name,
-        price: product?.price,
-        category: product?.product_category
-          .map((category) => category?.name)
-          .join(", "),
-        collection: product?.product_collection
-          .map((collection) => collection.name)
-          .join(", "),
-        stock: product?.stock,
-        status:
-          product?.stock > 50
-            ? "Active"
-            : product?.stock > 0
-            ? "Low Stock"
-            : "Out of Stock",
-      })) || [],
-    [productData]
-  );
-
-  // Handle edit product
-  const handleEdit = (product) => {
-    navigate(`/admin/update-product/${product.product_id}`);
-  };
-
-  // Handle view gallery
-  const handleViewGallery = (product_id) => {
-    navigate(`/admin/product-gallery/${product_id}`);
-  };
-
-  // Handle delete product
-  const handleDelete = async (product_id) => {
-    try {
-      const response = await fetch(`/api/products/${product_id}`, {
-        method: "DELETE",
-      });
-      if (response.ok) {
-        console.log(`Deleted product with ID: ${product_id}`);
-      } else {
-        console.error("Failed to delete product.");
-      }
-    } catch (err) {
-      console.error("Error deleting product:", err);
-    }
-  };
-
-  // Table columns
   const columns = useMemo(
     () => [
       {
@@ -83,7 +33,7 @@ const ViewProducts = () => {
         accessorKey: "id",
       },
       {
-        header: "Name",
+        header: "Product Name",
         accessorKey: "name",
       },
       {
@@ -155,20 +105,49 @@ const ViewProducts = () => {
     []
   );
 
-  // Table configuration
+  // Sort products by creation date (newest first)
+  const products = useMemo(() => {
+    if (!productData?.allProducts) return [];
+    
+    return [...productData.allProducts]
+      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+      .map((product, index) => ({
+        product_id: product?._id,
+        id: index + 1,
+        name: product?.product_name,
+        price: product?.price,
+        category: product?.product_category
+          .map((category) => category?.name)
+          .join(", "),
+        collection: product?.product_collection
+          .map((collection) => collection.name)
+          .join(", "),
+        stock: product?.stock,
+        status:
+          product?.stock > 50
+            ? "Active"
+            : product?.stock > 0
+            ? "Low Stock"
+            : "Out of Stock",
+      }));
+  }, [productData]);
+
   const table = useReactTable({
     data: products,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
+    getSortedRowModel: getSortedRowModel(),
     state: {
       globalFilter,
       pagination: {
         pageSize,
         pageIndex,
       },
+      sorting,
     },
+    onSortingChange: setSorting,
     onGlobalFilterChange: setGlobalFilter,
     onPaginationChange: (updater) => {
       if (typeof updater === "function") {
@@ -186,6 +165,32 @@ const ViewProducts = () => {
     pageCount: Math.ceil(products.length / pageSize),
     manualPagination: false,
   });
+
+  // Handle edit product
+  const handleEdit = (product) => {
+    navigate(`/admin/update-product/${product.product_id}`);
+  };
+
+  // Handle view gallery
+  const handleViewGallery = (product_id) => {
+    navigate(`/admin/product-gallery/${product_id}`);
+  };
+
+  // Handle delete product
+  const handleDelete = async (product_id) => {
+    try {
+      const response = await fetch(`/api/products/${product_id}`, {
+        method: "DELETE",
+      });
+      if (response.ok) {
+        console.log(`Deleted product with ID: ${product_id}`);
+      } else {
+        console.error("Failed to delete product.");
+      }
+    } catch (err) {
+      console.error("Error deleting product:", err);
+    }
+  };
 
   // Handle loading and error states
   if (isLoading) {

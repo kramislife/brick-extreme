@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Label } from "@/components/ui/label";
 import { useGetCollectionQuery } from "@/redux/api/productApi";
 import { toast } from "react-toastify";
-import { Checkbox } from "@radix-ui/react-checkbox";
+import { Checkbox } from "@/components/ui/checkbox"; // Changed import
 
 const COLLECTION_COLORS = {
   0: "bg-blue-100 dark:bg-blue-800 text-blue-700 dark:text-blue-300",
@@ -41,7 +41,7 @@ const ProductCollections = ({ formData, onCheckboxChange }) => {
                 id={collection._id}
                 checked={isChecked}
                 onCheckedChange={(checked) =>
-                  onCheckboxChange("productCollection", collection._id, checked)
+                  onCheckboxChange("productCollections", collection._id, checked)
                 }
                 className="w-5 h-5 border-gray-300 rounded focus:ring focus:ring-opacity-50"
               />

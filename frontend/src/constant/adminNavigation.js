@@ -5,6 +5,10 @@ import {
   ShoppingCart,
   Users,
   Star,
+  ChartColumnStacked,
+  FolderKanban,
+  Gauge,
+  Pencil
 } from "lucide-react";
 
 export const adminNavigation = [
@@ -13,37 +17,31 @@ export const adminNavigation = [
     label: "Dashboard",
     path: "/admin",
   },
-  // {
-  //   icon: PackagePlus,
-  //   label: "New Product",
-  //   path: "",
-  // },
   {
     icon: Package,
     label: "Products",
     path: "/admin/products",
   },
   {
-    icon: Package,
+    icon: ChartColumnStacked,
     label: "Categories",
     path: "/admin/categories",
   },
   {
-    icon: Package,
+    icon: FolderKanban,
     label: "Collections",
     path: "/admin/collections",
   },
   {
-    icon: Package,
-    label: "Skills",
-    path: "/admin/skills",
+    icon: Gauge,
+    label: "Skill Levels",
+    path: "/admin/skill-levels",
   },
   {
-    icon: Package,
+    icon: Pencil,
     label: "Designers",
     path: "/admin/designers",
   },
-
   {
     icon: ShoppingCart,
     label: "Orders",
@@ -59,4 +57,9 @@ export const adminNavigation = [
     label: "Reviews",
     path: "/admin/reviews",
   },
+   // {
+  //   icon: PackagePlus,
+  //   label: "New Product",
+  //   path: "",
+  // },
 ];
