@@ -78,44 +78,48 @@ const UpdateProduct = () => {
     if (isError) {
       toast.error(error?.data?.message || "Failed to fetch product details.");
     }
+
     if (data) {
-      console.log(data.product);
+      console.log(data);
 
       setFormData({
         // Map data from API to formData structure
-        name: data.product.product_name || "",
-        price: data.product.price || "",
-        discount: data.product.discount || "",
-        stock: data.product.stock || "",
-        description1: data.product.product_description_1 || "",
-        description2: data.product.product_description_2 || "",
-        description3: data.product.product_description_3 || "",
+        name: data?.product?.product_name || "",
+        price: data?.product?.price || "",
+        discount: data?.product?.discount || "",
+        stock: data?.product?.stock || "",
+        description1: data?.product?.product_description_1 || "",
+        description2: data?.product?.product_description_2 || "",
+        description3: data?.product?.product_description_3 || "",
         specifications: [
-          { name: "length", value: data.product.product_length || "" },
-          { name: "width", value: data.product.product_width || "" },
-          { name: "height", value: data.product.product_height || "" },
+          { name: "length", value: data?.product?.product_length || "" },
+          { name: "width", value: data?.product?.product_width || "" },
+          { name: "height", value: data?.product?.product_height || "" },
           {
             name: "piece_count",
-            value: data.product.product_piece_count || "",
+            value: data?.product?.product_piece_count || "",
           },
         ],
-        manufacturer: data.product.manufacturer || "",
-        seller: data.product.seller || "",
-        tags: data.product.tags?.join(", ") || "",
-        productCategories: data.product.product_category.name || [],
-        productCollections: data.product.product_collection || "",
-        productIncludes: data.product.product_includes?.split(", ") || [],
-        skillLevel: data.product.product_skill_level || "",
-        productDesigner: data.product.product_designer || "",
-        isActive: data.product.is_active ? "yes" : "no",
-        availability: data.product.product_availability || "In Stock",
-        preorder: data.product.is_preorder || false,
-        preorderDate: data.product.preorder_date
-          ? new Date(data.product.preorder_date)
+        manufacturer: data?.product?.manufacturer || "",
+        seller: data?.product?.seller || "",
+        tags: data?.product?.tags?.join(", ") || "",
+        productCategories:
+          data?.product?.product_category.map((cat) => cat._id) || [],
+        productCollections:
+          data?.product?.product_collection.map((col) => col._id) || [],
+
+        productIncludes: data?.product?.product_includes?.split(", ") || [],
+        skillLevel: data?.product?.product_skill_level || "",
+        productDesigner: data?.product?.product_designer || "",
+        isActive: data?.product?.is_active ? "yes" : "no",
+        availability: data?.product?.product_availability || "In Stock",
+        preorder: data?.product?.is_preorder || false,
+        preorderDate: data?.product?.preorder_date
+          ? new Date(data?.product?.preorder_date)
           : null,
       });
     }
-  }, [isError, error, data]);
+  }, [isError, error, data]); // Dependency array
 
   // Handle input changes for text fields
   const handleChange = (e) => {

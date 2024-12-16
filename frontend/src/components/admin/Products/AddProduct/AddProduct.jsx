@@ -58,7 +58,10 @@ const AddProduct = () => {
             />
             <Separator className="my-6" />
 
-            <ProductCollections formData={formData} onChange={handleChange} />
+            <ProductCollections
+              formData={formData}
+              onCheckboxChange={handleCheckboxChange}
+            />
             <Separator className="my-6" />
 
             <ProductIncludes

@@ -14,7 +14,7 @@ const DEFAULT_COLOR =
   "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300";
 
 const ProductCategories = ({ formData, onCheckboxChange }) => {
-  const { data, isLoading, isError, error } = useGetCategoryQuery();
+  const { data, isError, error } = useGetCategoryQuery();
 
   useEffect(() => {
     if (isError) {
@@ -43,8 +43,8 @@ const ProductCategories = ({ formData, onCheckboxChange }) => {
                 }
                 className="w-5 h-5 border-gray-300 rounded focus:ring focus:ring-opacity-50"
               />
-              <Label 
-                htmlFor={category._id} 
+              <Label
+                htmlFor={category._id}
                 className="text-sm font-medium cursor-pointer flex-1"
               >
                 {category.name}

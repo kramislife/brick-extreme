@@ -110,6 +110,8 @@ const useProductForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    console.log("PC:", formData.productCollections);
+
     const newProduct = {
       product_name: formData.name,
       price: parseFloat(formData.price),
