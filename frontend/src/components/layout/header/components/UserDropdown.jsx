@@ -26,9 +26,30 @@ const UserDropdown = ({ user }) => {
   // Check if the user is an admin or employee
   const isAdminOrEmployee = user?.role === "admin" || user?.role === "employee";
 
+  const menuItems = [
+    {
+      label: "Profile",
+      icon: <User className="mr-2 h-4 w-4" />,
+      onClick: () => navigate("/profile"),
+    },
+    ...(isAdminOrEmployee
+      ? [
+          {
+            label: "Dashboard",
+            icon: <LayoutDashboard className="mr-2 h-4 w-4" />,
+            onClick: () => navigate("/admin"),
+          },
+        ]
+      : []),
+    {
+      label: "Settings",
+      icon: <Settings className="mr-2 h-4 w-4" />,
+      onClick: () => navigate("/settings"),
+    },
+  ];
+
   return (
     <DropdownMenu modal={false}>
-      {/* User Avatar */}
       <DropdownMenuTrigger className="focus:outline-none">
         <div className="w-8 h-8 rounded-full bg-red-500 flex items-center justify-center text-white hover:bg-red-600 transition-colors">
           {user?.name?.charAt(0).toUpperCase()}
@@ -51,40 +72,24 @@ const UserDropdown = ({ user }) => {
         </DropdownMenuLabel>
         <DropdownMenuSeparator className="bg-gray-600" />
 
-        {/* Profile, Dashboard and Settings */}
+        {/* Menu Items */}
         <div className="flex flex-col gap-2">
-          <DropdownMenuItem
-            className="focus:bg-white cursor-pointer"
-            onClick={() => navigate("/profile")}
-          >
-            <User className="mr-2 h-4 w-4" />
-            <span>Profile</span>
-          </DropdownMenuItem>
-
-          {/* Show Dashboard only for admin/employee */}
-          {isAdminOrEmployee && (
+          {menuItems.map((item, index) => (
             <DropdownMenuItem
-              className="focus:bg-white cursor-pointer"
-              onClick={() => navigate("/admin")}
+              key={index}
+              className="cursor-pointer transition-colors"
+              onClick={item.onClick}
             >
-              <LayoutDashboard className="mr-2 h-4 w-4" />
-              <span>Dashboard</span>
+              {item.icon}
+              <span>{item.label}</span>
             </DropdownMenuItem>
-          )}
-
-          <DropdownMenuItem
-            className="focus:bg-white cursor-pointer"
-            onClick={() => navigate("/settings")}
-          >
-            <Settings className="mr-2 h-4 w-4" />
-            <span>Settings</span>
-          </DropdownMenuItem>
+          ))}
         </div>
         <DropdownMenuSeparator className="bg-gray-600" />
 
         {/* Logout */}
         <DropdownMenuItem
-          className="focus:bg-white cursor-pointer text-red-500 focus:text-red-500"
+          className="cursor-pointer text-red-500 focus:text-red-500 transition-colors"
           onClick={handleLogout}
         >
           <LogOut className="mr-2 h-4 w-4" />

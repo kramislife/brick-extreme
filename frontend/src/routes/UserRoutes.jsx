@@ -14,6 +14,8 @@ import ViewOrder from "@/components/admin/Products/ViewOrder";
 import ViewUsers from "@/components/admin/Products/ViewUsers";
 import ViewReviews from "@/components/admin/Products/ViewReviews";
 import CategoriesPage from "@/pages/Categories/CategoriesPage";
+import Profile from "@/components/auth/Profile/Profile";
+import Settings from "@/components/auth/Settings/Settings";
 
 const UserRoutes = (
   <>
@@ -44,6 +46,10 @@ const UserRoutes = (
       <Route path="users" element={<ViewUsers />} />
       <Route path="reviews" element={<ViewReviews />} />
     </Route>
+
+    {/* User Profile Routes */}
+    <Route path="profile" element={<Profile />} />
+    <Route path="settings" element={<Settings />} />
   </>
 );
 
