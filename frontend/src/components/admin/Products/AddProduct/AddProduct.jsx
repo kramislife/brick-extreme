@@ -77,7 +77,7 @@ const AddProduct = () => {
               formData={formData}
               onChange={handleChange}
               onCheckboxChange={handleCheckboxChange}
-              onDateChange={handleDateChange} // <--  Add this line
+              onDateChange={handleDateChange}
             />
 
             <div className="flex justify-end space-x-4 pt-6 border-t">

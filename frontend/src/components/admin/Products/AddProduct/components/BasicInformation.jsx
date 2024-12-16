@@ -1,16 +1,22 @@
-import React from 'react';
+import React, { useEffect } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Package, DollarSign, Percent, Box } from "lucide-react";
 
-const ACTIVE_COLOR = 'bg-blue-500 text-white';
+const ACTIVE_COLOR = "bg-blue-500 text-white";
 
 const BasicInformation = ({ formData, onChange }) => {
+  useEffect(() => {
+    console.log("BASIC INFO :", formData);
+  }, []);
   return (
     <section className="space-y-6">
       {/* Product Name */}
       <div className="space-y-2">
-        <Label htmlFor="name" className="flex items-center gap-2 text-lg font-semibold">
+        <Label
+          htmlFor="name"
+          className="flex items-center gap-2 text-lg font-semibold"
+        >
           <Package className="h-5 w-5 text-blue-600" />
           Product Name
         </Label>
@@ -27,7 +33,10 @@ const BasicInformation = ({ formData, onChange }) => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Price */}
         <div className="space-y-2">
-          <Label htmlFor="price" className="flex items-center gap-2 text-lg font-semibold">
+          <Label
+            htmlFor="price"
+            className="flex items-center gap-2 text-lg font-semibold"
+          >
             <DollarSign className="h-5 w-5 text-green-600" />
             Price
           </Label>
@@ -43,7 +52,10 @@ const BasicInformation = ({ formData, onChange }) => {
 
         {/* Discount */}
         <div className="space-y-2">
-          <Label htmlFor="discount" className="flex items-center gap-2 text-lg font-semibold">
+          <Label
+            htmlFor="discount"
+            className="flex items-center gap-2 text-lg font-semibold"
+          >
             <Percent className="h-5 w-5 text-orange-600" />
             Discount
           </Label>
@@ -59,7 +71,10 @@ const BasicInformation = ({ formData, onChange }) => {
 
         {/* Stock */}
         <div className="space-y-2">
-          <Label htmlFor="stock" className="flex items-center gap-2 text-lg font-semibold">
+          <Label
+            htmlFor="stock"
+            className="flex items-center gap-2 text-lg font-semibold"
+          >
             <Box className="h-5 w-5 text-purple-600" />
             Stock
           </Label>
