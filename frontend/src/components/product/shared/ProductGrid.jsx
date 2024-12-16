@@ -35,7 +35,6 @@ const ProductGrid = ({ title, products, baseUrl }) => {
         {title}
       </motion.h2>
 
-      {/* return a product grid if the product is available */}
       {products?.length > 0 ? (
         <>
           <motion.div
@@ -52,6 +51,7 @@ const ProductGrid = ({ title, products, baseUrl }) => {
             </button>
           </motion.div>
 
+          {/* return a product grid if the product is available */}
           <motion.div
             variants={productGridAnimations.containerVariants}
             initial="hidden"
@@ -69,6 +69,7 @@ const ProductGrid = ({ title, products, baseUrl }) => {
           </motion.div>
         </>
       ) : (
+        
         // return a message if the product is not available
         <motion.div
           variants={productGridAnimations.cardVariants(0)}
