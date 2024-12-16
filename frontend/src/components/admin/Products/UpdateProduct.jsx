@@ -109,8 +109,8 @@ const UpdateProduct = () => {
           data?.product?.product_collection.map((col) => col._id) || [],
 
         productIncludes: data?.product?.product_includes?.split(", ") || [],
-        skillLevel: data?.product?.product_skill_level || "",
-        productDesigner: data?.product?.product_designer || "",
+        skillLevel: data?.product?.product_skill_level?._id || "",
+        productDesigner: data?.product?.product_designer?._id || "",
         isActive: data?.product?.is_active ? "yes" : "no",
         availability: data?.product?.product_availability || "In Stock",
         preorder: data?.product?.is_preorder || false,

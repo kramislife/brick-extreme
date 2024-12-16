@@ -3,8 +3,6 @@ import { Label } from "@/components/ui/label";
 import { useGetSkillLevelsQuery } from "@/redux/api/productApi";
 import { toast } from "react-toastify";
 
-const SKILL_LEVELS = ["Beginner", "Intermediate", "Professional"];
-
 const ACTIVE_COLORS = {
   0: "bg-green-500 text-white",
 };

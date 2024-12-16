@@ -3,8 +3,6 @@ import { Label } from "@/components/ui/label";
 import { useGetDesignersQuery } from "@/redux/api/productApi";
 import { toast } from "react-toastify";
 
-const DESIGNERS = ["John Doe", "Jane Smith", "Alex Johnson"];
-
 const ACTIVE_COLOR = "bg-blue-500 text-white";
 const DEFAULT_COLOR =
   "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300";
