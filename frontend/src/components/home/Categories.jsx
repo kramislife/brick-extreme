@@ -44,7 +44,7 @@ const Categories = () => {
         variants={categoryAnimations.containerVariants}
         initial="hidden"
         animate={isInView ? "visible" : "hidden"}
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 mx-auto mb-8"
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mx-auto mb-8"
       >
         {displayedCategories.map((category, index) => (
           <motion.div
@@ -61,7 +61,7 @@ const Categories = () => {
                 <motion.img
                   src={category.image}
                   alt={category.title}
-                  className="w-full h-[30vh] object-fill"
+                  className="w-full h-[60vh] object-fill"
                   {...categoryAnimations.imageVariants}
                 />
                 <motion.div

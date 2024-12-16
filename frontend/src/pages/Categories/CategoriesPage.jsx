@@ -1,7 +1,7 @@
 import React from "react";
 import { Card, CardFooter } from "@/components/ui/card";
 import { motion } from "framer-motion";
-import image1 from "@/assets/subscribeAssets/lightsaber.png";
+import image1 from "@/assets/bestSellingAssets/droid.png";
 import Metadata from "@/components/layout/Metadata/Metadata";
 
 // Export categories data so it can be imported by other components
