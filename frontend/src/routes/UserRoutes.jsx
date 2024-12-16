@@ -17,6 +17,10 @@ import CategoriesPage from "@/pages/Categories/CategoriesPage";
 import Profile from "@/components/auth/Profile/Profile";
 import Settings from "@/components/auth/Settings/Settings";
 import UpdateProduct from "@/components/admin/Products/UpdateProduct";
+import ViewCategories from "@/components/admin/Products/ViewCategories";
+import ViewCollection from "@/components/admin/Products/ViewCollection";
+import ViewSkillLevel from "@/components/admin/Products/ViewSkillLevel";
+import ViewDesigner from "@/components/admin/Products/ViewDesigner";
 
 const UserRoutes = (
   <>
@@ -47,6 +51,10 @@ const UserRoutes = (
       <Route path="orders" element={<ViewOrder />} />
       <Route path="users" element={<ViewUsers />} />
       <Route path="reviews" element={<ViewReviews />} />
+      <Route path="categories" element={<ViewCategories />} />
+      <Route path="collections" element={<ViewCollection />} />
+      <Route path="skill-levels" element={<ViewSkillLevel />} />
+      <Route path="designers" element={<ViewDesigner />} />
     </Route>
 
     {/* User Profile Routes */}

@@ -28,7 +28,7 @@ const TableLayout = ({ headerGroups, rows, flexRender }) => (
               {row.getVisibleCells().map((cell) => (
                 <td
                   key={cell.id}
-                  className="px-6 py-5 text-sm text-light/80 text-center"
+                  className="py-5 px-2 text-sm text-light/80 text-center"
                 >
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </td>
