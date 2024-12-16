@@ -8,32 +8,32 @@ import Metadata from "@/components/layout/Metadata/Metadata";
 export const categories = [
   {
     id: 1,
-    title: "Lifestyle and Dino Eggs",
+    title: "Space Odyssey",
     image: image1,
   },
   {
     id: 2,
-    title: "Pocket Monsters",
+    title: "Fantasy",
     image: image1,
   },
   {
     id: 3,
-    title: "Star Wars Collection",
+    title: "Castles",
     image: image1,
   },
   {
     id: 4,
-    title: "Vintage Comics",
+    title: "Characters",
     image: image1,
   },
   {
     id: 5,
-    title: "Action Figures",
+    title: "Brick Art",
     image: image1,
   },
   {
     id: 6,
-    title: "Trading Cards",
+    title: "Micro-Builds",
     image: image1,
   },
   {
@@ -77,7 +77,7 @@ const CategoriesPage = () => {
                 transition={{ delay: index * 0.1 }}
               >
                 <Card className="overflow-hidden bg-gradient-r border-none rounded-lg cursor-pointer">
-                  <motion.div 
+                  <motion.div
                     className="relative w-full"
                     whileHover={{ scale: 1.05 }}
                     transition={{ duration: 0.3 }}

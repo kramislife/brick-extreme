@@ -16,6 +16,7 @@ import ViewReviews from "@/components/admin/Products/ViewReviews";
 import CategoriesPage from "@/pages/Categories/CategoriesPage";
 import Profile from "@/components/auth/Profile/Profile";
 import Settings from "@/components/auth/Settings/Settings";
+import UpdateProduct from "@/components/admin/Products/UpdateProduct";
 
 const UserRoutes = (
   <>
@@ -41,6 +42,7 @@ const UserRoutes = (
     <Route path="admin" element={<AdminView />}>
       <Route index element={<Dashboard />} />
       <Route path="new-product" element={<AddProduct />} />
+      <Route path="update-product/:id" element={<UpdateProduct />} />
       <Route path="products" element={<ViewProducts />} />
       <Route path="orders" element={<ViewOrder />} />
       <Route path="users" element={<ViewUsers />} />

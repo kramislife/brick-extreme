@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { useRegisterMutation } from "@/redux/api/authApi";
 import RegisterImg from "@/assets/authAssets/Register.png";
 import { registerAnimations } from "@/hooks/animationConfig";
+import { useSelector } from "react-redux";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -16,15 +17,23 @@ const Register = () => {
     contact: "",
   });
 
+  const { user } = useSelector((state) => state.auth);
+
   const navigate = useNavigate();
   const [register, { isLoading, isError, error, data, isSuccess }] =
     useRegisterMutation();
 
   useEffect(() => {
+    if (user) {
+      navigate("/");
+    }
+  }, [user]);
+
+  useEffect(() => {
     if (isError) {
-      const errorMessage =
-        error?.data?.message || "An error occurred. Please try again.";
-      toast.error(errorMessage);
+      toast.error(
+        error?.data?.message || "An error occurred. Please try again."
+      );
     }
 
     if (isSuccess) {

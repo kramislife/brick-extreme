@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { data, NavLink, useNavigate } from "react-router-dom";
 import { useGetMeQuery } from "@/redux/api/userApi";
 import { useSelector } from "react-redux";
-import { toast } from "react-toastify";
 import logo from "@/assets/logo.png";
 
 import SearchSheet from "./components/SearchSheet";
@@ -15,16 +14,17 @@ import { User } from "lucide-react";
 const Header = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
-  const { isError, error, isLoading } = useGetMeQuery();
   const { user } = useSelector((state) => state.auth);
 
-  useEffect(() => {
-    if (isError) {
-      toast.error(error?.data?.message);
-    }
-  }, [isError, error]);
+  const { data } = useGetMeQuery();
 
-  if (isLoading) return null;
+  useEffect(() => {
+    if (user !== null) {
+      if (data) {
+        console.log(data);
+      }
+    }
+  }, [user, data]);
 
   return (
     <nav className="bg-brand-gradient fixed w-full top-0 z-50 py-3">
@@ -52,7 +52,7 @@ const Header = () => {
           {/* User Dropdown */}
           <div className="relative hidden md:block z-[100]">
             {user ? (
-              <UserDropdown user={user} />
+              <UserDropdown />
             ) : (
               <button
                 onClick={() => navigate("/login")}

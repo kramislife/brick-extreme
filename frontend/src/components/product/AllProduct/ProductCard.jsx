@@ -34,7 +34,7 @@ const ProductCard = ({ product }) => {
         <img
           src={product?.product_images?.[0]?.url || defaultImage}
           alt={product.product_name}
-          className="w-full h-full aspect-square transition-transform duration-300 group-hover:scale-110"
+          className="w-full aspect-square transition-transform duration-300 group-hover:scale-110"
         />
         <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-50 transition-opacity duration-300"></div>
         {product.discount > 0 && (

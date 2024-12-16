@@ -5,6 +5,7 @@ import { loginAnimations } from "@/hooks/animationConfig";
 import { useEffect, useState } from "react";
 import { useLoginMutation } from "@/redux/api/authApi";
 import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
 
 const Login = () => {
   const [email_username, setEmail_username] = useState("");
@@ -12,7 +13,17 @@ const Login = () => {
 
   const navigate = useNavigate();
 
-  const [login, { data, isLoading, isError, error }] = useLoginMutation();
+  const { isAuthenticated } = useSelector((state) => state.auth);
+  console.log(isAuthenticated);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/");
+    }
+  }, [isAuthenticated]);
+
+  const [login, { data, isLoading, isError, error, isSuccess }] =
+    useLoginMutation();
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -26,15 +37,17 @@ const Login = () => {
   };
 
   useEffect(() => {
-    if (data) {
-      toast.success(data.message);
+    if (isSuccess) {
+      toast.success(data?.message);
+      console.log("LOGIN MESSAGE:", data?.message);
+
       navigate("/");
     }
 
     if (isError) {
       toast.error(error?.data?.message);
     }
-  }, [isError, error, data]);
+  }, [isError, error, isSuccess]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-brand-gradient p-4">
