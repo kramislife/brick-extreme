@@ -6,7 +6,8 @@ export const productApi = createApi({
     baseUrl: "/api/v1",
   }),
   endpoints: (builder) => ({
-    // Fetch products with optional query parameters
+    // --------------------------------- GET PRODUCTS ---------------------------------------
+
     getProducts: builder.query({
       query: (queryString) => {
         if (typeof queryString === "object") {
@@ -21,7 +22,46 @@ export const productApi = createApi({
       providesTags: ["Products"],
     }),
 
-    // Fetch product categories
+    // --------------------------------- GET PRODUCT DETAILS ---------------------------------------
+
+    getProductDetails: builder.query({
+      query: (id) => `/products/${id}`,
+    }),
+
+    // --------------------------------- ADD A NEW PRODUCT ---------------------------------------
+
+    createProduct: builder.mutation({
+      query: (newProduct) => ({
+        url: `/admin/newProduct`,
+        method: "POST",
+        body: newProduct,
+      }),
+      invalidatesTags: ["Products"],
+    }),
+
+    // --------------------------------- UPDATE A PRODUCT ---------------------------------------
+
+    updateProduct: builder.mutation({
+      query: ({ id, body }) => ({
+        url: `/admin/updateProduct/${id}`,
+        method: "PUT",
+        body: body,
+      }),
+      invalidatesTags: ["Products"],
+    }),
+
+    // --------------------------------- DELETE A PRODUCT ---------------------------------------
+
+    deleteProduct: builder.mutation({
+      query: (id) => ({
+        url: `/products/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Products"],
+    }),
+
+    // --------------------------------- GET CATEGORIES ---------------------------------------
+
     getCategory: builder.query({
       query: () => `/categories`,
     }),
@@ -45,41 +85,18 @@ export const productApi = createApi({
     getCategoryByKey: builder.query({
       query: (key) => `/categories/${key}`,
     }),
-
-    // Fetch product details by ID
-    getProductDetails: builder.query({
-      query: (id) => `/products/${id}`,
-    }),
-
-    // Create a new product
-    createProduct: builder.mutation({
-      query: (newProduct) => ({
-        url: `/admin/newProduct`,
-        method: "POST",
-        body: newProduct,
-      }),
-      invalidatesTags: ["Products"],
-    }),
-
-    // Delete a product by ID
-    deleteProduct: builder.mutation({
-      query: (id) => ({
-        url: `/products/${id}`,
-        method: "DELETE",
-      }),
-      invalidatesTags: ["Products"],
-    }),
   }),
 });
 
 export const {
   useGetProductsQuery,
+  useGetProductDetailsQuery,
+  useCreateProductMutation,
+  useUpdateProductMutation,
   useGetCategoryQuery,
   useGetCollectionQuery,
   useGetSkillLevelsQuery,
   useGetDesignersQuery,
   useGetCategoryByKeyQuery,
-  useGetProductDetailsQuery,
-  useCreateProductMutation,
   useDeleteProductMutation,
 } = productApi;
