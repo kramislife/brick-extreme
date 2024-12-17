@@ -61,7 +61,7 @@ const Categories = () => {
                 <motion.img
                   src={category.image}
                   alt={category.title}
-                  className="w-full h-[450px] object-fill"
+                  className="w-full h-[360px] object-fill"
                   {...categoryAnimations.imageVariants}
                 />
                 <motion.div
