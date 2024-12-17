@@ -3,12 +3,8 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Package, DollarSign, Percent, Box } from "lucide-react";
 
-const ACTIVE_COLOR = "bg-blue-500 text-white";
-
 const BasicInformation = ({ formData, onChange }) => {
-  useEffect(() => {
-    console.log("BASIC INFO :", formData);
-  }, []);
+
   return (
     <section className="space-y-6">
       {/* Product Name */}
@@ -22,6 +18,7 @@ const BasicInformation = ({ formData, onChange }) => {
         </Label>
         <Input
           id="name"
+          name="name"
           value={formData.name}
           onChange={onChange}
           placeholder="Enter product name"
@@ -42,6 +39,7 @@ const BasicInformation = ({ formData, onChange }) => {
           </Label>
           <Input
             id="price"
+            name="price"
             type="number"
             value={formData.price}
             onChange={onChange}
@@ -61,6 +59,7 @@ const BasicInformation = ({ formData, onChange }) => {
           </Label>
           <Input
             id="discount"
+            name="discount"
             type="number"
             value={formData.discount}
             onChange={onChange}
@@ -80,6 +79,7 @@ const BasicInformation = ({ formData, onChange }) => {
           </Label>
           <Input
             id="stock"
+            name="stock"
             type="number"
             value={formData.stock}
             onChange={onChange}

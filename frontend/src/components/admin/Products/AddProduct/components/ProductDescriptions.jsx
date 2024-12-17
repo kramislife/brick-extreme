@@ -7,18 +7,21 @@ const ProductDescriptions = ({ formData, onChange }) => {
   const descriptions = [
     {
       id: "description1",
+      name: "description1",
       label: "Main Description",
       icon: <FileText className="h-5 w-5 text-blue-600" />,
       placeholder: "Enter the main product description...",
     },
     {
       id: "description2",
+      name: "description2",
       label: "Features & Highlights",
       icon: <ListChecks className="h-5 w-5 text-green-600" />,
       placeholder: "List key features and highlights...",
     },
     {
       id: "description3",
+      name: "description3",
       label: "Additional Details",
       icon: <Info className="h-5 w-5 text-purple-600" />,
       placeholder: "Add any additional important information...",
@@ -43,6 +46,7 @@ const ProductDescriptions = ({ formData, onChange }) => {
           </div>
           <Textarea
             id={desc.id}
+            name={desc.name}
             value={formData[desc.id]}
             onChange={onChange}
             placeholder={desc.placeholder}

@@ -58,21 +58,20 @@ const useProductForm = () => {
 
   // Handle changes to input fields
   const handleChange = (e) => {
-    const { id, value, type, name } = e.target;
-    const fieldName = type === "radio" ? name : id;
-
+    const { name, value, type } = e.target;
+    
     // Handle specification fields differently
-    if (["length", "width", "height", "piece_count"].includes(fieldName)) {
+    if (["length", "width", "height", "piece_count"].includes(name)) {
       setFormData((prev) => ({
         ...prev,
         specifications: prev.specifications.map((spec) =>
-          spec.name === fieldName ? { ...spec, value } : spec
+          spec.name === name ? { ...spec, value } : spec
         ),
       }));
     } else {
       setFormData((prev) => ({
         ...prev,
-        [fieldName]: value,
+        [name]: value,
       }));
     }
   };

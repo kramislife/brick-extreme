@@ -54,7 +54,7 @@ const UpdateProduct = () => {
     productIncludes: [],
     skillLevel: "",
     productDesigner: "",
-    isActive: "",
+    isActive: false,
     availability: null,
     preorder: false,
     preorderDate: null, // Add this for pre-order date
@@ -111,7 +111,7 @@ const UpdateProduct = () => {
         productIncludes: data?.product?.product_includes?.split(", ") || [],
         skillLevel: data?.product?.product_skill_level?._id || "",
         productDesigner: data?.product?.product_designer?._id || "",
-        isActive: data?.product?.is_active ? "yes" : "no",
+        isActive: data?.product?.is_active || false,
         availability: data?.product?.product_availability || "In Stock",
         preorder: data?.product?.is_preorder || false,
         preorderDate: data?.product?.preorder_date
@@ -121,29 +121,58 @@ const UpdateProduct = () => {
     }
   }, [isError, error, data]); // Dependency array
 
-  // Handle input changes for text fields
+  // Modified handleChange function to handle specifications correctly
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setProduct((prevProduct) => ({
-      ...prevProduct,
-      [name]: value,
-    }));
+    const { name, value, type } = e.target;
+    
+    if (["length", "width", "height", "piece_count"].includes(name)) {
+      setFormData(prevData => ({
+        ...prevData,
+        specifications: prevData.specifications.map(spec =>
+          spec.name === name ? { ...spec, value: value } : spec
+        )
+      }));
+    } else if (type === 'radio') {
+      // Handle radio button inputs
+      setFormData(prevData => ({
+        ...prevData,
+        [name]: value
+      }));
+    } else {
+      // Handle other fields normally
+      setFormData(prevData => ({
+        ...prevData,
+        [name]: value
+      }));
+    }
   };
 
-  // Handle input changes for checkboxes
-  const handleCheckboxChange = (e) => {
-    const { name, checked } = e.target;
-    setProduct((prevProduct) => ({
-      ...prevProduct,
-      [name]: checked,
-    }));
+  // Update the handleCheckboxChange function to handle array fields
+  const handleCheckboxChange = (fieldName, value, checked) => {
+    setFormData((prevData) => {
+      if (Array.isArray(prevData[fieldName])) {
+        // Handle array fields like productCategories
+        return {
+          ...prevData,
+          [fieldName]: checked
+            ? [...prevData[fieldName], value]
+            : prevData[fieldName].filter((item) => item !== value),
+        };
+      } else {
+        // Handle boolean fields like isActive
+        return {
+          ...prevData,
+          [fieldName]: checked,
+        };
+      }
+    });
   };
 
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const updateProduct = {
+    const productData = {
       product_name: formData.name,
       price: parseFloat(formData.price),
       discount: parseFloat(formData.discount),
@@ -182,7 +211,7 @@ const UpdateProduct = () => {
       ratings: 0, // Default value
       seller: formData.seller || "Brick Extreme",
       tags: formData.tags.split(",").map((tag) => tag.trim()) || [],
-      is_active: formData.isActive === "yes" ? true : false,
+      is_active: formData.isActive,
       manufacturer: formData.manufacturer || "Unknown", // Fallback to "Unknown" if manufacturer is empty
       is_preorder: formData.preorder,
       preorder_date: formData.preorderDate
@@ -191,8 +220,12 @@ const UpdateProduct = () => {
       createdBy: user?._id,
     };
 
-    createProduct(newProduct);
-    console.log("Form submitted with data:", formData);
+    try {
+      await updateProduct({ id, productData });
+      toast.success("Product updated successfully!");
+    } catch (error) {
+      toast.error(error?.data?.message || "Failed to update product");
+    }
   };
 
   // Loading state
@@ -234,7 +267,10 @@ const UpdateProduct = () => {
             />
             <Separator className="my-6" />
 
-            <ProductCollections formData={formData} onChange={handleChange} />
+            <ProductCollections 
+              formData={formData} 
+              onCheckboxChange={handleCheckboxChange} 
+            />
             <Separator className="my-6" />
 
             <ProductIncludes

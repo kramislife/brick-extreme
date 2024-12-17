@@ -11,6 +11,7 @@ const AdditionalInformation = ({ formData, onChange }) => {
           <Label htmlFor="seller" className="text-lg font-semibold">Seller</Label>
           <Input
             id="seller"
+            name="seller"
             value={formData.seller}
             onChange={onChange}
             placeholder="Enter seller name"
@@ -23,6 +24,7 @@ const AdditionalInformation = ({ formData, onChange }) => {
           <Label htmlFor="manufacturer" className="text-lg font-semibold">Manufacturer</Label>
           <Input
             id="manufacturer"
+            name="manufacturer"
             value={formData.manufacturer}
             onChange={onChange}
             placeholder="Enter manufacturer"
@@ -36,6 +38,7 @@ const AdditionalInformation = ({ formData, onChange }) => {
         <Label htmlFor="tags" className="text-lg font-semibold">Tags</Label>
         <Input
           id="tags"
+          name="tags"
           value={formData.tags}
           onChange={onChange}
           placeholder="Enter tags separated by commas"
