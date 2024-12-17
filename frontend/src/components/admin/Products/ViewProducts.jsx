@@ -54,7 +54,7 @@ const ViewProducts = () => {
         accessorKey: "stock",
       },
       {
-        header: "Created At",
+        header: "Date Created",
         accessorKey: "createdAt",
         cell: ({ row }) =>
           new Date(row.original.createdAt).toLocaleDateString(),
