@@ -48,7 +48,7 @@ const BasicInformation = ({ formData, onChange }) => {
             htmlFor="price"
             className="flex items-center gap-2 text-lg font-semibold"
           >
-            <DollarSign className="h-5 w-5 text-green-600" />
+            <DollarSign className="h-5 w-5 text-green-600 pr-2" />
             Price
           </Label>
           <Input

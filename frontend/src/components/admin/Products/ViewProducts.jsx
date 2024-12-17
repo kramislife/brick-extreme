@@ -54,12 +54,18 @@ const ViewProducts = () => {
         accessorKey: "stock",
       },
       {
+        header: "Created At",
+        accessorKey: "createdAt",
+        cell: ({ row }) =>
+          new Date(row.original.createdAt).toLocaleDateString(),
+      },
+      {
         header: "Status",
         accessorKey: "status",
         cell: ({ row }) => {
           const statusColors = {
             Active: "bg-green-500 text-black",
-            "Low Stock": "bg-yellow-500 text-black",
+            Low: "bg-yellow-500 text-black",
             "Out of Stock": "bg-red-500 text-light",
           };
           return (
@@ -108,7 +114,7 @@ const ViewProducts = () => {
   // Sort products by creation date (newest first)
   const products = useMemo(() => {
     if (!productData?.allProducts) return [];
-    
+
     return [...productData.allProducts]
       .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
       .map((product, index) => ({
@@ -123,11 +129,12 @@ const ViewProducts = () => {
           .map((collection) => collection.name)
           .join(", "),
         stock: product?.stock,
+        createdAt: product?.createdAt,
         status:
           product?.stock > 50
             ? "Active"
             : product?.stock > 0
-            ? "Low Stock"
+            ? "Low"
             : "Out of Stock",
       }));
   }, [productData]);

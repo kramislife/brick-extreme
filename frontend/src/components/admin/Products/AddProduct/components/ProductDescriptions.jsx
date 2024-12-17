@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { FileText, ListChecks, Info } from "lucide-react";
@@ -33,16 +33,14 @@ const ProductDescriptions = ({ formData, onChange }) => {
       {descriptions.map((desc) => (
         <div key={desc.id} className="space-y-2">
           <div className="space-y-1">
-            <Label 
-              htmlFor={desc.id} 
+            <Label
+              htmlFor={desc.id}
               className="flex items-center gap-2 text-lg font-semibold"
             >
               {desc.icon}
               {desc.label}
             </Label>
-            <p className="text-sm text-gray-400 ml-7">
-              {desc.subtitle}
-            </p>
+            <p className="text-sm text-gray-400 ml-7">{desc.subtitle}</p>
           </div>
           <Textarea
             id={desc.id}
