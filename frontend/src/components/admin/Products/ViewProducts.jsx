@@ -7,7 +7,7 @@ import {
   getSortedRowModel,
   flexRender,
 } from "@tanstack/react-table";
-import { Edit2, Trash2, Image } from "lucide-react";
+import { Edit2, Trash2, Image, PlusCircle } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import SearchBar from "@/components/admin/table/SearchBar";
 import ShowEntries from "@/components/admin/table/ShowEntries";
@@ -214,8 +214,9 @@ const ViewProducts = () => {
         </div>
         <button
           onClick={() => navigate("/admin/new-product")}
-          className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+          className="bg-gradient-to-r from-blue-600 to-purple-600 text-white flex items-center gap-2 hover:from-blue-700 hover:to-purple-700 px-4 py-2 rounded-md"
         >
+          <PlusCircle className="w-5 h-5" />
           Add New Product
         </button>
       </div>
