@@ -18,13 +18,13 @@ const Header = () => {
 
   const { data } = useGetMeQuery();
 
-  useEffect(() => {
-    if (user !== null) {
-      if (data) {
-        console.log(data);
-      }
-    }
-  }, [user, data]);
+  // useEffect(() => {
+  //   if (user !== null) {
+  //     if (data) {
+  //       console.log(data);
+  //     }
+  //   }
+  // }, [user, data]);
 
   return (
     <nav className="bg-brand-gradient fixed w-full top-0 z-50 py-3">

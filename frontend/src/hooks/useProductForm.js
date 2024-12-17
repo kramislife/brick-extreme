@@ -1,23 +1,14 @@
 import { useCreateProductMutation } from "@/redux/api/productApi";
 import { useEffect, useState } from "react";
-import { toast } from "react-hot-toast";
+import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 const useProductForm = () => {
   const { user } = useSelector((state) => state.auth);
   const navigate = useNavigate();
-  const [createProduct, { data, isLoading, isError, error, isSuccess }] =
+  const [createProduct, { isLoading }] =
     useCreateProductMutation();
-
-  useEffect(() => {
-    if (isSuccess) {
-      navigate("/admin/products");
-    }
-    if (isError) {
-      console.log(error?.data?.message);
-    }
-  }, [data, isError, error]);
 
   const [formData, setFormData] = useState({
     // Basic Information
@@ -58,21 +49,20 @@ const useProductForm = () => {
 
   // Handle changes to input fields
   const handleChange = (e) => {
-    const { id, value, type, name } = e.target;
-    const fieldName = type === "radio" ? name : id;
-
+    const { name, value, type } = e.target;
+    
     // Handle specification fields differently
-    if (["length", "width", "height", "piece_count"].includes(fieldName)) {
+    if (["length", "width", "height", "piece_count"].includes(name)) {
       setFormData((prev) => ({
         ...prev,
         specifications: prev.specifications.map((spec) =>
-          spec.name === fieldName ? { ...spec, value } : spec
+          spec.name === name ? { ...spec, value } : spec
         ),
       }));
     } else {
       setFormData((prev) => ({
         ...prev,
-        [fieldName]: value,
+        [name]: value,
       }));
     }
   };
@@ -107,10 +97,13 @@ const useProductForm = () => {
   };
 
   // Submit form data
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log("PC:", formData.productCollections);
+    if (!formData.name || !formData.price) {
+      toast.error("Name and price are required fields");
+      return;
+    }
 
     const newProduct = {
       product_name: formData.name,
@@ -160,8 +153,14 @@ const useProductForm = () => {
       createdBy: user?._id,
     };
 
-    createProduct(newProduct);
-    console.log("Form submitted with data:", formData);
+    try {
+      await createProduct(newProduct).unwrap();
+      toast.success("Product created successfully!");
+      navigate("/admin/products");
+    } catch (error) {
+      console.error("Creation error:", error);
+      toast.error(error?.data?.message || "Failed to create product");
+    }
   };
 
   return {

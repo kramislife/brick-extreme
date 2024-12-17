@@ -11,10 +11,12 @@ const AdditionalInformation = ({ formData, onChange }) => {
           <Label htmlFor="seller" className="text-lg font-semibold">Seller</Label>
           <Input
             id="seller"
+            name="seller"
             value={formData.seller}
             onChange={onChange}
             placeholder="Enter seller name"
             className="border-2 rounded-lg px-4 py-2 transition duration-300 focus:outline-none focus:border-blue-500 hover:border-blue-300"
+            required
           />
         </div>
 
@@ -23,10 +25,12 @@ const AdditionalInformation = ({ formData, onChange }) => {
           <Label htmlFor="manufacturer" className="text-lg font-semibold">Manufacturer</Label>
           <Input
             id="manufacturer"
+            name="manufacturer"
             value={formData.manufacturer}
             onChange={onChange}
             placeholder="Enter manufacturer"
             className="border-2 rounded-lg px-4 py-2 transition duration-300 focus:outline-none focus:border-blue-500 hover:border-blue-300"
+            required
           />
         </div>
       </div>
@@ -36,10 +40,12 @@ const AdditionalInformation = ({ formData, onChange }) => {
         <Label htmlFor="tags" className="text-lg font-semibold">Tags</Label>
         <Input
           id="tags"
+          name="tags"
           value={formData.tags}
           onChange={onChange}
           placeholder="Enter tags separated by commas"
           className="border-2 rounded-lg px-4 py-2 transition duration-300 focus:outline-none focus:border-blue-500 hover:border-blue-300"
+          required
         />
       </div>
     </section>

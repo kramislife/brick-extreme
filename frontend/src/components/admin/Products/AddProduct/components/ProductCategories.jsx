@@ -37,6 +37,7 @@ const ProductCategories = ({ formData, onCheckboxChange }) => {
             >
               <Checkbox
                 id={category._id}
+                name={category._id}
                 checked={isChecked}
                 onCheckedChange={(checked) =>
                   onCheckboxChange("productCategories", category._id, checked)

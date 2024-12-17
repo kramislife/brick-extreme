@@ -1,14 +1,24 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Package, DollarSign, Percent, Box } from "lucide-react";
 
-const ACTIVE_COLOR = "bg-blue-500 text-white";
-
 const BasicInformation = ({ formData, onChange }) => {
-  useEffect(() => {
-    console.log("BASIC INFO :", formData);
-  }, []);
+  // Add handler for numeric inputs
+  const handleNumericInput = (e) => {
+    const { name, value } = e.target;
+    // Prevent negative values and ensure proper decimal handling
+    const sanitizedValue = value.startsWith('-') ? '' : value;
+    
+    // Call the parent onChange with the sanitized value
+    onChange({
+      target: {
+        name,
+        value: sanitizedValue
+      }
+    });
+  };
+
   return (
     <section className="space-y-6">
       {/* Product Name */}
@@ -22,6 +32,7 @@ const BasicInformation = ({ formData, onChange }) => {
         </Label>
         <Input
           id="name"
+          name="name"
           value={formData.name}
           onChange={onChange}
           placeholder="Enter product name"
@@ -42,11 +53,15 @@ const BasicInformation = ({ formData, onChange }) => {
           </Label>
           <Input
             id="price"
+            name="price"
             type="number"
+            min="0"
+            step="0.01"
             value={formData.price}
-            onChange={onChange}
+            onChange={handleNumericInput}
             placeholder="0.00"
             className="border-2 rounded-lg px-4 py-2 transition duration-300 focus:outline-none focus:border-blue-500 hover:border-blue-300"
+            onWheel={(e) => e.target.blur()}
           />
         </div>
 
@@ -61,11 +76,16 @@ const BasicInformation = ({ formData, onChange }) => {
           </Label>
           <Input
             id="discount"
+            name="discount"
             type="number"
+            min="0"
+            max="100"
+            step="0.01"
             value={formData.discount}
-            onChange={onChange}
+            onChange={handleNumericInput}
             placeholder="0.00"
             className="border-2 rounded-lg px-4 py-2 transition duration-300 focus:outline-none focus:border-blue-500 hover:border-blue-300"
+            onWheel={(e) => e.target.blur()}
           />
         </div>
 
@@ -80,11 +100,15 @@ const BasicInformation = ({ formData, onChange }) => {
           </Label>
           <Input
             id="stock"
+            name="stock"
             type="number"
+            min="0"
+            step="1"
             value={formData.stock}
-            onChange={onChange}
+            onChange={handleNumericInput}
             placeholder="0"
             className="border-2 rounded-lg px-4 py-2 transition duration-300 focus:outline-none focus:border-blue-500 hover:border-blue-300"
+            onWheel={(e) => e.target.blur()}
           />
         </div>
       </div>

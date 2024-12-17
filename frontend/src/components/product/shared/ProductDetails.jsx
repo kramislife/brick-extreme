@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Minus, Plus, ChevronLeft, ChevronRight } from "lucide-react";
+import { Minus, Plus, ChevronLeft, ChevronRight, ImageIcon } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import Metadata from "@/components/layout/Metadata/Metadata";
@@ -9,24 +9,22 @@ const ProductDetails = ({ product, containerVariants, itemVariants }) => {
   const [quantity, setQuantity] = useState(1);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  useEffect(() => {
-    console.log("Product Description > ", product);
-  }, []);
-
-  // Only render image gallery if there are images
+  // Determine if images are available
   const hasImages =
     product?.product_images && product.product_images.length > 0;
+
+  // Placeholder image for when no images are available
+  const PlaceholderImage = () => (
+    <div className="w-full h-full bg-slate-800 flex items-center justify-center">
+      <ImageIcon className="w-16 h-16 text-slate-500" />
+    </div>
+  );
 
   const nextImage = () => {
     if (!hasImages) return;
     setCurrentImageIndex((prev) =>
       prev === product.product_images.length - 1 ? 0 : prev + 1
     );
-    document
-      .getElementById(
-        `thumbnail-${(currentImageIndex + 1) % product.product_images.length}`
-      )
-      ?.scrollIntoView({ behavior: "smooth", block: "nearest" });
   };
 
   const prevImage = () => {
@@ -34,15 +32,6 @@ const ProductDetails = ({ product, containerVariants, itemVariants }) => {
     setCurrentImageIndex((prev) =>
       prev === 0 ? product.product_images.length - 1 : prev - 1
     );
-    document
-      .getElementById(
-        `thumbnail-${
-          currentImageIndex === 0
-            ? product.product_images.length - 1
-            : currentImageIndex - 1
-        }`
-      )
-      ?.scrollIntoView({ behavior: "smooth", block: "nearest" });
   };
 
   const selectImage = (index) => {
@@ -52,7 +41,7 @@ const ProductDetails = ({ product, containerVariants, itemVariants }) => {
 
   return (
     <>
-      <Metadata title={product.product_name} />
+      <Metadata title={product?.product_name || "Product Details"} />
       <motion.div
         variants={containerVariants}
         initial="hidden"
@@ -60,18 +49,17 @@ const ProductDetails = ({ product, containerVariants, itemVariants }) => {
         className="mx-auto px-4 py-8"
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* Image Gallery */}
-          {hasImages && (
-            <motion.div
-              variants={itemVariants}
-              className="relative flex flex-col-reverse md:flex-row gap-4"
-            >
-              {/* Thumbnails */}
-              <div className="w-full md:w-[130px] overflow-x-auto md:overflow-y-auto scrollbar-none">
-                <div className="flex flex-row md:flex-col gap-2">
-                  {product.product_images.map((image, index) => (
+          {/* Image Gallery Section */}
+          <motion.div
+            variants={itemVariants}
+            className="relative flex flex-col-reverse md:flex-row gap-4"
+          >
+            {/* Thumbnails */}
+            <div className="w-full md:w-[130px] overflow-x-auto md:overflow-y-auto scrollbar-none">
+              <div className="flex flex-row md:flex-col gap-2">
+                {hasImages ? (
+                  product.product_images.map((image, index) => (
                     <button
-                      id={`thumbnail-${index}`}
                       key={index}
                       onClick={() => selectImage(index)}
                       className={`min-w-[130px] md:min-w-0 aspect-square rounded-lg overflow-hidden border-2 transition-all ${
@@ -86,12 +74,23 @@ const ProductDetails = ({ product, containerVariants, itemVariants }) => {
                         className="w-full h-full object-fill hover:scale-110 transition-transform duration-300"
                       />
                     </button>
-                  ))}
-                </div>
+                  ))
+                ) : (
+                  <div className="w-full flex md:flex-col gap-2">
+                    {[...Array(4)].map((_, index) => (
+                      <div
+                        key={index}
+                        className="min-w-[130px] md:min-w-0 aspect-square rounded-lg bg-slate-800 border border-slate-700"
+                      />
+                    ))}
+                  </div>
+                )}
               </div>
+            </div>
 
-              {/* Main Image Display */}
-              <div className="flex-1 relative bg-blue-950 rounded-lg overflow-hidden aspect-square">
+            {/* Main Image Display */}
+            <div className="flex-1 relative bg-blue-950 rounded-lg overflow-hidden aspect-square">
+              {hasImages ? (
                 <AnimatePresence mode="wait">
                   <motion.img
                     key={currentImageIndex}
@@ -104,53 +103,60 @@ const ProductDetails = ({ product, containerVariants, itemVariants }) => {
                     transition={{ duration: 0.3 }}
                   />
                 </AnimatePresence>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70"
-                  onClick={prevImage}
-                >
-                  <ChevronLeft className="w-6 h-6" />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70"
-                  onClick={nextImage}
-                >
-                  <ChevronRight className="w-6 h-6" />
-                </Button>
-              </div>
-            </motion.div>
-          )}
+              ) : (
+                <PlaceholderImage />
+              )}
+
+              {hasImages && (
+                <>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70"
+                    onClick={prevImage}
+                  >
+                    <ChevronLeft className="w-6 h-6" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70"
+                    onClick={nextImage}
+                  >
+                    <ChevronRight className="w-6 h-6" />
+                  </Button>
+                </>
+              )}
+            </div>
+          </motion.div>
 
           {/* Product Info */}
           <motion.div variants={itemVariants} className="flex flex-col h-full">
             {/* Basic Info Section - Always visible */}
             <div className="mb-6">
               <h1 className="text-4xl font-bold text-white mb-2">
-                {product?.product_name}
+                {product?.product_name || "Unnamed Product"}
               </h1>
 
               <div className="flex items-center gap-1 mb-8">
-                <StarRating rating={product?.ratings} />
+                <StarRating rating={product?.ratings || 0} />
                 <span className="text-gray-400 ml-2 text-sm">
-                  ({product?.ratings})
+                  ({product?.ratings || 'No ratings'})
                 </span>
               </div>
 
               {/* Updated Price Display */}
               <div className="flex items-center space-x-4">
-                <span className="text-4xl font-semibold ">
+                <span className="text-4xl font-semibold">
                   $
                   {(
-                    (product?.price || 0) -
-                    ((product?.price || 0) * (product?.discount || 0)) / 100
-                  ).toFixed(2)}
+                    ((product?.price || 0) *
+                      (1 - (product?.discount || 0) / 100)).toFixed(2)
+                  )}
                 </span>
                 {product?.discount > 0 && (
-                  <span className="text-2xl text-red-500 line-through ">
-                    ${product?.price?.toFixed(2)}
+                  <span className="text-2xl text-red-500 line-through">
+                    ${(product?.price || 0).toFixed(2)}
                   </span>
                 )}
               </div>

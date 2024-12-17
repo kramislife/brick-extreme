@@ -13,11 +13,21 @@ const ProductSpecifications = ({ formData, onChange }) => {
             </Label>
             <Input
               id={spec.name}
+              name={spec.name}
               type="number"
               value={spec.value}
-              onChange={onChange}
+              onChange={(e) => {
+                const value = e.target.value;
+                onChange({
+                  target: {
+                    name: spec.name,
+                    value: value
+                  }
+                });
+              }}
               placeholder="0"
               className="border-2 rounded-lg px-4 py-2 transition duration-300 focus:outline-none focus:border-blue-500 hover:border-blue-300"
+              required
             />
           </div>
         ))}

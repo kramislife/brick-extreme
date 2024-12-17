@@ -44,11 +44,6 @@ const UserDropdown = () => {
   );
 
   const menuItems = [
-    {
-      label: "Profile",
-      icon: <User className="mr-2 h-4 w-4" />,
-      onClick: () => navigate("/profile"),
-    },
     ...(isAdminOrEmployee
       ? [
           {
@@ -58,6 +53,11 @@ const UserDropdown = () => {
           },
         ]
       : []),
+      {
+        label: "Profile",
+        icon: <User className="mr-2 h-4 w-4" />,
+        onClick: () => navigate("/profile"),
+      },
     {
       label: "Settings",
       icon: <Settings className="mr-2 h-4 w-4" />,
