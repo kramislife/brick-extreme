@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 const useProductForm = () => {
   const { user } = useSelector((state) => state.auth);
   const navigate = useNavigate();
-  const [createProduct, { data, isLoading, isError, error, isSuccess }] =
+  const [createProduct, { isLoading }] =
     useCreateProductMutation();
 
   const [formData, setFormData] = useState({
