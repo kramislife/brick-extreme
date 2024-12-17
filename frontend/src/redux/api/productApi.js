@@ -26,6 +26,10 @@ export const productApi = createApi({
 
     getProductDetails: builder.query({
       query: (id) => `/products/${id}`,
+      providesTags: (result, error, id) => [
+        { type: 'ProductDetails', id },
+        { type: 'Product', id }
+      ],
     }),
 
     // --------------------------------- ADD A NEW PRODUCT ---------------------------------------
@@ -42,12 +46,16 @@ export const productApi = createApi({
     // --------------------------------- UPDATE A PRODUCT ---------------------------------------
 
     updateProduct: builder.mutation({
-      query: ({ id, body }) => ({
-        url: `/admin/updateProduct/${id}`,
-        method: "PUT",
-        body: body,
+      query: ({ id, productData }) => ({
+        url: `/admin/product/${id}`,
+        method: 'PUT',
+        body: productData,
       }),
-      invalidatesTags: ["Products"],
+      invalidatesTags: (result, error, { id }) => [
+        'Products',
+        { type: 'Product', id },
+        { type: 'ProductDetails', id }
+      ],
     }),
 
     // --------------------------------- DELETE A PRODUCT ---------------------------------------

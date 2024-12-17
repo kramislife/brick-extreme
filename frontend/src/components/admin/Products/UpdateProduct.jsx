@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
+import { useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -13,224 +14,24 @@ import ProductIncludes from "./AddProduct/components/ProductIncludes";
 import SkillLevel from "./AddProduct/components/SkillLevel";
 import ProductDesigner from "./AddProduct/components/ProductDesigner";
 import ProductStatus from "./AddProduct/components/ProductStatus";
-import { useParams } from "react-router-dom";
-import {
-  useGetProductDetailsQuery,
-  useUpdateProductMutation,
-} from "@/redux/api/productApi";
-import { toast } from "react-toastify";
+import { useProductUpdate } from "@/hooks/useProductUpdate";
 
 const UpdateProduct = () => {
-  const { id } = useParams(); // Get product ID from route params
+  const { id } = useParams();
+  const {
+    formData,
+    isLoading,
+    handleChange,
+    handleCheckboxChange,
+    handleSubmit,
+  } = useProductUpdate(id);
 
-  const [formData, setFormData] = useState({
-    // Basic Information
-    name: "",
-    price: "",
-    discount: "",
-    stock: "",
-
-    // Descriptions
-    description1: "",
-    description2: "",
-    description3: "",
-
-    // Specifications as array of objects
-    specifications: [
-      { name: "length", value: "" },
-      { name: "width", value: "" },
-      { name: "height", value: "" },
-      { name: "piece_count", value: "" },
-    ],
-
-    // Additional Information
-    manufacturer: "",
-    seller: "",
-    tags: "",
-
-    // New Fields
-    productCategories: [],
-    productCollections: "",
-    productIncludes: [],
-    skillLevel: "",
-    productDesigner: "",
-    isActive: false,
-    availability: null,
-    preorder: false,
-    preorderDate: null, // Add this for pre-order date
-  });
-
-  // Fetch product details
-  const { data, isLoading, isError, error } = useGetProductDetailsQuery(id);
-
-  // Mutation for updating the product
-  const [
-    updateProduct,
-    {
-      isLoading: updateProductIsLoading,
-      isError: updateProductIsError,
-      error: updateProductError,
-    },
-  ] = useUpdateProductMutation();
-
-  // Populate product state when data is fetched
-  useEffect(() => {
-    if (isError) {
-      toast.error(error?.data?.message || "Failed to fetch product details.");
-    }
-
-    if (data) {
-      console.log(data);
-
-      setFormData({
-        // Map data from API to formData structure
-        name: data?.product?.product_name || "",
-        price: data?.product?.price || "",
-        discount: data?.product?.discount || "",
-        stock: data?.product?.stock || "",
-        description1: data?.product?.product_description_1 || "",
-        description2: data?.product?.product_description_2 || "",
-        description3: data?.product?.product_description_3 || "",
-        specifications: [
-          { name: "length", value: data?.product?.product_length || "" },
-          { name: "width", value: data?.product?.product_width || "" },
-          { name: "height", value: data?.product?.product_height || "" },
-          {
-            name: "piece_count",
-            value: data?.product?.product_piece_count || "",
-          },
-        ],
-        manufacturer: data?.product?.manufacturer || "",
-        seller: data?.product?.seller || "",
-        tags: data?.product?.tags?.join(", ") || "",
-        productCategories:
-          data?.product?.product_category.map((cat) => cat._id) || [],
-        productCollections:
-          data?.product?.product_collection.map((col) => col._id) || [],
-
-        productIncludes: data?.product?.product_includes?.split(", ") || [],
-        skillLevel: data?.product?.product_skill_level?._id || "",
-        productDesigner: data?.product?.product_designer?._id || "",
-        isActive: data?.product?.is_active || false,
-        availability: data?.product?.product_availability || "In Stock",
-        preorder: data?.product?.is_preorder || false,
-        preorderDate: data?.product?.preorder_date
-          ? new Date(data?.product?.preorder_date)
-          : null,
-      });
-    }
-  }, [isError, error, data]); // Dependency array
-
-  // Modified handleChange function to handle specifications correctly
-  const handleChange = (e) => {
-    const { name, value, type } = e.target;
-    
-    if (["length", "width", "height", "piece_count"].includes(name)) {
-      setFormData(prevData => ({
-        ...prevData,
-        specifications: prevData.specifications.map(spec =>
-          spec.name === name ? { ...spec, value: value } : spec
-        )
-      }));
-    } else if (type === 'radio') {
-      // Handle radio button inputs
-      setFormData(prevData => ({
-        ...prevData,
-        [name]: value
-      }));
-    } else {
-      // Handle other fields normally
-      setFormData(prevData => ({
-        ...prevData,
-        [name]: value
-      }));
-    }
-  };
-
-  // Update the handleCheckboxChange function to handle array fields
-  const handleCheckboxChange = (fieldName, value, checked) => {
-    setFormData((prevData) => {
-      if (Array.isArray(prevData[fieldName])) {
-        // Handle array fields like productCategories
-        return {
-          ...prevData,
-          [fieldName]: checked
-            ? [...prevData[fieldName], value]
-            : prevData[fieldName].filter((item) => item !== value),
-        };
-      } else {
-        // Handle boolean fields like isActive
-        return {
-          ...prevData,
-          [fieldName]: checked,
-        };
-      }
-    });
-  };
-
-  // Handle form submission
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    const productData = {
-      product_name: formData.name,
-      price: parseFloat(formData.price),
-      discount: parseFloat(formData.discount),
-      stock: parseInt(formData.stock, 10),
-      product_description_1: formData.description1,
-      product_description_2: formData.description2 || "",
-      product_description_3: formData.description3 || "",
-      product_category: formData.productCategories,
-      product_collection: formData.productCollections,
-      product_piece_count: parseInt(
-        formData.specifications.find((spec) => spec.name === "piece_count")
-          ?.value || 0,
-        10
-      ),
-      product_availability:
-        formData.availability === "In Stock"
-          ? null
-          : formData.preorder_availability_date ||
-            new Date().toISOString().split("T")[0],
-
-      product_length: parseFloat(
-        formData.specifications.find((spec) => spec.name === "length")?.value ||
-          0
-      ),
-      product_width: parseFloat(
-        formData.specifications.find((spec) => spec.name === "width")?.value ||
-          0
-      ),
-      product_height: parseFloat(
-        formData.specifications.find((spec) => spec.name === "height")?.value ||
-          0
-      ),
-      product_includes: formData.productIncludes.join(", "),
-      product_skill_level: formData.skillLevel,
-      product_designer: formData.productDesigner,
-      ratings: 0, // Default value
-      seller: formData.seller || "Brick Extreme",
-      tags: formData.tags.split(",").map((tag) => tag.trim()) || [],
-      is_active: formData.isActive,
-      manufacturer: formData.manufacturer || "Unknown", // Fallback to "Unknown" if manufacturer is empty
-      is_preorder: formData.preorder,
-      preorder_date: formData.preorderDate
-        ? formData.preorderDate.toISOString().split("T")[0]
-        : null, // Format date for preorder
-      createdBy: user?._id,
-    };
-
-    try {
-      await updateProduct({ id, productData });
-      toast.success("Product updated successfully!");
-    } catch (error) {
-      toast.error(error?.data?.message || "Failed to update product");
-    }
-  };
-
-  // Loading state
   if (isLoading || !formData) {
-    return <div>Loading product details...</div>;
+    return (
+      <div className="flex justify-center items-center h-48">
+        <div>Loading...</div>
+      </div>
+    );
   }
 
   return (
@@ -242,7 +43,6 @@ const UpdateProduct = () => {
           </CardHeader>
 
           <CardContent className="p-6 space-y-8">
-            {/* Pass individual fields to components */}
             <BasicInformation formData={formData} onChange={handleChange} />
             <Separator className="my-6" />
 
@@ -294,13 +94,13 @@ const UpdateProduct = () => {
             <div className="flex justify-end space-x-4 pt-6 border-t">
               <Button
                 type="submit"
-                disabled={updateProductIsLoading}
+                disabled={isLoading}
                 className={`bg-gradient-to-r from-blue-600 to-purple-600 text-white flex items-center gap-2 hover:from-blue-700 hover:to-purple-700 ${
-                  updateProductIsLoading ? "opacity-50" : ""
+                  isLoading ? "opacity-50" : ""
                 }`}
               >
                 <Save className="h-4 w-4" />
-                {updateProductIsLoading ? "Updating..." : "Update Product"}
+                {isLoading ? "Updating..." : "Update Product"}
               </Button>
             </div>
           </CardContent>
