@@ -1,17 +1,18 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo } from "react";
 import {
   useReactTable,
   getCoreRowModel,
   getPaginationRowModel,
   getFilteredRowModel,
   flexRender,
-} from '@tanstack/react-table';
-import { Eye, Edit2, Trash2 } from 'lucide-react';
+} from "@tanstack/react-table";
+import { Eye, Edit2, Trash2 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import SearchBar from '@/components/admin/table/SearchBar';
-import ShowEntries from '@/components/admin/table/ShowEntries';
-import TableLayout from '@/components/admin/table/TableLayout';
-import Pagination from '@/components/admin/table/Pagination';
+import SearchBar from "@/components/admin/table/SearchBar";
+import ShowEntries from "@/components/admin/table/ShowEntries";
+import TableLayout from "@/components/admin/table/TableLayout";
+import Pagination from "@/components/admin/table/Pagination";
+import Metadata from "@/components/layout/Metadata/Metadata";
 
 const ViewOrder = () => {
   // Sample data
@@ -24,9 +25,7 @@ const ViewOrder = () => {
       total: 299.99,
       status: "Pending",
       paymentStatus: "Paid",
-      items: [
-        { name: "Product 1", quantity: 2, price: 149.99 }
-      ]
+      items: [{ name: "Product 1", quantity: 2, price: 149.99 }],
     },
     {
       id: 2,
@@ -36,9 +35,7 @@ const ViewOrder = () => {
       total: 159.99,
       status: "Delivered",
       paymentStatus: "Paid",
-      items: [
-        { name: "Product 2", quantity: 1, price: 159.99 }
-      ]
+      items: [{ name: "Product 2", quantity: 1, price: 159.99 }],
     },
     {
       id: 3,
@@ -48,9 +45,7 @@ const ViewOrder = () => {
       total: 159.99,
       status: "Delivered",
       paymentStatus: "Paid",
-      items: [
-        { name: "Product 2", quantity: 1, price: 159.99 }
-      ]
+      items: [{ name: "Product 2", quantity: 1, price: 159.99 }],
     },
     {
       id: 4,
@@ -60,9 +55,7 @@ const ViewOrder = () => {
       total: 159.99,
       status: "Delivered",
       paymentStatus: "Paid",
-      items: [
-        { name: "Product 2", quantity: 1, price: 159.99 }
-      ]
+      items: [{ name: "Product 2", quantity: 1, price: 159.99 }],
     },
     {
       id: 5,
@@ -72,13 +65,11 @@ const ViewOrder = () => {
       total: 159.99,
       status: "Delivered",
       paymentStatus: "Paid",
-      items: [
-        { name: "Product 2", quantity: 1, price: 159.99 }
-      ]
+      items: [{ name: "Product 2", quantity: 1, price: 159.99 }],
     },
   ]);
 
-  const [globalFilter, setGlobalFilter] = useState('');
+  const [globalFilter, setGlobalFilter] = useState("");
 
   const columns = useMemo(
     () => [
@@ -104,11 +95,25 @@ const ViewOrder = () => {
         header: "Status",
         accessorKey: "status",
         cell: ({ row }) => (
-          <span className={`px-3 py-1 rounded-full text-sm font-medium
-            ${row.original.status === 'Pending' ? 'bg-yellow-100 text-yellow-800' : ''}
-            ${row.original.status === 'Delivered' ? 'bg-green-100 text-green-800' : ''}
-            ${row.original.status === 'Cancelled' ? 'bg-red-100 text-red-800' : ''}
-          `}>
+          <span
+            className={`px-3 py-1 rounded-full text-sm font-medium
+            ${
+              row.original.status === "Pending"
+                ? "bg-yellow-100 text-yellow-800"
+                : ""
+            }
+            ${
+              row.original.status === "Delivered"
+                ? "bg-green-100 text-green-800"
+                : ""
+            }
+            ${
+              row.original.status === "Cancelled"
+                ? "bg-red-100 text-red-800"
+                : ""
+            }
+          `}
+          >
             {row.original.status}
           </span>
         ),
@@ -117,11 +122,25 @@ const ViewOrder = () => {
         header: "Payment Status",
         accessorKey: "paymentStatus",
         cell: ({ row }) => (
-          <span className={`px-3 py-1 rounded-full text-sm font-medium
-            ${row.original.paymentStatus === 'Paid' ? 'bg-green-100 text-green-800' : ''}
-            ${row.original.paymentStatus === 'Pending' ? 'bg-yellow-100 text-yellow-800' : ''}
-            ${row.original.paymentStatus === 'Failed' ? 'bg-red-100 text-red-800' : ''}
-          `}>
+          <span
+            className={`px-3 py-1 rounded-full text-sm font-medium
+            ${
+              row.original.paymentStatus === "Paid"
+                ? "bg-green-100 text-green-800"
+                : ""
+            }
+            ${
+              row.original.paymentStatus === "Pending"
+                ? "bg-yellow-100 text-yellow-800"
+                : ""
+            }
+            ${
+              row.original.paymentStatus === "Failed"
+                ? "bg-red-100 text-red-800"
+                : ""
+            }
+          `}
+          >
             {row.original.paymentStatus}
           </span>
         ),
@@ -184,40 +203,43 @@ const ViewOrder = () => {
   };
 
   return (
-    <div className="container mx-auto py-6 px-4">
-      <div className="mb-8 space-y-2">
-        <h1 className="text-3xl font-bold text-light tracking-tight">
-          Order Management
-        </h1>
-        <p className="text-gray-200/70 text-md">
-          Manage your customer orders
-        </p>
+    <>
+      <Metadata title="Orders" />
+      <div className="container mx-auto py-6 px-4">
+        <div className="mb-8 space-y-2">
+          <h1 className="text-3xl font-bold text-light tracking-tight">
+            Order Management
+          </h1>
+          <p className="text-gray-200/70 text-md">
+            Manage your customer orders
+          </p>
+        </div>
+
+        <Card className="bg-darkBrand border-none">
+          <CardContent className="p-10">
+            <div className="flex flex-col md:flex-row justify-between gap-6 mb-10">
+              <ShowEntries
+                value={table.getState().pagination.pageSize}
+                onChange={table.setPageSize}
+              />
+              <SearchBar
+                value={globalFilter}
+                onChange={setGlobalFilter}
+                placeholder="Search orders..."
+              />
+            </div>
+
+            <TableLayout
+              headerGroups={table.getHeaderGroups()}
+              rows={table.getRowModel().rows}
+              flexRender={flexRender}
+            />
+
+            <Pagination table={table} />
+          </CardContent>
+        </Card>
       </div>
-
-      <Card className="bg-darkBrand border-none">
-        <CardContent className="p-10">
-          <div className="flex flex-col md:flex-row justify-between gap-6 mb-10">
-            <ShowEntries 
-              value={table.getState().pagination.pageSize}
-              onChange={table.setPageSize}
-            />
-            <SearchBar 
-              value={globalFilter}
-              onChange={setGlobalFilter}
-              placeholder="Search orders..."
-            />
-          </div>
-
-          <TableLayout 
-            headerGroups={table.getHeaderGroups()}
-            rows={table.getRowModel().rows}
-            flexRender={flexRender}
-          />
-
-          <Pagination table={table} />
-        </CardContent>
-      </Card>
-    </div>
+    </>
   );
 };
 

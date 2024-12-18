@@ -1,17 +1,18 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo } from "react";
 import {
   useReactTable,
   getCoreRowModel,
   getPaginationRowModel,
   getFilteredRowModel,
   flexRender,
-} from '@tanstack/react-table';
-import { Eye, Trash2, Star } from 'lucide-react';
+} from "@tanstack/react-table";
+import { Eye, Trash2, Star } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import SearchBar from '@/components/admin/table/SearchBar';
-import ShowEntries from '@/components/admin/table/ShowEntries';
-import TableLayout from '@/components/admin/table/TableLayout';
-import Pagination from '@/components/admin/table/Pagination';
+import SearchBar from "@/components/admin/table/SearchBar";
+import ShowEntries from "@/components/admin/table/ShowEntries";
+import TableLayout from "@/components/admin/table/TableLayout";
+import Pagination from "@/components/admin/table/Pagination";
+import Metadata from "@/components/layout/Metadata/Metadata";
 
 const ViewReviews = () => {
   const [data] = useState([
@@ -21,7 +22,7 @@ const ViewReviews = () => {
       customerName: "John Doe",
       rating: 5,
       date: "2024-03-20",
-      status: "Published"
+      status: "Published",
     },
     {
       id: 2,
@@ -29,7 +30,7 @@ const ViewReviews = () => {
       customerName: "Jane Smith",
       rating: 4,
       date: "2024-03-19",
-      status: "Pending"
+      status: "Pending",
     },
     {
       id: 3,
@@ -37,7 +38,7 @@ const ViewReviews = () => {
       customerName: "Jane Smith",
       rating: 4,
       date: "2024-03-19",
-      status: "Pending"
+      status: "Pending",
     },
     {
       id: 4,
@@ -45,7 +46,7 @@ const ViewReviews = () => {
       customerName: "Jane Smith",
       rating: 4,
       date: "2024-03-19",
-      status: "Pending"
+      status: "Pending",
     },
     {
       id: 5,
@@ -53,11 +54,11 @@ const ViewReviews = () => {
       customerName: "Jane Smith",
       rating: 4,
       date: "2024-03-19",
-      status: "Pending"
+      status: "Pending",
     },
   ]);
 
-  const [globalFilter, setGlobalFilter] = useState('');
+  const [globalFilter, setGlobalFilter] = useState("");
 
   // Render star rating component
   const RatingStars = ({ rating }) => {
@@ -69,8 +70,8 @@ const ViewReviews = () => {
             size={16}
             className={`${
               index < rating
-                ? 'text-yellow-400 fill-yellow-400'
-                : 'text-gray-300'
+                ? "text-yellow-400 fill-yellow-400"
+                : "text-gray-300"
             }`}
           />
         ))}
@@ -106,11 +107,25 @@ const ViewReviews = () => {
         header: "Status",
         accessorKey: "status",
         cell: ({ row }) => (
-          <span className={`px-3 py-1 rounded-full text-sm font-medium
-            ${row.original.status === 'Published' ? 'bg-green-100 text-green-800' : ''}
-            ${row.original.status === 'Pending' ? 'bg-yellow-100 text-yellow-800' : ''}
-            ${row.original.status === 'Rejected' ? 'bg-red-100 text-red-800' : ''}
-          `}>
+          <span
+            className={`px-3 py-1 rounded-full text-sm font-medium
+            ${
+              row.original.status === "Published"
+                ? "bg-green-100 text-green-800"
+                : ""
+            }
+            ${
+              row.original.status === "Pending"
+                ? "bg-yellow-100 text-yellow-800"
+                : ""
+            }
+            ${
+              row.original.status === "Rejected"
+                ? "bg-red-100 text-red-800"
+                : ""
+            }
+          `}
+          >
             {row.original.status}
           </span>
         ),
@@ -162,40 +177,43 @@ const ViewReviews = () => {
   };
 
   return (
-    <div className="container mx-auto py-6 px-4">
-      <div className="mb-8 space-y-2">
-        <h1 className="text-3xl font-bold text-light tracking-tight">
-          Review Management
-        </h1>
-        <p className="text-gray-200/70 text-md">
-          Manage your product reviews
-        </p>
+    <>
+      <Metadata title="Reviews" />
+      <div className="container mx-auto py-6 px-4">
+        <div className="mb-8 space-y-2">
+          <h1 className="text-3xl font-bold text-light tracking-tight">
+            Review Management
+          </h1>
+          <p className="text-gray-200/70 text-md">
+            Manage your product reviews
+          </p>
+        </div>
+
+        <Card className="bg-darkBrand border-none">
+          <CardContent className="p-10">
+            <div className="flex flex-col md:flex-row justify-between gap-6 mb-10">
+              <ShowEntries
+                value={table.getState().pagination.pageSize}
+                onChange={table.setPageSize}
+              />
+              <SearchBar
+                value={globalFilter}
+                onChange={setGlobalFilter}
+                placeholder="Search reviews..."
+              />
+            </div>
+
+            <TableLayout
+              headerGroups={table.getHeaderGroups()}
+              rows={table.getRowModel().rows}
+              flexRender={flexRender}
+            />
+
+            <Pagination table={table} />
+          </CardContent>
+        </Card>
       </div>
-
-      <Card className="bg-darkBrand border-none">
-        <CardContent className="p-10">
-          <div className="flex flex-col md:flex-row justify-between gap-6 mb-10">
-            <ShowEntries 
-              value={table.getState().pagination.pageSize}
-              onChange={table.setPageSize}
-            />
-            <SearchBar 
-              value={globalFilter}
-              onChange={setGlobalFilter}
-              placeholder="Search reviews..."
-            />
-          </div>
-
-          <TableLayout 
-            headerGroups={table.getHeaderGroups()}
-            rows={table.getRowModel().rows}
-            flexRender={flexRender}
-          />
-
-          <Pagination table={table} />
-        </CardContent>
-      </Card>
-    </div>
+    </>
   );
 };
 

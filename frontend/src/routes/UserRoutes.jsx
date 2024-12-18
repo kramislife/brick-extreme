@@ -21,15 +21,18 @@ import ViewCategories from "@/components/admin/Products/ViewCategories";
 import ViewCollection from "@/components/admin/Products/ViewCollection";
 import ViewSkillLevel from "@/components/admin/Products/ViewSkillLevel";
 import ViewDesigner from "@/components/admin/Products/ViewDesigner";
+import ProtectedRoutes from "@/routes/ProtectedRoutes";
 
 const UserRoutes = (
   <>
     {/* Public Routes */}
     <Route index element={<Home />} />
+    <Route path="about" element={<About />} />
+    <Route path="contact" element={<Contact />} />
+
+    {/* Product Routes */}
     <Route path="products" element={<Products />} />
     <Route path="categories" element={<CategoriesPage />} />
-
-    {/* Product Routes with Categories */}
     <Route path="products/best-selling/:id" element={<ProductView />} />
     <Route path="products/latest/:id" element={<ProductView />} />
     <Route path="products/:id" element={<ProductView />} />
@@ -38,28 +41,52 @@ const UserRoutes = (
     <Route path="login" element={<Login />} />
     <Route path="register" element={<Register />} />
 
-    {/* Other Routes */}
-    <Route path="about" element={<About />} />
-    <Route path="contact" element={<Contact />} />
+    {/* Protected User Routes */}
+    <Route
+      path="profile"
+      element={
+        <ProtectedRoutes>
+          <Profile />
+        </ProtectedRoutes>
+      }
+    />
+    <Route
+      path="settings"
+      element={
+        <ProtectedRoutes>
+          <Settings />
+        </ProtectedRoutes>
+      }
+    />
 
-    {/* Admin Routes */}
-    <Route path="admin" element={<AdminView />}>
+    {/* Protected Admin/Employee Routes */}
+    <Route
+      path="admin"
+      element={
+        <ProtectedRoutes adminOnly={true}>
+          <AdminView />
+        </ProtectedRoutes>
+      }
+    >
+      {/* Dashboard */}
       <Route index element={<Dashboard />} />
+
+      {/* Product Management */}
+      <Route path="products" element={<ViewProducts />} />
       <Route path="new-product" element={<AddProduct />} />
       <Route path="update-product/:id" element={<UpdateProduct />} />
-      <Route path="products" element={<ViewProducts />} />
-      <Route path="orders" element={<ViewOrder />} />
-      <Route path="users" element={<ViewUsers />} />
-      <Route path="reviews" element={<ViewReviews />} />
+      
+      {/* Category Management */}
       <Route path="categories" element={<ViewCategories />} />
       <Route path="collections" element={<ViewCollection />} />
       <Route path="skill-levels" element={<ViewSkillLevel />} />
       <Route path="designers" element={<ViewDesigner />} />
-    </Route>
 
-    {/* User Profile Routes */}
-    <Route path="profile" element={<Profile />} />
-    <Route path="settings" element={<Settings />} />
+      {/* User & Order Management */}
+      <Route path="users" element={<ViewUsers />} />
+      <Route path="orders" element={<ViewOrder />} />
+      <Route path="reviews" element={<ViewReviews />} />
+    </Route>
   </>
 );
 

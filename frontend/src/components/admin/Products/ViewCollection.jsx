@@ -13,6 +13,7 @@ import ShowEntries from "@/components/admin/table/ShowEntries";
 import TableLayout from "@/components/admin/table/TableLayout";
 import Pagination from "@/components/admin/table/Pagination";
 import { useGetCollectionQuery } from "@/redux/api/productApi";
+import Metadata from "@/components/layout/Metadata/Metadata";
 
 const ViewCollection = () => {
   const { data: collectionData, isLoading } = useGetCollectionQuery();
@@ -40,23 +41,23 @@ const ViewCollection = () => {
         header: "Updated By",
         accessorKey: "updatedBy",
       },
-    //   {
-    //     header: "Status",
-    //     accessorKey: "status",
-    //     cell: ({ row }) => (
-    //       <span
-    //         className={`px-3 py-1 rounded-full text-sm font-medium
-    //         ${
-    //           row.original.status
-    //             ? "bg-green-100 text-green-800"
-    //             : "bg-red-100 text-red-800"
-    //         }
-    //       `}
-    //       >
-    //         {row.original.status ? "Active" : "Inactive"}
-    //       </span>
-    //     ),
-    //   },
+      //   {
+      //     header: "Status",
+      //     accessorKey: "status",
+      //     cell: ({ row }) => (
+      //       <span
+      //         className={`px-3 py-1 rounded-full text-sm font-medium
+      //         ${
+      //           row.original.status
+      //             ? "bg-green-100 text-green-800"
+      //             : "bg-red-100 text-red-800"
+      //         }
+      //       `}
+      //       >
+      //         {row.original.status ? "Active" : "Inactive"}
+      //       </span>
+      //     ),
+      //   },
       {
         header: "Actions",
         cell: ({ row }) => (
@@ -91,10 +92,10 @@ const ViewCollection = () => {
       description: collection.description,
       createdBy: collection.createdAt
         ? new Date(collection.createdAt).toLocaleString()
-        : 'Not Created',
+        : "Not Created",
       updatedBy: collection.updatedAt
         ? new Date(collection.updatedAt).toLocaleString()
-        : 'Not Updated',
+        : "Not Updated",
       status: collection.is_active,
     }));
   }, [collectionData]);
@@ -124,40 +125,43 @@ const ViewCollection = () => {
   }
 
   return (
-    <div className="container mx-auto py-6 px-4">
-      <div className="mb-8 space-y-2">
-        <h1 className="text-3xl font-bold text-light tracking-tight">
-          Collection Management
-        </h1>
-        <p className="text-gray-200/70 text-md">
-          Manage your product collections
-        </p>
+    <>
+      <Metadata title="Collections" />
+      <div className="container mx-auto py-6 px-4">
+        <div className="mb-8 space-y-2">
+          <h1 className="text-3xl font-bold text-light tracking-tight">
+            Collection Management
+          </h1>
+          <p className="text-gray-200/70 text-md">
+            Manage your product collections
+          </p>
+        </div>
+
+        <Card className="bg-darkBrand border-none">
+          <CardContent className="p-10">
+            <div className="flex flex-col md:flex-row justify-between gap-6 mb-10">
+              <ShowEntries
+                value={table.getState().pagination.pageSize}
+                onChange={table.setPageSize}
+              />
+              <SearchBar
+                value={globalFilter}
+                onChange={setGlobalFilter}
+                placeholder="Search collections..."
+              />
+            </div>
+
+            <TableLayout
+              headerGroups={table.getHeaderGroups()}
+              rows={table.getRowModel().rows}
+              flexRender={flexRender}
+            />
+
+            <Pagination table={table} />
+          </CardContent>
+        </Card>
       </div>
-
-      <Card className="bg-darkBrand border-none">
-        <CardContent className="p-10">
-          <div className="flex flex-col md:flex-row justify-between gap-6 mb-10">
-            <ShowEntries
-              value={table.getState().pagination.pageSize}
-              onChange={table.setPageSize}
-            />
-            <SearchBar
-              value={globalFilter}
-              onChange={setGlobalFilter}
-              placeholder="Search collections..."
-            />
-          </div>
-
-          <TableLayout
-            headerGroups={table.getHeaderGroups()}
-            rows={table.getRowModel().rows}
-            flexRender={flexRender}
-          />
-
-          <Pagination table={table} />
-        </CardContent>
-      </Card>
-    </div>
+    </>
   );
 };
 

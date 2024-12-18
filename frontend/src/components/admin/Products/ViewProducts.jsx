@@ -16,6 +16,7 @@ import Pagination from "@/components/admin/table/Pagination";
 import { useGetProductsQuery } from "@/redux/api/productApi";
 import LoadingSpinner from "@/components/layout/spinner/LoadingSpinner";
 import { useNavigate } from "react-router-dom";
+import Metadata from "@/components/layout/Metadata/Metadata";
 
 const ViewProducts = () => {
   const { data: productData, isLoading, error } = useGetProductsQuery();
@@ -209,46 +210,49 @@ const ViewProducts = () => {
   }
 
   return (
-    <div className="container mx-auto py-6 px-4">
-      <div className="mb-8 flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-bold text-light tracking-tight">
-            Products Management
-          </h1>
-          <p className="text-gray-200/70 text-md">
-            Manage your product inventory
-          </p>
-        </div>
-        <button
-          onClick={() => navigate("/admin/new-product")}
-          className="bg-gradient-to-r from-blue-600 to-purple-600 text-white flex items-center gap-2 hover:from-blue-700 hover:to-purple-700 px-4 py-2 rounded-md"
-        >
-          <PlusCircle className="w-5 h-5" />
-          Add New Product
-        </button>
-      </div>
-
-      <Card className="bg-darkBrand border-none">
-        <CardContent className="p-10">
-          <div className="flex flex-col md:flex-row justify-between gap-6 mb-10">
-            <ShowEntries value={pageSize} onChange={setPageSize} />
-            <SearchBar
-              value={globalFilter ?? ""}
-              onChange={(value) => setGlobalFilter(String(value))}
-              placeholder="Search products..."
-            />
+    <>
+      <Metadata title="Products" />
+      <div className="container mx-auto py-6 px-4">
+        <div className="mb-8 flex justify-between items-center">
+          <div>
+            <h1 className="text-3xl font-bold text-light tracking-tight">
+              Products Management
+            </h1>
+            <p className="text-gray-200/70 text-md">
+              Manage your product inventory
+            </p>
           </div>
+          <button
+            onClick={() => navigate("/admin/new-product")}
+            className="bg-gradient-to-r from-blue-600 to-purple-600 text-white flex items-center gap-2 hover:from-blue-700 hover:to-purple-700 px-4 py-2 rounded-md"
+          >
+            <PlusCircle className="w-5 h-5" />
+            Add New Product
+          </button>
+        </div>
 
-          <TableLayout
-            headerGroups={table.getHeaderGroups()}
-            rows={table.getRowModel().rows}
-            flexRender={flexRender}
-          />
+        <Card className="bg-darkBrand border-none">
+          <CardContent className="p-10">
+            <div className="flex flex-col md:flex-row justify-between gap-6 mb-10">
+              <ShowEntries value={pageSize} onChange={setPageSize} />
+              <SearchBar
+                value={globalFilter ?? ""}
+                onChange={(value) => setGlobalFilter(String(value))}
+                placeholder="Search products..."
+              />
+            </div>
 
-          <Pagination table={table} />
-        </CardContent>
-      </Card>
-    </div>
+            <TableLayout
+              headerGroups={table.getHeaderGroups()}
+              rows={table.getRowModel().rows}
+              flexRender={flexRender}
+            />
+
+            <Pagination table={table} />
+          </CardContent>
+        </Card>
+      </div>
+    </>
   );
 };
 

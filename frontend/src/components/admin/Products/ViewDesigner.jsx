@@ -1,22 +1,23 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo } from "react";
 import {
   useReactTable,
   getCoreRowModel,
   getPaginationRowModel,
   getFilteredRowModel,
   flexRender,
-} from '@tanstack/react-table';
-import { Edit2, Trash2, Link as LinkIcon } from 'lucide-react';
+} from "@tanstack/react-table";
+import { Edit2, Trash2, Link as LinkIcon } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import SearchBar from '@/components/admin/table/SearchBar';
-import ShowEntries from '@/components/admin/table/ShowEntries';
-import TableLayout from '@/components/admin/table/TableLayout';
-import Pagination from '@/components/admin/table/Pagination';
-import { useGetDesignersQuery } from '@/redux/api/productApi';
+import SearchBar from "@/components/admin/table/SearchBar";
+import ShowEntries from "@/components/admin/table/ShowEntries";
+import TableLayout from "@/components/admin/table/TableLayout";
+import Pagination from "@/components/admin/table/Pagination";
+import { useGetDesignersQuery } from "@/redux/api/productApi";
+import Metadata from "@/components/layout/Metadata/Metadata";
 
 const ViewDesigner = () => {
   const { data: designerData, isLoading } = useGetDesignersQuery();
-  const [globalFilter, setGlobalFilter] = useState('');
+  const [globalFilter, setGlobalFilter] = useState("");
 
   const columns = useMemo(
     () => [
@@ -37,20 +38,22 @@ const ViewDesigner = () => {
         accessorKey: "links",
         cell: ({ row }) => (
           <div>
-            {row.original.links && Object.entries(row.original.links).map(([platform, url]) => (
-              url && (
-                <a
-                  key={platform}
-                  href={url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex justify-center items-center gap-1 text-blue-500 hover:text-blue-600"
-                >
-                  <LinkIcon size={14} />
-                  <span className="capitalize">{platform}</span>
-                </a>
-              )
-            ))}
+            {row.original.links &&
+              Object.entries(row.original.links).map(
+                ([platform, url]) =>
+                  url && (
+                    <a
+                      key={platform}
+                      href={url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex justify-center items-center gap-1 text-blue-500 hover:text-blue-600"
+                    >
+                      <LinkIcon size={14} />
+                      <span className="capitalize">{platform}</span>
+                    </a>
+                  )
+              )}
           </div>
         ),
       },
@@ -127,40 +130,43 @@ const ViewDesigner = () => {
   }
 
   return (
-    <div className="container mx-auto py-6 px-4">
-      <div className="mb-8 space-y-2">
-        <h1 className="text-3xl font-bold text-light tracking-tight">
-          Designer Management
-        </h1>
-        <p className="text-gray-200/70 text-md">
-          Manage your product designers
-        </p>
+    <>
+      <Metadata title="Designers" />
+      <div className="container mx-auto py-6 px-4">
+        <div className="mb-8 space-y-2">
+          <h1 className="text-3xl font-bold text-light tracking-tight">
+            Designer Management
+          </h1>
+          <p className="text-gray-200/70 text-md">
+            Manage your product designers
+          </p>
+        </div>
+
+        <Card className="bg-darkBrand border-none">
+          <CardContent className="p-10">
+            <div className="flex flex-col md:flex-row justify-between gap-6 mb-10">
+              <ShowEntries
+                value={table.getState().pagination.pageSize}
+                onChange={table.setPageSize}
+              />
+              <SearchBar
+                value={globalFilter}
+                onChange={setGlobalFilter}
+                placeholder="Search designers..."
+              />
+            </div>
+
+            <TableLayout
+              headerGroups={table.getHeaderGroups()}
+              rows={table.getRowModel().rows}
+              flexRender={flexRender}
+            />
+
+            <Pagination table={table} />
+          </CardContent>
+        </Card>
       </div>
-
-      <Card className="bg-darkBrand border-none">
-        <CardContent className="p-10">
-          <div className="flex flex-col md:flex-row justify-between gap-6 mb-10">
-            <ShowEntries 
-              value={table.getState().pagination.pageSize}
-              onChange={table.setPageSize}
-            />
-            <SearchBar 
-              value={globalFilter}
-              onChange={setGlobalFilter}
-              placeholder="Search designers..."
-            />
-          </div>
-
-          <TableLayout 
-            headerGroups={table.getHeaderGroups()}
-            rows={table.getRowModel().rows}
-            flexRender={flexRender}
-          />
-
-          <Pagination table={table} />
-        </CardContent>
-      </Card>
-    </div>
+    </>
   );
 };
 

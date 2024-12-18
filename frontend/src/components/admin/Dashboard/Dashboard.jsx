@@ -13,6 +13,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import Metadata from "@/components/layout/Metadata/Metadata";
 
 // Register Chart.js components
 ChartJS.register(
@@ -139,184 +140,189 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="mx-auto py-5 px-4">
-      {/* Header with enhanced styling */}
-      <div className="mb-8 space-y-2">
-        <h1 className="text-3xl font-bold text-light tracking-tight">
-          Dashboard
-        </h1>
-        <p className="text-gray-200/70 text-md">Welcome to your dashboard</p>
-      </div>
+    <>
+      <Metadata title="Dashboard" />
+      <div className="mx-auto py-5 px-4">
+        {/* Header with enhanced styling */}
+        <div className="mb-8 space-y-2">
+          <h1 className="text-3xl font-bold text-light tracking-tight">
+            Dashboard
+          </h1>
+          <p className="text-gray-200/70 text-md">Welcome to your dashboard</p>
+        </div>
 
-      {/* Stats Cards with enhanced styling */}
-      <div className="grid gap-5 mb-8 md:grid-cols-2 lg:grid-cols-4">
-        {/* Update each Card component */}
-        <Card className="bg-darkBrand border-none hover:bg-darkBrand/90 transition-colors">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-light">
-              Total Sales
-            </CardTitle>
-            <TrendingUp className="h-4 w-4 text-light" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-light py-2">$45,231.89</div>
-            <p className="text-xs text-light/80">+20.1% from last month</p>
-          </CardContent>
-        </Card>
+        {/* Stats Cards with enhanced styling */}
+        <div className="grid gap-5 mb-8 md:grid-cols-2 lg:grid-cols-4">
+          {/* Update each Card component */}
+          <Card className="bg-darkBrand border-none hover:bg-darkBrand/90 transition-colors">
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium text-light">
+                Total Sales
+              </CardTitle>
+              <TrendingUp className="h-4 w-4 text-light" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-light py-2">
+                $45,231.89
+              </div>
+              <p className="text-xs text-light/80">+20.1% from last month</p>
+            </CardContent>
+          </Card>
 
-        {/* Total Orders Card */}
-        <Card className="bg-darkBrand border-none hover:bg-darkBrand/90 transition-colors">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-light">
-              Total Orders
-            </CardTitle>
-            <ShoppingCart className="h-4 w-4 text-light" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-light py-2">+2350</div>
-            <p className="text-xs text-light/80">+180.1% from last month</p>
-          </CardContent>
-        </Card>
+          {/* Total Orders Card */}
+          <Card className="bg-darkBrand border-none hover:bg-darkBrand/90 transition-colors">
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium text-light">
+                Total Orders
+              </CardTitle>
+              <ShoppingCart className="h-4 w-4 text-light" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-light py-2">+2350</div>
+              <p className="text-xs text-light/80">+180.1% from last month</p>
+            </CardContent>
+          </Card>
 
-        {/* Products Card */}
-        <Card className="bg-darkBrand border-none hover:bg-darkBrand/90 transition-colors">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-light">
-              Products
-            </CardTitle>
-            <Package className="h-4 w-4 text-light" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-light py-2">+12,234</div>
-            <p className="text-xs text-light/80">+19% from last month</p>
-          </CardContent>
-        </Card>
+          {/* Products Card */}
+          <Card className="bg-darkBrand border-none hover:bg-darkBrand/90 transition-colors">
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium text-light">
+                Products
+              </CardTitle>
+              <Package className="h-4 w-4 text-light" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-light py-2">+12,234</div>
+              <p className="text-xs text-light/80">+19% from last month</p>
+            </CardContent>
+          </Card>
 
-        {/* Active Users Card */}
-        <Card className="bg-darkBrand border-none hover:bg-darkBrand/90 transition-colors">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-light">
-              Active Users
-            </CardTitle>
-            <Users className="h-4 w-4 text-light" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-light py-2">+573</div>
-            <p className="text-xs text-light/80">+201 since last hour</p>
-          </CardContent>
-        </Card>
-      </div>
+          {/* Active Users Card */}
+          <Card className="bg-darkBrand border-none hover:bg-darkBrand/90 transition-colors">
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium text-light">
+                Active Users
+              </CardTitle>
+              <Users className="h-4 w-4 text-light" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-light py-2">+573</div>
+              <p className="text-xs text-light/80">+201 since last hour</p>
+            </CardContent>
+          </Card>
+        </div>
 
-      {/* Graphs Section with enhanced styling */}
-      <div className="grid gap-5 mb-8 md:grid-cols-2">
-        <Card className="bg-darkBrand border-none p-4 hover:bg-darkBrand/90 transition-colors">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-light text-lg font-semibold">
-              Sales Over Time
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="pt-4">
-            <Line data={lineChartData} options={lineChartOptions} />
-          </CardContent>
-        </Card>
+        {/* Graphs Section with enhanced styling */}
+        <div className="grid gap-5 mb-8 md:grid-cols-2">
+          <Card className="bg-darkBrand border-none p-4 hover:bg-darkBrand/90 transition-colors">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-light text-lg font-semibold">
+                Sales Over Time
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="pt-4">
+              <Line data={lineChartData} options={lineChartOptions} />
+            </CardContent>
+          </Card>
 
-        {/* Bar Chart - Sales by Month */}
-        <Card className="bg-darkBrand border-none p-4 hover:bg-darkBrand/90 transition-colors">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-light text-lg font-semibold">
-              Monthly Sales Comparison
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="pt-4">          
+          {/* Bar Chart - Sales by Month */}
+          <Card className="bg-darkBrand border-none p-4 hover:bg-darkBrand/90 transition-colors">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-light text-lg font-semibold">
+                Monthly Sales Comparison
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="pt-4">
               <Bar data={barChartData} options={barChartOptions} />
-          </CardContent>
-        </Card>
-      </div>
+            </CardContent>
+          </Card>
+        </div>
 
-      {/* Top Products Bar Chart */}
-      <div className="grid gap-5 mb-8">
-        <Card className="bg-darkBrand border-none p-4 hover:bg-darkBrand/90 transition-colors">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-light text-lg font-semibold">
-              Top Selling Products
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Bar data={topProductsData} options={topProductsOptions} />
-          </CardContent>
-        </Card>
-      </div>
+        {/* Top Products Bar Chart */}
+        <div className="grid gap-5 mb-8">
+          <Card className="bg-darkBrand border-none p-4 hover:bg-darkBrand/90 transition-colors">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-light text-lg font-semibold">
+                Top Selling Products
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Bar data={topProductsData} options={topProductsOptions} />
+            </CardContent>
+          </Card>
+        </div>
 
-      {/* Recent Orders with enhanced table styling */}
-      <div className="grid gap-5">
-        <Card className="bg-darkBrand border-none hover:bg-darkBrand/90 transition-colors p-5">
-          <CardHeader className="pb-10">
-            <CardTitle className="text-light text-lg font-semibold">
-              Recent Orders
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="relative w-full overflow-auto">
-              <table className="w-full caption-bottom text-sm">
-                <thead>
-                  <tr className="border-b border-gray-200/10 text-center">
-                    <th className="h-12 px-6 text-center align-middle font-semibold text-light/90">
-                      Order ID
-                    </th>
-                    <th className="h-12 px-6 text-center align-middle font-semibold text-light/90">
-                      Customer
-                    </th>
-                    <th className="h-12 px-6 text-center align-middle font-semibold text-light/90">
-                      Product
-                    </th>
-                    <th className="h-12 px-6 text-center align-middle font-semibold text-light/90">
-                      Amount
-                    </th>
-                    <th className="h-12 px-6 text-center align-middle font-semibold text-light/90">
-                      Status
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {[...Array(5)].map((_, i) => (
-                    <tr
-                      key={i}
-                      className="border-b border-gray-200/10 transition-colors hover:bg-blue-500/10 text-light/80"
-                    >
-                      <td className="p-4 text-center font-medium text-sm">
-                        #OID123{i}
-                      </td>
-                      <td className="p-4 text-center font-medium text-sm">
-                        John Doe
-                      </td>
-                      <td className="p-4 text-center font-medium text-sm">
-                        Product {i + 1}
-                      </td>
-                      <td className="p-4 text-center font-medium text-sm">
-                        $199.99
-                      </td>
-                      <td className="p-4 text-center">
-                        {/* Status cell with dynamic background color */}
-                        <span
-                          className={`inline-flex rounded-full px-3 py-1 text-xs font-medium 
+        {/* Recent Orders with enhanced table styling */}
+        <div className="grid gap-5">
+          <Card className="bg-darkBrand border-none hover:bg-darkBrand/90 transition-colors p-5">
+            <CardHeader className="pb-10">
+              <CardTitle className="text-light text-lg font-semibold">
+                Recent Orders
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="relative w-full overflow-auto">
+                <table className="w-full caption-bottom text-sm">
+                  <thead>
+                    <tr className="border-b border-gray-200/10 text-center">
+                      <th className="h-12 px-6 text-center align-middle font-semibold text-light/90">
+                        Order ID
+                      </th>
+                      <th className="h-12 px-6 text-center align-middle font-semibold text-light/90">
+                        Customer
+                      </th>
+                      <th className="h-12 px-6 text-center align-middle font-semibold text-light/90">
+                        Product
+                      </th>
+                      <th className="h-12 px-6 text-center align-middle font-semibold text-light/90">
+                        Amount
+                      </th>
+                      <th className="h-12 px-6 text-center align-middle font-semibold text-light/90">
+                        Status
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {[...Array(5)].map((_, i) => (
+                      <tr
+                        key={i}
+                        className="border-b border-gray-200/10 transition-colors hover:bg-blue-500/10 text-light/80"
+                      >
+                        <td className="p-4 text-center font-medium text-sm">
+                          #OID123{i}
+                        </td>
+                        <td className="p-4 text-center font-medium text-sm">
+                          John Doe
+                        </td>
+                        <td className="p-4 text-center font-medium text-sm">
+                          Product {i + 1}
+                        </td>
+                        <td className="p-4 text-center font-medium text-sm">
+                          $199.99
+                        </td>
+                        <td className="p-4 text-center">
+                          {/* Status cell with dynamic background color */}
+                          <span
+                            className={`inline-flex rounded-full px-3 py-1 text-xs font-medium 
                       ${
                         i % 2 === 0
                           ? "bg-green-300 text-black"
                           : "bg-yellow-300 text-black"
                       }`}
-                        >
-                          {i % 2 === 0 ? "Shipped" : "Pending"}
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </CardContent>
-        </Card>
+                          >
+                            {i % 2 === 0 ? "Shipped" : "Pending"}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
