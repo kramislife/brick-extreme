@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Package, ShoppingCart, Users, TrendingUp } from "lucide-react";
 import { Line, Bar } from "react-chartjs-2";
@@ -14,6 +14,7 @@ import {
   Legend,
 } from "chart.js";
 import Metadata from "@/components/layout/Metadata/Metadata";
+import { useSelector } from "react-redux";
 
 // Register Chart.js components
 ChartJS.register(
@@ -28,6 +29,37 @@ ChartJS.register(
 );
 
 const Dashboard = () => {
+  const { user } = useSelector((state) => state.auth);
+  const [currentTime, setCurrentTime] = useState(new Date());
+
+  // Update time every second
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  // Format date and time
+  const formatDate = (date) => {
+    return date.toLocaleDateString("en-US", {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
+
+  const formatTime = (date) => {
+    return date.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: true,
+    });
+  };
+
   // Update line chart styling
   const lineChartData = {
     labels: ["January", "February", "March", "April", "May", "June"],
@@ -143,12 +175,20 @@ const Dashboard = () => {
     <>
       <Metadata title="Dashboard" />
       <div className="mx-auto py-5 px-4">
-        {/* Header with enhanced styling */}
-        <div className="mb-8 space-y-2">
-          <h1 className="text-3xl font-bold text-light tracking-tight">
-            Dashboard
-          </h1>
-          <p className="text-gray-200/70 text-md">Welcome to your dashboard</p>
+        {/* Welcome Section  */}
+        <div className="mb-8 space-y-3">
+          <h2 className="text-3xl font-bold text-light tracking-tight">
+            {(() => {
+              const hour = currentTime.getHours();
+              if (hour < 12) return "Good Morning";
+              if (hour < 17) return "Good Afternoon";
+              return "Good Evening";
+            })()}
+            , {user?.name}!
+          </h2>
+          <p className="text-sm font-light text-gray-200/70">
+            Today is {formatDate(currentTime)} at {formatTime(currentTime)}
+          </p>
         </div>
 
         {/* Stats Cards with enhanced styling */}
