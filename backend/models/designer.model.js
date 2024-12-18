@@ -16,7 +16,7 @@ const designerSchema = new mongoose.Schema(
       instagram: {
         type: String,
         match: [
-          /^https?:\/\/(www\.)?instagram\.com\/[A-Za-z0-9_]+$/,
+          /^https?:\/\/(www\.)?instagram\.com\/[A-Za-z0-9_.-]+\/?$/,
           "Invalid Instagram URL",
         ],
       },

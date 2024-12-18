@@ -46,7 +46,7 @@ categorySchema.pre("save", async function (next) {
     .model("Category")
     .findOne({ key: this.key });
   if (existingCategory) {
-    const error = new Error("Category Already Avalable.");
+    const error = new Error("Category Already Available.");
     return next(error);
   }
 
@@ -67,7 +67,7 @@ categorySchema.pre("findOneAndUpdate", async function (next) {
     .model("Category")
     .findOne({ key: update.key });
   if (existingCategory) {
-    const error = new Error("Category Already available.");
+    const error = new Error("Category Already Available.");
     return next(error);
   }
 

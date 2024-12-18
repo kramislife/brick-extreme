@@ -74,13 +74,19 @@ const ViewSkillLevel = () => {
 
   const data = useMemo(() => {
     if (!skillLevelData?.skillLevels) return [];
-    return skillLevelData.skillLevels.map((skillLevel, index) => ({
-      id: index + 1,
-      _id: skillLevel._id,
-      name: skillLevel.name,
-      description: skillLevel.description,
-      status: skillLevel.is_active,
-    }));
+    // Sort categories by creation date (newest first)
+    return [...skillLevelData.skillLevels]
+      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+      .map((skillLevel, index) => ({
+        id: index + 1,
+        _id: skillLevel._id,
+        name: skillLevel.name,
+        description: skillLevel.description,
+        createdBy: new Date(skillLevel.createdAt).toLocaleString(),
+        updatedBy: skillLevel.updatedAt
+          ? new Date(skillLevel.updatedAt).toLocaleString()
+          : "Not Updated",
+      }));
   }, [skillLevelData]);
 
   const table = useReactTable({

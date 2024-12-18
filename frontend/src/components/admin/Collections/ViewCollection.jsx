@@ -87,19 +87,18 @@ const ViewCollection = () => {
 
   const data = useMemo(() => {
     if (!collectionData?.collections) return [];
-    return collectionData.collections.map((collection, index) => ({
-      id: index + 1,
-      _id: collection._id,
-      name: collection.name,
-      description: collection.description,
-      createdBy: collection.createdAt
-        ? new Date(collection.createdAt).toLocaleString()
-        : "Not Created",
-      updatedBy: collection.updatedAt
-        ? new Date(collection.updatedAt).toLocaleString()
-        : "Not Updated",
-      status: collection.is_active,
-    }));
+    return [...collectionData.collections]
+      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+      .map((collection, index) => ({
+        id: index + 1,
+        _id: collection._id,  
+        name: collection.name,
+        description: collection.description,
+        createdBy: new Date(collection.createdAt).toLocaleString(),
+        updatedBy: collection.updatedAt
+          ? new Date(collection.updatedAt).toLocaleString()
+          : "Not Updated",
+      }));
   }, [collectionData]);
 
   const table = useReactTable({
