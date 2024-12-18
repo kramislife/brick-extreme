@@ -4,16 +4,16 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Save } from "lucide-react";
-import BasicInformation from "./AddProduct/components/BasicInformation";
-import ProductDescriptions from "./AddProduct/components/ProductDescriptions";
-import ProductSpecifications from "./AddProduct/components/ProductSpecifications";
-import AdditionalInformation from "./AddProduct/components/AdditionalInformation";
-import ProductCategories from "./AddProduct/components/ProductCategories";
-import ProductCollections from "./AddProduct/components/ProductCollections";
-import ProductIncludes from "./AddProduct/components/ProductIncludes";
-import SkillLevel from "./AddProduct/components/SkillLevel";
-import ProductDesigner from "./AddProduct/components/ProductDesigner";
-import ProductStatus from "./AddProduct/components/ProductStatus";
+import BasicInformation from "./components/BasicInformation";
+import ProductDescriptions from "./components/ProductDescriptions";
+import ProductSpecifications from "./components/ProductSpecifications";
+import AdditionalInformation from "./components/AdditionalInformation";
+import ProductCategories from "./components/ProductCategories";
+import ProductCollections from "./components/ProductCollections";
+import ProductIncludes from "./components/ProductIncludes";
+import SkillLevel from "./components/SkillLevel";
+import ProductDesigner from "./components/ProductDesigner";
+import ProductStatus from "./components/ProductStatus";
 import { useProductUpdate } from "@/hooks/useProductUpdate";
 
 const UpdateProduct = () => {
@@ -67,9 +67,9 @@ const UpdateProduct = () => {
             />
             <Separator className="my-6" />
 
-            <ProductCollections 
-              formData={formData} 
-              onCheckboxChange={handleCheckboxChange} 
+            <ProductCollections
+              formData={formData}
+              onCheckboxChange={handleCheckboxChange}
             />
             <Separator className="my-6" />
 

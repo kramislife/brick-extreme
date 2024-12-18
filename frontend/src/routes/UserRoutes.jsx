@@ -1,6 +1,6 @@
 import Login from "@/components/auth/Login/Login";
 import Register from "@/components/auth/Register/Register";
-import AddProduct from "@/components/admin/Products/AddProduct/AddProduct";
+import AddProduct from "@/components/admin/Products/AddProduct";
 import Dashboard from "@/components/admin/Dashboard/Dashboard";
 import About from "@/pages/About/About";
 import Contact from "@/pages/Contact/Contact";
@@ -10,17 +10,17 @@ import ProductView from "@/pages/Products/AllProduct/ProductView";
 import { Route } from "react-router-dom";
 import AdminView from "@/pages/Admin/AdminView";
 import ViewProducts from "@/components/admin/Products/ViewProducts";
-import ViewOrder from "@/components/admin/Products/ViewOrder";
-import ViewUsers from "@/components/admin/Products/ViewUsers";
-import ViewReviews from "@/components/admin/Products/ViewReviews";
+import ViewOrder from "@/components/admin/Order/ViewOrder";
+import ViewUsers from "@/components/admin/Users/ViewUsers";
+import ViewReviews from "@/components/admin/Reviews/ViewReviews";
 import CategoriesPage from "@/pages/Categories/CategoriesPage";
 import Profile from "@/components/auth/Profile/Profile";
 import Settings from "@/components/auth/Settings/Settings";
 import UpdateProduct from "@/components/admin/Products/UpdateProduct";
-import ViewCategories from "@/components/admin/Products/ViewCategories";
-import ViewCollection from "@/components/admin/Products/ViewCollection";
-import ViewSkillLevel from "@/components/admin/Products/ViewSkillLevel";
-import ViewDesigner from "@/components/admin/Products/ViewDesigner";
+import ViewCategories from "@/components/admin/Categories/ViewCategories";
+import ViewCollection from "@/components/admin/Collections/ViewCollection";
+import ViewSkillLevel from "@/components/admin/SkillLevel/ViewSkillLevel";
+import ViewDesigner from "@/components/admin/Designers/ViewDesigner";
 import ProtectedRoutes from "@/routes/ProtectedRoutes";
 
 const UserRoutes = (
