@@ -30,6 +30,7 @@ import AddSkillLevel from "@/components/admin/SkillLevel/AddSkillLevel";
 import UpdateSkillLevel from "@/components/admin/SkillLevel/UpdateSkillLevel";
 import AddDesigner from "@/components/admin/Designers/AddDesigner";
 import UpdateDesigner from "@/components/admin/Designers/UpdateDesigner";
+import ProductImages from "@/components/admin/Products/components/ProductImages";
 
 const UserRoutes = (
   <>
@@ -83,7 +84,8 @@ const UserRoutes = (
       <Route path="products" element={<ViewProducts />} />
       <Route path="new-product" element={<AddProduct />} />
       <Route path="update-product/:id" element={<UpdateProduct />} />
-      
+      <Route path="product-gallery/:id" element={<ProductImages />} />
+
       {/* Category Management */}
       <Route path="categories" element={<ViewCategory />} />
       <Route path="new-category" element={<AddCategory />} />
@@ -103,7 +105,6 @@ const UserRoutes = (
       <Route path="designers" element={<ViewDesigner />} />
       <Route path="new-designer" element={<AddDesigner />} />
       <Route path="update-designer/:id" element={<UpdateDesigner />} />
-
 
       {/* User & Order Management */}
       <Route path="users" element={<ViewUsers />} />

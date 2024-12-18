@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import {
   useReactTable,
   getCoreRowModel,
@@ -21,6 +21,9 @@ const ViewCollection = () => {
   const [globalFilter, setGlobalFilter] = useState("");
   const navigate = useNavigate();
 
+  useEffect(() => {
+    console.log(collectionData);
+  }, [collectionData]);
   const columns = useMemo(
     () => [
       {
@@ -36,30 +39,13 @@ const ViewCollection = () => {
         accessorKey: "description",
       },
       {
-        header: "Created By",
-        accessorKey: "createdBy",
+        header: "Created At",
+        accessorKey: "createdAt",
       },
       {
-        header: "Updated By",
-        accessorKey: "updatedBy",
+        header: "Updated At",
+        accessorKey: "updatedAt",
       },
-      //   {
-      //     header: "Status",
-      //     accessorKey: "status",
-      //     cell: ({ row }) => (
-      //       <span
-      //         className={`px-3 py-1 rounded-full text-sm font-medium
-      //         ${
-      //           row.original.status
-      //             ? "bg-green-100 text-green-800"
-      //             : "bg-red-100 text-red-800"
-      //         }
-      //       `}
-      //       >
-      //         {row.original.status ? "Active" : "Inactive"}
-      //       </span>
-      //     ),
-      //   },
       {
         header: "Actions",
         cell: ({ row }) => (
@@ -91,12 +77,12 @@ const ViewCollection = () => {
       .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
       .map((collection, index) => ({
         id: index + 1,
-        _id: collection._id,  
+        _id: collection._id,
         name: collection.name,
         description: collection.description,
-        createdBy: new Date(collection.createdAt).toLocaleString(),
-        updatedBy: collection.updatedAt
-          ? new Date(collection.updatedAt).toLocaleString()
+        createdAt: new Date(collection.createdAt).toLocaleDateString(),
+        updatedAt: collection.updatedAt
+          ? new Date(collection.updatedAt).toLocaleDateString()
           : "Not Updated",
       }));
   }, [collectionData]);
