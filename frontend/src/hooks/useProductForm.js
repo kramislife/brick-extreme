@@ -1,5 +1,5 @@
 import { useCreateProductMutation } from "@/redux/api/productApi";
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";

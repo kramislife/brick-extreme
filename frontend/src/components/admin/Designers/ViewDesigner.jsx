@@ -49,7 +49,7 @@ const ViewDesigner = () => {
                       href={url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex justify-center items-center gap-1 text-blue-500 hover:text-blue-600"
+                      className="flex items-center justify-center gap-1 text-blue-500 hover:text-blue-600 mb-1"
                     >
                       <LinkIcon size={14} />
                       <span className="capitalize">{platform}</span>
@@ -97,14 +97,19 @@ const ViewDesigner = () => {
 
   const data = useMemo(() => {
     if (!designerData?.designers) return [];
-    return designerData.designers.map((designer, index) => ({
-      id: index + 1,
-      _id: designer._id,
-      name: designer.name,
-      bio: designer.bio,
-      links: designer.social_links || {},
-      status: designer.is_active,
-    }));
+    return [...designerData.designers]
+      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+      .map((designer, index) => ({
+        id: index + 1,
+        _id: designer._id,
+        name: designer.name,
+        bio: designer.bio,
+        links: designer.social_links || {},
+        createdBy: new Date(designer.createdAt).toLocaleString(),
+        updatedBy: designer.updatedAt
+          ? new Date(designer.updatedAt).toLocaleString()
+          : "Not Updated",
+      }));
   }, [designerData]);
 
   const table = useReactTable({
@@ -120,7 +125,7 @@ const ViewDesigner = () => {
   });
 
   const handleEdit = (designer) => {
-    console.log("Edit designer:", designer);
+    navigate(`/admin/update-designer/${designer._id}`);
   };
 
   const handleDelete = (designer) => {

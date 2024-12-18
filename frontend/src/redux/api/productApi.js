@@ -22,7 +22,7 @@ export const productApi = createApi({
       providesTags: ["Products"],
     }),
 
-    // --------------------------------- GET PRODUCT DETAILS ---------------------------------------
+    // GET PRODUCT DETAILS
 
     getProductDetails: builder.query({
       query: (id) => `/products/${id}`,
@@ -32,7 +32,7 @@ export const productApi = createApi({
       ],
     }),
 
-    // --------------------------------- ADD A NEW PRODUCT ---------------------------------------
+    // ADD A NEW PRODUCT
 
     createProduct: builder.mutation({
       query: (newProduct) => ({
@@ -43,7 +43,7 @@ export const productApi = createApi({
       invalidatesTags: ["Products"],
     }),
 
-    // --------------------------------- UPDATE A PRODUCT ---------------------------------------
+    // UPDATE A PRODUCT
 
     updateProduct: builder.mutation({
       query: ({ id, productData }) => ({
@@ -58,7 +58,7 @@ export const productApi = createApi({
       ],
     }),
 
-    // --------------------------------- DELETE A PRODUCT ---------------------------------------
+    // DELETE A PRODUCT
 
     deleteProduct: builder.mutation({
       query: (id) => ({
@@ -72,26 +72,176 @@ export const productApi = createApi({
 
     getCategory: builder.query({
       query: () => `/categories`,
+      providesTags: ["Categories"],
     }),
 
-    // Fetch product collections
-    getCollection: builder.query({
-      query: () => `/collections`,
-    }),
+    // GET CATEGORY BY KEY
 
-    // Fetch skill levels
-    getSkillLevels: builder.query({
-      query: () => `/skillLevels`,
-    }),
-
-    // Fetch designers
-    getDesigners: builder.query({
-      query: () => `/designers`,
-    }),
-
-    // Fetch category details by key
     getCategoryByKey: builder.query({
       query: (key) => `/categories/${key}`,
+    }),
+
+    // ADD A NEW CATEGORY
+
+    createCategory: builder.mutation({
+      query: (data) => ({
+        url: "/admin/newCategory",
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["Categories"],
+    }),
+
+    // UPDATE A CATEGORY
+
+    updateCategory: builder.mutation({
+      query: ({ id, ...data }) => ({
+        url: `/admin/categories/${id}`,
+        method: "PUT",
+        body: data,
+      }),
+      invalidatesTags: ["Categories"],
+    }),
+
+    // DELETE A CATEGORY
+
+    deleteCategory: builder.mutation({
+      query: (id) => ({
+        url: `/admin/category/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Categories"],
+    }),
+
+    // --------------------------------- GET COLLECTIONS ---------------------------------------
+
+    getCollection: builder.query({
+      query: () => `/collections`,
+      providesTags: ["Collections"],
+    }),
+
+    // GET COLLECTION BY KEY
+
+    getCollectionByKey: builder.query({
+      query: (key) => `/collections/${key}`,
+    }),
+
+    // ADD A NEW COLLECTION
+
+    createCollection: builder.mutation({
+      query: (data) => ({
+        url: "/admin/newCollection",
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["Collections"],
+    }),
+
+    // UPDATE A COLLECTION
+
+    updateCollection: builder.mutation({
+      query: ({ id, ...data }) => ({
+        url: `/admin/collections/${id}`,
+        method: "PUT",
+        body: data,
+      }),
+      invalidatesTags: ["Collections"],
+    }),
+
+    // DELETE A COLLECTION
+
+    deleteCollection: builder.mutation({
+      query: (id) => ({
+        url: `/admin/collection/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Collections"],
+    }),
+
+    // --------------------------------- GET SKILL LEVELS ---------------------------------------
+
+    getSkillLevels: builder.query({
+      query: () => `/skillLevels`,
+      providesTags: ["SkillLevels"],
+    }),
+
+    // GET SKILL LEVEL BY KEY
+
+    getSkillLevelByKey: builder.query({
+      query: (key) => `/skillLevels/${key}`,
+    }),
+
+    // ADD A NEW SKILL LEVEL
+    createSkillLevel: builder.mutation({
+      query: (data) => ({
+        url: "/admin/newSkillLevel",
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["SkillLevels"],
+    }),
+
+    // UPDATE A SKILL LEVEL
+
+    updateSkillLevel: builder.mutation({
+      query: ({ id, ...data }) => ({
+        url: `/admin/skillLevels/${id}`,
+        method: "PUT",
+        body: data,
+      }),
+      invalidatesTags: ["SkillLevels"],
+    }),
+
+    // DELETE A SKILL LEVEL
+
+    deleteSkillLevel: builder.mutation({
+      query: (id) => ({
+        url: `/admin/skillLevel/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["SkillLevels"],
+    }),
+
+    // --------------------------------- GET DESIGNERS ---------------------------------------
+
+    getDesigners: builder.query({
+      query: () => `/designers`,
+      providesTags: ["Designers"],
+    }),
+
+    // GET DESIGNER BY KEY
+
+    getDesignerByKey: builder.query({
+      query: (key) => `/designers/${key}`,
+    }),
+
+    // ADD A NEW DESIGNER
+    createDesigner: builder.mutation({
+      query: (data) => ({
+        url: "/admin/newDesigner",
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["Designers"],
+    }),
+
+    // UPDATE A DESIGNER
+    updateDesigner: builder.mutation({
+      query: ({ id, ...data }) => ({
+        url: `/admin/designers/${id}`,
+        method: "PUT",
+        body: data,
+      }),
+      invalidatesTags: ["Designers"],
+    }),
+
+    // DELETE A DESIGNER
+    deleteDesigner: builder.mutation({
+      query: (id) => ({
+        url: `/admin/designer/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Designers"],
     }),
   }),
 });
@@ -107,4 +257,16 @@ export const {
   useGetDesignersQuery,
   useGetCategoryByKeyQuery,
   useDeleteProductMutation,
+  useCreateCategoryMutation,
+  useUpdateCategoryMutation,
+  useDeleteCategoryMutation,
+  useCreateCollectionMutation,
+  useCreateSkillLevelMutation,
+  useCreateDesignerMutation,
+  useUpdateCollectionMutation,
+  useDeleteCollectionMutation,
+  useUpdateSkillLevelMutation,
+  useDeleteSkillLevelMutation,
+  useUpdateDesignerMutation,
+  useDeleteDesignerMutation,
 } = productApi;
