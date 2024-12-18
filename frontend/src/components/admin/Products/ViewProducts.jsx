@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   useReactTable,
   getCoreRowModel,
@@ -13,13 +13,39 @@ import SearchBar from "@/components/admin/table/SearchBar";
 import ShowEntries from "@/components/admin/table/ShowEntries";
 import TableLayout from "@/components/admin/table/TableLayout";
 import Pagination from "@/components/admin/table/Pagination";
-import { useGetProductsQuery } from "@/redux/api/productApi";
+import {
+  useDeleteProductMutation,
+  useGetProductsQuery,
+} from "@/redux/api/productApi";
 import LoadingSpinner from "@/components/layout/spinner/LoadingSpinner";
 import { useNavigate } from "react-router-dom";
 import Metadata from "@/components/layout/Metadata/Metadata";
+import { toast } from "react-toastify";
 
 const ViewProducts = () => {
   const { data: productData, isLoading, error } = useGetProductsQuery();
+
+  const [
+    deleteProduct,
+    {
+      data: deletedProductData, // Corrected typo in your code ("date" -> "data")
+      isLoading: isDeleting,
+      isError: isDeletingError,
+      error: deleteError,
+      isSuccess: isDeleted,
+    },
+  ] = useDeleteProductMutation();
+
+  useEffect(() => {
+    if (isDeleted) {
+      toast.success(deletedProductData?.message);
+      // console.log(deletedProductData);
+    } else if (isDeletingError) {
+      toast.error(deleteError.error?.data?.message);
+      // console.error(deleteError);
+    }
+  }, [isDeleted, isDeletingError, deletedProductData, deleteError]);
+
   const [globalFilter, setGlobalFilter] = useState("");
   const [pageSize, setPageSize] = useState(10);
   const [pageIndex, setPageIndex] = useState(0);
@@ -185,19 +211,8 @@ const ViewProducts = () => {
   };
 
   // Handle delete product
-  const handleDelete = async (product_id) => {
-    try {
-      const response = await fetch(`/api/products/${product_id}`, {
-        method: "DELETE",
-      });
-      if (response.ok) {
-        console.log(`Deleted product with ID: ${product_id}`);
-      } else {
-        console.error("Failed to delete product.");
-      }
-    } catch (err) {
-      console.error("Error deleting product:", err);
-    }
+  const handleDelete = (product_id) => {
+    deleteProduct(product_id);
   };
 
   // Handle loading and error states
