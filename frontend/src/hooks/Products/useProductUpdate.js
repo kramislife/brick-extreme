@@ -4,7 +4,7 @@ import { useGetProductDetailsQuery, useUpdateProductMutation } from '@/redux/api
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 
-export const useProductUpdate = (id) => {
+const useProductUpdate = (id) => {
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.auth);
   
@@ -206,3 +206,5 @@ export const useProductUpdate = (id) => {
     handleSubmit,
   };
 };
+
+export default useProductUpdate;

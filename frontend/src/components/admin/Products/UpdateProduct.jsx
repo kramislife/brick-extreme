@@ -14,7 +14,7 @@ import ProductIncludes from "./components/ProductIncludes";
 import SkillLevel from "./components/SkillLevel";
 import ProductDesigner from "./components/ProductDesigner";
 import ProductStatus from "./components/ProductStatus";
-import { useProductUpdate } from "@/hooks/useProductUpdate";
+import useProductUpdate from "@/hooks/Products/useProductUpdate";
 
 const UpdateProduct = () => {
   const { id } = useParams();
