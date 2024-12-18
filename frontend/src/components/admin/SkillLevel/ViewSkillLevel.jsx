@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import {
   useReactTable,
   getCoreRowModel,
@@ -12,12 +12,33 @@ import SearchBar from "@/components/admin/table/SearchBar";
 import ShowEntries from "@/components/admin/table/ShowEntries";
 import TableLayout from "@/components/admin/table/TableLayout";
 import Pagination from "@/components/admin/table/Pagination";
-import { useGetSkillLevelsQuery } from "@/redux/api/productApi";
+import {
+  useDeleteSkillLevelMutation,
+  useGetSkillLevelsQuery,
+} from "@/redux/api/productApi";
 import Metadata from "@/components/layout/Metadata/Metadata";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const ViewSkillLevel = () => {
   const { data: skillLevelData, isLoading } = useGetSkillLevelsQuery();
+
+  const [
+    deleteSkillLevel,
+    { data: DeletedSkillData, isSuccess, isError, error },
+  ] = useDeleteSkillLevelMutation();
+
+  useEffect(() => {
+    if (isError) {
+      toast.error(error?.data?.message);
+    }
+
+    if (isSuccess) {
+      console.log(DeletedSkillData);
+      toast.success(DeletedSkillData.message);
+    }
+  }, [isSuccess, isError, error, DeletedSkillData]);
+
   const [globalFilter, setGlobalFilter] = useState("");
   const navigate = useNavigate();
 
@@ -36,17 +57,6 @@ const ViewSkillLevel = () => {
         accessorKey: "description",
       },
 
-      //   {
-      //     header: "Status",
-      //     accessorKey: "status",
-      //     cell: ({ row }) => (
-      //       <span className={`px-3 py-1 rounded-full text-sm font-medium
-      //         ${row.original.status ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}
-      //       `}>
-      //         {row.original.status ? 'Active' : 'Inactive'}
-      //       </span>
-      //     ),
-      //   },
       {
         header: "Actions",
         cell: ({ row }) => (
@@ -106,7 +116,7 @@ const ViewSkillLevel = () => {
   };
 
   const handleDelete = (skillLevel) => {
-    console.log("Delete skill level:", skillLevel);
+    deleteSkillLevel(skillLevel._id);
   };
 
   if (isLoading) {

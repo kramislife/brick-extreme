@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import {
   useReactTable,
   getCoreRowModel,
@@ -12,14 +12,34 @@ import SearchBar from "@/components/admin/table/SearchBar";
 import ShowEntries from "@/components/admin/table/ShowEntries";
 import TableLayout from "@/components/admin/table/TableLayout";
 import Pagination from "@/components/admin/table/Pagination";
-import { useGetDesignersQuery } from "@/redux/api/productApi";
+import {
+  useDeleteDesignerMutation,
+  useGetDesignersQuery,
+} from "@/redux/api/productApi";
 import Metadata from "@/components/layout/Metadata/Metadata";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const ViewDesigner = () => {
   const { data: designerData, isLoading } = useGetDesignersQuery();
+
+  const [
+    deleteDesigner,
+    { isSuccess, isError, error, data: deleteDesignerData },
+  ] = useDeleteDesignerMutation();
+
   const [globalFilter, setGlobalFilter] = useState("");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isError) {
+      toast.error(error?.data?.message);
+    }
+
+    if (isSuccess) {
+      toast.success(deleteDesignerData?.message);
+    }
+  }, [isError, error, deleteDesignerData, isSuccess]);
 
   const columns = useMemo(
     () => [
@@ -129,7 +149,7 @@ const ViewDesigner = () => {
   };
 
   const handleDelete = (designer) => {
-    console.log("Delete designer:", designer);
+    deleteDesigner(designer._id);
   };
 
   if (isLoading) {
