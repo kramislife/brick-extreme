@@ -39,17 +39,6 @@ const ViewCategories = () => {
         header: "Updated By",
         accessorKey: "updatedBy",
       },
-      // {
-      //   header: "Status",
-      //   accessorKey: "status",
-      //   cell: ({ row }) => (
-      //     <span className={`px-3 py-1 rounded-full text-sm font-medium
-      //       ${row.original.status ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}
-      //     `}>
-      //       {row.original.status ? 'Active' : 'Inactive'}
-      //     </span>
-      //   ),
-      // },
       {
         header: "Actions",
         cell: ({ row }) => (

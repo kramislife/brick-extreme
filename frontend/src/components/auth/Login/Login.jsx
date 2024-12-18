@@ -15,7 +15,6 @@ const Login = () => {
   const navigate = useNavigate();
 
   const { isAuthenticated } = useSelector((state) => state.auth);
-  console.log(isAuthenticated);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -40,7 +39,6 @@ const Login = () => {
   useEffect(() => {
     if (isSuccess) {
       toast.success(data?.message);
-      console.log("LOGIN MESSAGE:", data?.message);
 
       navigate("/");
     }
