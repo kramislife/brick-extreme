@@ -1,22 +1,25 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo } from "react";
 import {
   useReactTable,
   getCoreRowModel,
   getPaginationRowModel,
   getFilteredRowModel,
   flexRender,
-} from '@tanstack/react-table';
-import { Edit2, Trash2 } from 'lucide-react';
+} from "@tanstack/react-table";
+import { Edit2, Trash2, PlusCircle } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
-import SearchBar from '@/components/admin/table/SearchBar';
-import ShowEntries from '@/components/admin/table/ShowEntries';
-import TableLayout from '@/components/admin/table/TableLayout';
-import Pagination from '@/components/admin/table/Pagination';
-import { useGetCategoryQuery } from '@/redux/api/productApi';
+import SearchBar from "@/components/admin/table/SearchBar";
+import ShowEntries from "@/components/admin/table/ShowEntries";
+import TableLayout from "@/components/admin/table/TableLayout";
+import Pagination from "@/components/admin/table/Pagination";
+import { useGetCategoryQuery } from "@/redux/api/productApi";
+import Metadata from "@/components/layout/Metadata/Metadata";
 
 const ViewCategories = () => {
   const { data: categoryData, isLoading } = useGetCategoryQuery();
-  const [globalFilter, setGlobalFilter] = useState('');
+  const [globalFilter, setGlobalFilter] = useState("");
+  const navigate = useNavigate();
 
   const columns = useMemo(
     () => [
@@ -80,9 +83,9 @@ const ViewCategories = () => {
       name: category.name,
       status: category.is_active,
       createdBy: new Date(category.createdAt).toLocaleString(),
-      updatedBy: category.updatedAt 
+      updatedBy: category.updatedAt
         ? new Date(category.updatedAt).toLocaleString()
-        : 'Not Updated',
+        : "Not Updated",
     }));
   }, [categoryData]);
 
@@ -111,40 +114,52 @@ const ViewCategories = () => {
   }
 
   return (
-    <div className="container mx-auto py-6 px-4">
-      <div className="mb-8 space-y-2">
-        <h1 className="text-3xl font-bold text-light tracking-tight">
-          Category Management
-        </h1>
-        <p className="text-gray-200/70 text-md">
-          Manage your product categories
-        </p>
-      </div>
-
-      <Card className="bg-darkBrand border-none">
-        <CardContent className="p-10">
-          <div className="flex flex-col md:flex-row justify-between gap-6 mb-10">
-            <ShowEntries 
-              value={table.getState().pagination.pageSize}
-              onChange={table.setPageSize}
-            />
-            <SearchBar 
-              value={globalFilter}
-              onChange={setGlobalFilter}
-              placeholder="Search categories..."
-            />
+    <>
+      <Metadata title="Categories" />
+      <div className="container mx-auto py-6 px-4">
+        <div className="mb-8 flex justify-between items-center">
+          <div className="space-y-2">
+            <h1 className="text-3xl font-bold text-light tracking-tight">
+              Category Management
+            </h1>
+            <p className="text-gray-200/70 text-md">
+              Manage your product categories
+            </p>
           </div>
+          <button
+            onClick={() => navigate("/admin/new-category")}
+            className="bg-gradient-to-r from-blue-600 to-purple-600 text-white flex items-center gap-2 hover:from-blue-700 hover:to-purple-700 px-4 py-2 rounded-md"
+          >
+            <PlusCircle className="w-5 h-5" />
+            Add New Category
+          </button>
+        </div>
 
-          <TableLayout 
-            headerGroups={table.getHeaderGroups()}
-            rows={table.getRowModel().rows}
-            flexRender={flexRender}
-          />
+        <Card className="bg-darkBrand border-none">
+          <CardContent className="p-10">
+            <div className="flex flex-col md:flex-row justify-between gap-6 mb-10">
+              <ShowEntries
+                value={table.getState().pagination.pageSize}
+                onChange={table.setPageSize}
+              />
+              <SearchBar
+                value={globalFilter}
+                onChange={setGlobalFilter}
+                placeholder="Search categories..."
+              />
+            </div>
 
-          <Pagination table={table} />
-        </CardContent>
-      </Card>
-    </div>
+            <TableLayout
+              headerGroups={table.getHeaderGroups()}
+              rows={table.getRowModel().rows}
+              flexRender={flexRender}
+            />
+
+            <Pagination table={table} />
+          </CardContent>
+        </Card>
+      </div>
+    </>
   );
 };
 

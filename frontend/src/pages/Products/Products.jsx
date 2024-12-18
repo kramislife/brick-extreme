@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import FilterAccordion from "@/components/product/AllProduct/FilterAccordion";
-import ProductSection from "@/components/product/AllProduct/ProductSection";
+import FilterAccordion from "@/components/product/FilterAccordion";
+import ProductSection from "@/components/product/ProductSection";
 import Metadata from "@/components/layout/Metadata/Metadata";
 import ProductSort from "@/components/product/shared/ProductSort";
 import { Filter } from "lucide-react";

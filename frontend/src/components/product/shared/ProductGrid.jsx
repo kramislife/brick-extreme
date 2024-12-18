@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, useInView } from "framer-motion";
-import ProductCard from "@/components/product/AllProduct/ProductCard";
+import ProductCard from "@/components/product/ProductCard";
 import { PackageX } from "lucide-react";
 import { productGridAnimations } from "@/hooks/animationConfig";
 
@@ -18,8 +18,8 @@ const ProductGrid = ({ title, products, baseUrl }) => {
   // return a best-selling or latest-product category
   const handleViewAll = () => {
     // Extract the category ID from the baseUrl
-    const categoryId = baseUrl.split('=')[1];
-    
+    const categoryId = baseUrl.split("=")[1];
+
     // Navigate with the proper query parameter
     navigate(`/products?product_category=${categoryId}`);
   };
@@ -69,7 +69,6 @@ const ProductGrid = ({ title, products, baseUrl }) => {
           </motion.div>
         </>
       ) : (
-        
         // return a message if the product is not available
         <motion.div
           variants={productGridAnimations.cardVariants(0)}

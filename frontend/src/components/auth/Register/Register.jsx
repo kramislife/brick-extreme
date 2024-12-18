@@ -6,6 +6,7 @@ import { useRegisterMutation } from "@/redux/api/authApi";
 import RegisterImg from "@/assets/authAssets/Register.png";
 import { registerAnimations } from "@/hooks/animationConfig";
 import { useSelector } from "react-redux";
+import Metadata from "@/components/layout/Metadata/Metadata";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -83,6 +84,8 @@ const Register = () => {
   };
 
   return (
+    <>
+      <Metadata title="Register" />
     <div className="min-h-screen flex items-center justify-center bg-brand-gradient px-4 py-10">
       <div className="w-full max-w-7xl flex gap-12 items-center">
         {/* Left side - Animation */}
@@ -273,6 +276,7 @@ const Register = () => {
         </motion.div>
       </div>
     </div>
+    </>
   );
 };
 
