@@ -15,6 +15,8 @@ import SkillLevel from "./components/SkillLevel";
 import ProductDesigner from "./components/ProductDesigner";
 import ProductStatus from "./components/ProductStatus";
 import useProductUpdate from "@/hooks/useProductUpdate";
+import LoadingSpinner from "@/components/layout/spinner/LoadingSpinner";
+
 
 const UpdateProduct = () => {
   const { id } = useParams();
@@ -29,11 +31,12 @@ const UpdateProduct = () => {
   if (isLoading || !formData) {
     return (
       <div className="flex justify-center items-center h-48">
-        <div>Loading...</div>
+        <>
+          <LoadingSpinner />
+        </>
       </div>
     );
   }
-
   return (
     <div className="mx-auto py-6 space-y-8">
       <form onSubmit={handleSubmit}>
