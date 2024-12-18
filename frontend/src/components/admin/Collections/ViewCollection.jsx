@@ -114,7 +114,7 @@ const ViewCollection = () => {
   });
 
   const handleEdit = (collection) => {
-    console.log("Edit collection:", collection);
+    navigate(`/admin/update-collection/${collection._id}`);
   };
 
   const handleDelete = (collection) => {

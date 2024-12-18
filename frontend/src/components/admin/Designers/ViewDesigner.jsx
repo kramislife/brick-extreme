@@ -125,7 +125,7 @@ const ViewDesigner = () => {
   });
 
   const handleEdit = (designer) => {
-    console.log("Edit designer:", designer);
+    navigate(`/admin/update-designer/${designer._id}`);
   };
 
   const handleDelete = (designer) => {

@@ -102,7 +102,7 @@ const ViewSkillLevel = () => {
   });
 
   const handleEdit = (skillLevel) => {
-    console.log("Edit skill level:", skillLevel);
+    navigate(`/admin/update-skill-level/${skillLevel._id}`);
   };
 
   const handleDelete = (skillLevel) => {

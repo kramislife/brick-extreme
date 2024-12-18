@@ -96,7 +96,7 @@ export const productApi = createApi({
 
     updateCategory: builder.mutation({
       query: ({ id, ...data }) => ({
-        url: `/admin/category/${id}`,
+        url: `/admin/categories/${id}`,
         method: "PUT",
         body: data,
       }),
@@ -141,7 +141,7 @@ export const productApi = createApi({
 
     updateCollection: builder.mutation({
       query: ({ id, ...data }) => ({
-        url: `/admin/collection/${id}`,
+        url: `/admin/collections/${id}`,
         method: "PUT",
         body: data,
       }),
@@ -185,7 +185,7 @@ export const productApi = createApi({
 
     updateSkillLevel: builder.mutation({
       query: ({ id, ...data }) => ({
-        url: `/admin/skillLevel/${id}`,
+        url: `/admin/skillLevels/${id}`,
         method: "PUT",
         body: data,
       }),
@@ -228,7 +228,7 @@ export const productApi = createApi({
     // UPDATE A DESIGNER
     updateDesigner: builder.mutation({
       query: ({ id, ...data }) => ({
-        url: `/admin/designer/${id}`,
+        url: `/admin/designers/${id}`,
         method: "PUT",
         body: data,
       }),
