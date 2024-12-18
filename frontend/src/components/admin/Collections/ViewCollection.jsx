@@ -6,7 +6,7 @@ import {
   getFilteredRowModel,
   flexRender,
 } from "@tanstack/react-table";
-import { Edit2, Trash2 } from "lucide-react";
+import { Edit2, PlusCircle, Trash2 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import SearchBar from "@/components/admin/table/SearchBar";
 import ShowEntries from "@/components/admin/table/ShowEntries";
@@ -14,10 +14,12 @@ import TableLayout from "@/components/admin/table/TableLayout";
 import Pagination from "@/components/admin/table/Pagination";
 import { useGetCollectionQuery } from "@/redux/api/productApi";
 import Metadata from "@/components/layout/Metadata/Metadata";
+import { useNavigate } from "react-router-dom";
 
 const ViewCollection = () => {
   const { data: collectionData, isLoading } = useGetCollectionQuery();
   const [globalFilter, setGlobalFilter] = useState("");
+  const navigate = useNavigate();
 
   const columns = useMemo(
     () => [
@@ -128,13 +130,22 @@ const ViewCollection = () => {
     <>
       <Metadata title="Collections" />
       <div className="container mx-auto py-6 px-4">
-        <div className="mb-8 space-y-2">
-          <h1 className="text-3xl font-bold text-light tracking-tight">
-            Collection Management
-          </h1>
-          <p className="text-gray-200/70 text-md">
-            Manage your product collections
-          </p>
+        <div className="mb-8 flex justify-between items-center">
+          <div className="space-y-2">
+            <h1 className="text-3xl font-bold text-light tracking-tight">
+              Collection Management
+            </h1>
+            <p className="text-gray-200/70 text-md">
+              Manage your product collections
+            </p>
+          </div>
+          <button
+            onClick={() => navigate("/admin/new-collection")}
+            className="bg-gradient-to-r from-blue-600 to-purple-600 text-white flex items-center gap-2 hover:from-blue-700 hover:to-purple-700 px-4 py-2 rounded-md"
+          >
+            <PlusCircle className="w-5 h-5" />
+            Add New Collection
+          </button>
         </div>
 
         <Card className="bg-darkBrand border-none">

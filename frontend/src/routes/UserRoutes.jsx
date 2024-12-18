@@ -17,11 +17,19 @@ import CategoriesPage from "@/pages/Categories/CategoriesPage";
 import Profile from "@/components/auth/Profile/Profile";
 import Settings from "@/components/auth/Settings/Settings";
 import UpdateProduct from "@/components/admin/Products/UpdateProduct";
-import ViewCategories from "@/components/admin/Categories/ViewCategories";
+import ViewCategory from "@/components/admin/Categories/ViewCategory";
 import ViewCollection from "@/components/admin/Collections/ViewCollection";
 import ViewSkillLevel from "@/components/admin/SkillLevel/ViewSkillLevel";
 import ViewDesigner from "@/components/admin/Designers/ViewDesigner";
 import ProtectedRoutes from "@/routes/ProtectedRoutes";
+import AddCategory from "@/components/admin/Categories/AddCategory";
+import UpdateCategory from "@/components/admin/Categories/UpdateCategory";
+import AddCollection from "@/components/admin/Collections/AddCollection";
+import UpdateCollection from "@/components/admin/Collections/UpdateCollection";
+import AddSkillLevel from "@/components/admin/SkillLevel/AddSkillLevel";
+import UpdateSkillLevel from "@/components/admin/SkillLevel/UpdateSkillLevel";
+import AddDesigner from "@/components/admin/Designers/AddDesigner";
+import UpdateDesigner from "@/components/admin/Designers/UpdateDesigner";
 
 const UserRoutes = (
   <>
@@ -77,10 +85,25 @@ const UserRoutes = (
       <Route path="update-product/:id" element={<UpdateProduct />} />
       
       {/* Category Management */}
-      <Route path="categories" element={<ViewCategories />} />
+      <Route path="categories" element={<ViewCategory />} />
+      <Route path="new-category" element={<AddCategory />} />
+      <Route path="update-category/:id" element={<UpdateCategory />} />
+
+      {/* Collection Management */}
       <Route path="collections" element={<ViewCollection />} />
+      <Route path="new-collection" element={<AddCollection />} />
+      <Route path="update-collection/:id" element={<UpdateCollection />} />
+
+      {/* Skill Level Management */}
       <Route path="skill-levels" element={<ViewSkillLevel />} />
+      <Route path="new-skill-level" element={<AddSkillLevel />} />
+      <Route path="update-skill-level/:id" element={<UpdateSkillLevel />} />
+
+      {/* Designer Management */}
       <Route path="designers" element={<ViewDesigner />} />
+      <Route path="new-designer" element={<AddDesigner />} />
+      <Route path="update-designer/:id" element={<UpdateDesigner />} />
+
 
       {/* User & Order Management */}
       <Route path="users" element={<ViewUsers />} />

@@ -6,7 +6,7 @@ import {
   getFilteredRowModel,
   flexRender,
 } from "@tanstack/react-table";
-import { Edit2, Trash2, Link as LinkIcon } from "lucide-react";
+import { Edit2, Trash2, Link as LinkIcon, PlusCircle } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import SearchBar from "@/components/admin/table/SearchBar";
 import ShowEntries from "@/components/admin/table/ShowEntries";
@@ -14,10 +14,12 @@ import TableLayout from "@/components/admin/table/TableLayout";
 import Pagination from "@/components/admin/table/Pagination";
 import { useGetDesignersQuery } from "@/redux/api/productApi";
 import Metadata from "@/components/layout/Metadata/Metadata";
+import { useNavigate } from "react-router-dom";
 
 const ViewDesigner = () => {
   const { data: designerData, isLoading } = useGetDesignersQuery();
   const [globalFilter, setGlobalFilter] = useState("");
+  const navigate = useNavigate();
 
   const columns = useMemo(
     () => [
@@ -133,13 +135,22 @@ const ViewDesigner = () => {
     <>
       <Metadata title="Designers" />
       <div className="container mx-auto py-6 px-4">
-        <div className="mb-8 space-y-2">
-          <h1 className="text-3xl font-bold text-light tracking-tight">
-            Designer Management
-          </h1>
-          <p className="text-gray-200/70 text-md">
-            Manage your product designers
-          </p>
+        <div className="mb-8 space-y-2 flex justify-between items-center">
+          <div className="space-y-2">
+            <h1 className="text-3xl font-bold text-light tracking-tight">
+              Designer Management
+            </h1>
+            <p className="text-gray-200/70 text-md">
+              Manage your product designers
+            </p>
+          </div>
+          <button
+            onClick={() => navigate("/admin/new-designer")}
+            className="bg-gradient-to-r from-blue-600 to-purple-600 text-white flex items-center gap-2 hover:from-blue-700 hover:to-purple-700 px-4 py-2 rounded-md"
+          >
+            <PlusCircle className="w-5 h-5" />
+            Add New Designer
+          </button>
         </div>
 
         <Card className="bg-darkBrand border-none">
