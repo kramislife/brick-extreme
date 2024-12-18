@@ -7,6 +7,31 @@ import NavigationItem from "./NavigationItem";
 const DesktopSidebar = ({ isMinimized, toggleMinimize }) => {
   const location = useLocation();
 
+  // Helper function to check if current path matches navigation item
+  const isPathActive = (itemPath) => {
+    // Handle dashboard route separately
+    if (itemPath === '/admin') {
+      return location.pathname === itemPath;
+    }
+
+    // Map of parent paths and their related paths
+    const relatedPaths = {
+      '/admin/products': ['/admin/products', '/admin/new-product', '/admin/update-product', '/admin/product-gallery'],
+      '/admin/categories': ['/admin/categories', '/admin/new-category', '/admin/update-category'],
+      '/admin/collections': ['/admin/collections', '/admin/new-collection', '/admin/update-collection'],
+      '/admin/skill-levels': ['/admin/skill-levels', '/admin/new-skill-level', '/admin/update-skill-level'],
+      '/admin/designers': ['/admin/designers', '/admin/new-designer', '/admin/update-designer'],
+      '/admin/users': ['/admin/users'],
+      '/admin/orders': ['/admin/orders'],
+      '/admin/reviews': ['/admin/reviews'],
+    };
+
+    // Check if current path starts with any of the related paths
+    return relatedPaths[itemPath]?.some(path => 
+      location.pathname.startsWith(path)
+    ) || false;
+  };
+
   return (
     <div
       className={`
@@ -45,7 +70,7 @@ const DesktopSidebar = ({ isMinimized, toggleMinimize }) => {
             <NavigationItem
               key={index}
               item={item}
-              isActive={location.pathname === item.path}
+              isActive={isPathActive(item.path)}
               isMinimized={isMinimized}
             />
           ))}
