@@ -40,12 +40,12 @@ const DesktopSidebar = ({ isMinimized, toggleMinimize }) => {
         ${isMinimized ? "w-24" : "w-72"}
       `}
     >
-      <div className="sticky top-0 h-full">
+      <div className="sticky top-0 h-full pt-2">
         <Button
           variant="ghost"
           size="icon"
           onClick={toggleMinimize}
-          className="absolute top-4 -right-5 z-10"
+          className="absolute top-6 -right-5 z-10"
         >
           {isMinimized ? (
             <ChevronsRight className="w-10 h-10" />
@@ -56,7 +56,7 @@ const DesktopSidebar = ({ isMinimized, toggleMinimize }) => {
 
         {!isMinimized && (
           <div className="p-6">
-            <h1 className="text-2xl font-bold">Admin Panel</h1>
+            <h1 className="text-xl font-bold tracking-wide">Brick Admin Panel</h1>
           </div>
         )}
 

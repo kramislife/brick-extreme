@@ -174,10 +174,10 @@ const Dashboard = () => {
   return (
     <>
       <Metadata title="Dashboard" />
-      <div className="mx-auto py-5 px-4">
+      <div className="mx-auto py-6 px-4">
         {/* Welcome Section  */}
         <div className="mb-8 space-y-3">
-          <h2 className="text-3xl font-bold text-light tracking-tight">
+          <h2 className="text-3xl font-bold text-light tracking-wide">
             {(() => {
               const hour = currentTime.getHours();
               if (hour < 12) return "Good Morning";
@@ -186,7 +186,7 @@ const Dashboard = () => {
             })()}
             , {user?.name}!
           </h2>
-          <p className="text-sm font-light text-gray-200/70">
+          <p className="text-sm font-light text-gray-200/70 tracking-widest">
             Today is {formatDate(currentTime)} at {formatTime(currentTime)}
           </p>
         </div>
