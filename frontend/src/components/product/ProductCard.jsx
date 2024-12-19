@@ -1,6 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { ImageIcon } from "lucide-react";
 import StarRating from "@/components/product/shared/StarRating";
 import defaultImage from "@/assets/bestSellingAssets/droid.png";
 
@@ -8,6 +9,16 @@ const ProductCard = ({ product }) => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const category = searchParams.get("category");
+
+  // Determine if images are available
+  const hasImages = product?.product_images && product.product_images.length > 0;
+
+  // Placeholder image component
+  const PlaceholderImage = () => (
+    <div className="w-full h-full bg-brand-gradient flex items-center justify-center">
+      <ImageIcon className="w-16 h-16 text-slate-500" />
+    </div>
+  );
 
   const handleViewDetails = () => {
     if (category) {
@@ -31,11 +42,15 @@ const ProductCard = ({ product }) => {
     >
       {/* Product Image */}
       <div className="relative overflow-hidden aspect-square">
-        <img
-          src={product?.product_images?.[0]?.url || defaultImage}
-          alt={product.product_name}
-          className="w-full aspect-square transition-transform duration-300 group-hover:scale-110"
-        />
+        {hasImages ? (
+          <img
+            src={product.product_images[0].url}
+            alt={product.product_name}
+            className="w-full aspect-square transition-transform duration-300 group-hover:scale-110"
+          />
+        ) : (
+          <PlaceholderImage />
+        )}
         <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-50 transition-opacity duration-300"></div>
         {product.discount > 0 && (
           <div className="absolute top-2 right-2 bg-red-600 text-white px-2 py-1 rounded-md text-sm font-semibold">
