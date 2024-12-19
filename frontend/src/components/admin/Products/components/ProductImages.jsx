@@ -1,10 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { useGetProductDetailsQuery } from "@/redux/api/productApi";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Upload, X, ImagePlus, AlertCircle, Info } from "lucide-react";
 import Metadata from "@/components/layout/Metadata/Metadata";
+import LoadingSpinner from "@/components/layout/spinner/LoadingSpinner";
 
 const ProductImages = () => {
+  const { id } = useParams();
+  const { data: productData, isLoading } = useGetProductDetailsQuery(id);
+
   const [mainImage, setMainImage] = useState(null);
   const [mainImagePreview, setMainImagePreview] = useState(null);
   const [thumbnailImages, setThumbnailImages] = useState([]);
@@ -14,6 +20,31 @@ const ProductImages = () => {
 
   const supportedTypes = ["image/jpeg", "image/png", "image/webp"];
   const maxSize = 5 * 1024 * 1024;
+
+  useEffect(() => {
+    if (productData?.product) {
+      // Set main image (index 0)
+      setMainImage(productData.product.product_images?.[0] || null);
+      setMainImagePreview(productData.product.product_images?.[0]?.url || null);
+
+      // Set thumbnail images (index 1 onwards)
+      setThumbnailImages(productData.product.product_images?.slice(1) || []);
+      setThumbnailPreviewUrls(
+        productData.product.product_images?.slice(1)?.map((img) => img.url) ||
+          []
+      );
+    }
+  }, [productData]);
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-48">
+        <>
+          <LoadingSpinner />
+        </>
+      </div>
+    );
+  }
 
   const validateFile = (file) => {
     if (!supportedTypes.includes(file.type)) {
@@ -106,8 +137,10 @@ const ProductImages = () => {
       setError("Please upload a main product image");
       return;
     }
-    console.log("Main Image:", mainImage);
-    console.log("Thumbnail Images:", thumbnailImages);
+
+    // Combine main image and thumbnails in correct order
+    const allImages = [mainImage, ...thumbnailImages];
+    console.log("All Images in order:", allImages);
   };
 
   return (
@@ -181,7 +214,7 @@ const ProductImages = () => {
                       <img
                         src={mainImagePreview}
                         alt="Main product"
-                        className="w-full h-full object-cover rounded-lg"
+                        className="w-full h-full object-fill rounded-xl"
                       />
                       <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-30 transition-opacity rounded-lg cursor-pointer" />
                       <Button
@@ -234,7 +267,7 @@ const ProductImages = () => {
                         <img
                           src={url}
                           alt={`Thumbnail ${index + 1}`}
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-fill"
                         />
                         <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-30 transition-opacity cursor-pointer" />
                         <Button

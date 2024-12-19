@@ -272,32 +272,20 @@ const ProductDetails = ({ product, containerVariants, itemVariants }) => {
 
             {/* Description Section */}
             <div className="mb-6">
-              {product?.product_description_1 && (
-                <div className="flex items-start gap-3 mb-3">
-                  <CircleCheckBig className="w-4 h-4 text-green-500 mt-1.5 flex-shrink-0" />
-                  <p className="text-gray-300 leading-loose">
-                    {product.product_description_1}
-                  </p>
-                </div>
-              )}
-
-              {product?.product_description_2 && (
-                <div className="flex items-start gap-3 mb-3">
-                  <CircleCheckBig className="w-4 h-4 text-green-500 mt-1.5 flex-shrink-0" />
-                  <p className="text-gray-300 leading-loose">
-                    {product.product_description_2}
-                  </p>
-                </div>
-              )}
-
-              {product?.product_description_3 && (
-                <div className="flex items-start gap-3">
-                  <CircleCheckBig className="w-4 h-4 text-green-500 mt-1.5 flex-shrink-0" />
-                  <p className="text-gray-300 leading-loose">
-                    {product.product_description_3}
-                  </p>
-                </div>
-              )}
+              {[
+                product?.product_description_1,
+                product?.product_description_2,
+                product?.product_description_3,
+              ]
+                .filter(description => description?.trim()) // Only include non-empty descriptions after trimming whitespace
+                .map((description, index) => (
+                  <div key={index} className="flex items-start gap-3 mb-3 last:mb-0">
+                    <CircleCheckBig className="w-4 h-4 text-green-500 mt-1.5 flex-shrink-0" />
+                    <p className="text-gray-300 leading-loose">
+                      {description}
+                    </p>
+                  </div>
+                ))}
             </div>
 
             {/* Quantity and Cart Section - Always at bottom */}
