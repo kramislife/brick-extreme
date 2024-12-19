@@ -91,9 +91,9 @@ const ViewProducts = () => {
         accessorKey: "status",
         cell: ({ row }) => {
           const statusColors = {
-            Active: "bg-green-500 text-black",
+            "In Stock": "bg-green-500 text-black",
             Low: "bg-yellow-500 text-black",
-            "Out of Stock": "bg-red-500 text-light",
+            Unavailable: "bg-red-500 text-light",
           };
           return (
             <span
@@ -159,10 +159,10 @@ const ViewProducts = () => {
         createdAt: product?.createdAt,
         status:
           product?.stock > 50
-            ? "Active"
+            ? "In Stock"
             : product?.stock > 0
             ? "Low"
-            : "Out of Stock",
+            : "Unavailable",
       }));
   }, [productData]);
 

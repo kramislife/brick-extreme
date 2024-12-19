@@ -68,6 +68,32 @@ export const productApi = createApi({
       invalidatesTags: ["Products"],
     }),
 
+    // UPLOAD AN IMAGE
+
+    uploadProductImages: builder.mutation({
+      query({ id, body }) {
+        return {
+          url: `/admin/products/${id}/upload_images`,
+          method: "PATCH",
+          body,
+        };
+      },
+      invalidatesTags: ["Product"],
+    }),
+
+    // DELETE AN IMAGE
+
+    deleteProductImage: builder.mutation({
+      query({ id, body }) {
+        return {
+          url: `/admin/products/${id}/delete_images`,
+          method: "DELETE",
+          body,
+        };
+      },
+      invalidatesTags: ["Product"],
+    }),
+
     // --------------------------------- GET CATEGORIES ---------------------------------------
 
     getCategory: builder.query({
@@ -270,4 +296,6 @@ export const {
   useDeleteSkillLevelMutation,
   useUpdateDesignerMutation,
   useDeleteDesignerMutation,
+  useUploadProductImagesMutation,
+  useDeleteProductImageMutation,
 } = productApi;
