@@ -1,4 +1,4 @@
-import cloudinary from "cloudinary";
+import { v2 as cloudinary } from "cloudinary"; // Correctly importing Cloudinary
 import dotenv from "dotenv";
 
 dotenv.config({ path: "backend/config/config.env" });
@@ -9,26 +9,63 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-export const upload_file = (file, folder) => {
+// CLOUDINARY UPLOAD AVATAR IMAGE FILE
+export const upload_user_avatar_file = (file, folder) => {
   return new Promise((resolve, reject) => {
-    cloudinary.v2.uploader.upload(
+    cloudinary.uploader.upload(
       file,
-      (result) => {
-        resolve({
-          public_id: result.public_id,
-          url: result.url,
-        });
-      },
       {
-        resource_type: "auto",
-        folder,
+        resource_type: "auto", // Ensures auto-detection of file type
+        folder: folder,
+      },
+      (error, result) => {
+        if (error) {
+          reject(error); // Reject promise if there is an error
+        } else {
+          resolve({
+            public_id: result.public_id,
+            url: result.url,
+          });
+        }
       }
     );
   });
 };
 
-export const delete_file = async (file) => {
-  const res = await cloudinary.v2.uploader.destroy(file);
+// CLOUDINARY FILE DELETE
+export const delete_user_avatar_file = async (file) => {
+  try {
+    const res = await cloudinary.uploader.destroy(file);
+    if (res.result === "ok") {
+      return true;
+    } else {
+      return false; // Return false if deletion failed
+    }
+  } catch (error) {
+    throw new Error(`Failed to delete the file: ${error.message}`);
+  }
+};
 
-  if (res?.result === "ok") return true;
+// UPLOAD PRODUCT IMAGES
+
+export const upload_product_images = (file, folder) => {
+  return new Promise((resolve, reject) => {
+    cloudinary.uploader.upload(
+      file,
+      {
+        resource_type: "auto",
+        folder: folder,
+      },
+      (error, result) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve({
+            public_id: result.public_id,
+            url: result.url,
+          });
+        }
+      }
+    );
+  });
 };

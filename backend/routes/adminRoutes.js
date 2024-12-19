@@ -2,8 +2,10 @@ import express from "express";
 import {
   deleteAllProducts,
   deleteProductByID,
+  deleteProductImage,
   newProduct,
   updateProduct,
+  uploadProductImage,
 } from "../controllers/productController.js";
 
 import {
@@ -248,6 +250,32 @@ router
     deleteProductByID
   );
 
+// UPLOAD PRODUCT IMAGE
+router
+  .route("/admin/products/:id/upload_images")
+  .patch(
+    isAuthenticatedUser,
+    isAuthorizedUser(
+      userRoles.SUPER_ADMIN,
+      userRoles.ADMIN,
+      userRoles.EMPLOYEE
+    ),
+    uploadProductImage
+  );
+
+// DELETE PRODUCT IMAGE
+router
+  .route("/admin/products/:id/delete_images")
+  .delete(
+    isAuthenticatedUser,
+    isAuthorizedUser(
+      userRoles.SUPER_ADMIN,
+      userRoles.ADMIN,
+      userRoles.EMPLOYEE
+    ),
+    deleteProductImage
+  );
+
 // DELETE ALL PRODUCTS
 router
   .route("/admin/products")
@@ -256,6 +284,8 @@ router
     isAuthorizedUser(userRoles.SUPER_ADMIN, userRoles.ADMIN),
     deleteAllProducts
   );
+
+// ---------------------------------- PRODUCTS --------------------------------------------------
 
 // GET ALL USERS
 router

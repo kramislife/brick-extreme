@@ -2,7 +2,10 @@ import catchAsyncErrors from "../middlewares/catchAsyncErrors.js";
 import Category from "../models/category.model.js";
 import Product from "../models/product.model.js";
 import API_Filters from "../Utills/apiFilters.js";
-import { upload_file } from "../Utills/cloudinary.js";
+import {
+  delete_user_avatar_file,
+  upload_product_images,
+} from "../Utills/cloudinary.js";
 import ErrorHandler from "../Utills/customErrorHandler.js";
 
 //------------------------------------  GET ALL PRODUCT => GET /products  ------------------------------------
@@ -166,17 +169,68 @@ export const deleteAllProducts = catchAsyncErrors(async (req, res, next) => {
 
 // ------------------------------- UPLOAD PRODUCT IMAGE  ------------------------------------
 export const uploadProductImage = catchAsyncErrors(async (req, res, next) => {
-  let product = await Product.findById(req?.params?.id);
+  // Map images to URLs using `Promise.all`
+  const urls = await Promise.all(
+    req.body.images.map((image) =>
+      upload_product_images(image, "brick_extreme//products")
+    )
+  );
+
+  console.log("URLs:", urls);
+
+  // Update the product directly using findByIdAndUpdate
+  const product = await Product.findByIdAndUpdate(
+    req.params.id, // Find the product by ID
+    { $push: { product_images: { $each: urls } } }, // Update operation
+    { new: true, runValidators: true } // Options
+  );
 
   if (!product) {
     return next(new ErrorHandler("Product not found", 404));
   }
 
-  const uploader = async (image) =>
-    upload_file(image, "brick_extreme//products");
+  res.status(200).json({
+    success: true,
+    message: "Images uploaded successfully",
+    data: product,
+  });
+});
 
-  const urls = (await Promise.all(req?.body.images)).map(uploader);
+// ------------------------------- DELETE PRODUCT IMAGES ---------------------------------------
+export const deleteProductImage = catchAsyncErrors(async (req, res, next) => {
+  const { id } = req.params;
+  const { public_id } = req.body;
 
-  product?.images?.push(...urls);
-  await product?.save();
+  if (!public_id) {
+    return next(new ErrorHandler("Image ID is required", 400));
+  }
+
+  // Check if the product exists
+  const product = await Product.findById(id);
+  if (!product) {
+    return next(new ErrorHandler("Product not found", 404));
+  }
+
+  // Delete image from storage
+  const isDeleted = await delete_user_avatar_file(public_id);
+
+  if (!isDeleted) {
+    return next(new ErrorHandler("Failed to delete image from storage", 500));
+  }
+
+  const updatedProduct = await Product.findByIdAndUpdate(
+    id,
+    { $pull: { product_images: { public_id } } }, // Remove the image with matching `public_id`
+    { new: true, runValidators: true }
+  );
+
+  if (!updatedProduct) {
+    return next(new ErrorHandler("Failed to update product images", 500));
+  }
+
+  return res.status(200).json({
+    success: true,
+    message: "Image deleted successfully",
+    product: updatedProduct,
+  });
 });
