@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import {
   useReactTable,
   getCoreRowModel,
@@ -13,17 +13,42 @@ import SearchBar from "@/components/admin/table/SearchBar";
 import ShowEntries from "@/components/admin/table/ShowEntries";
 import TableLayout from "@/components/admin/table/TableLayout";
 import Pagination from "@/components/admin/table/Pagination";
-import { useGetCategoryQuery, useDeleteCategoryMutation } from "@/redux/api/productApi";
+import {
+  useGetCategoryQuery,
+  useDeleteCategoryMutation,
+} from "@/redux/api/productApi";
 import Metadata from "@/components/layout/Metadata/Metadata";
 import { toast } from "react-toastify";
 
 const ViewCategories = () => {
-  const { data: categoryData, isLoading, refetch } = useGetCategoryQuery(undefined, {
-    refetchOnMountOrArgChange: true
+  const {
+    data: categoryData,
+    isLoading,
+    refetch,
+  } = useGetCategoryQuery(undefined, {
+    refetchOnMountOrArgChange: true,
   });
   const [globalFilter, setGlobalFilter] = useState("");
   const navigate = useNavigate();
-  const [deleteCategory] = useDeleteCategoryMutation();
+  const [
+    deleteCategory,
+    {
+      data: deleteCategoryData,
+      isLoading: deleteCategoryLoading,
+      error: deleteCategoryError,
+      isSuccess: deleteCategorySuccess,
+    },
+  ] = useDeleteCategoryMutation();
+
+  useEffect(() => {
+    if (deleteCategorySuccess) {
+      refetch();
+    }
+
+    if (deleteCategoryError) {
+      toast.error("Failed to delete category");
+    }
+  }, [deleteCategoryError, deleteCategorySuccess]);
 
   const columns = useMemo(
     () => [
@@ -70,7 +95,7 @@ const ViewCategories = () => {
 
   const data = useMemo(() => {
     if (!categoryData?.categories) return [];
-    
+
     // Sort categories by creation date (newest first)
     return [...categoryData.categories]
       .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
@@ -101,14 +126,9 @@ const ViewCategories = () => {
     navigate(`/admin/update-category/${category._id}`);
   };
 
-  const handleDelete = async (category) => {
-    try {
-      await deleteCategory(category._id).unwrap();
-      toast.success("Category deleted successfully!");
-      refetch();
-    } catch (error) {
-      toast.error(error?.data?.message || "Failed to delete category");
-    }
+  const handleDelete = (category) => {
+    // console.log("DELETE ", category._id);
+    deleteCategory(category._id);
   };
 
   if (isLoading) {

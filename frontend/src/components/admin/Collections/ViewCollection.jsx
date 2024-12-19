@@ -12,18 +12,35 @@ import SearchBar from "@/components/admin/table/SearchBar";
 import ShowEntries from "@/components/admin/table/ShowEntries";
 import TableLayout from "@/components/admin/table/TableLayout";
 import Pagination from "@/components/admin/table/Pagination";
-import { useGetCollectionQuery } from "@/redux/api/productApi";
+import {
+  useDeleteCollectionMutation,
+  useGetCollectionQuery,
+} from "@/redux/api/productApi";
 import Metadata from "@/components/layout/Metadata/Metadata";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const ViewCollection = () => {
   const { data: collectionData, isLoading } = useGetCollectionQuery();
+
+  const [
+    deleteCollection,
+    { error: deleteCollectionError, isSuccess: deleteCollectionSuccess },
+  ] = useDeleteCollectionMutation();
+
   const [globalFilter, setGlobalFilter] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log(collectionData);
-  }, [collectionData]);
+    if (deleteCollectionSuccess) {
+      toast.success("Collection Deleted Successfully");
+    }
+
+    if (deleteCollectionError) {
+      toast.error("Error Deleting Collection");
+    }
+  }, [deleteCollectionSuccess, deleteCollectionError]);
+
   const columns = useMemo(
     () => [
       {
@@ -104,7 +121,8 @@ const ViewCollection = () => {
   };
 
   const handleDelete = (collection) => {
-    console.log("Delete collection:", collection);
+    // console.log("Delete collection:", collection);
+    deleteCollection(collection._id);
   };
 
   if (isLoading) {

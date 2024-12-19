@@ -107,7 +107,7 @@ export const productApi = createApi({
 
     deleteCategory: builder.mutation({
       query: (id) => ({
-        url: `/admin/category/${id}`,
+        url: `/admin/categories/${id}`,
         method: "DELETE",
       }),
       invalidatesTags: ["Categories"],
@@ -152,7 +152,7 @@ export const productApi = createApi({
 
     deleteCollection: builder.mutation({
       query: (id) => ({
-        url: `/admin/collection/${id}`,
+        url: `/admin/collections/${id}`,
         method: "DELETE",
       }),
       invalidatesTags: ["Collections"],
@@ -196,7 +196,7 @@ export const productApi = createApi({
 
     deleteSkillLevel: builder.mutation({
       query: (id) => ({
-        url: `/admin/skillLevel/${id}`,
+        url: `/admin/skillLevels/${id}`,
         method: "DELETE",
       }),
       invalidatesTags: ["SkillLevels"],
@@ -236,9 +236,10 @@ export const productApi = createApi({
     }),
 
     // DELETE A DESIGNER
+
     deleteDesigner: builder.mutation({
       query: (id) => ({
-        url: `/admin/designer/${id}`,
+        url: `/admin/designers/${id}`,
         method: "DELETE",
       }),
       invalidatesTags: ["Designers"],
