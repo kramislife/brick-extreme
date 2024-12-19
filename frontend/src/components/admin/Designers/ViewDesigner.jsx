@@ -19,13 +19,14 @@ import {
 import Metadata from "@/components/layout/Metadata/Metadata";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import LoadingSpinner from "@/components/layout/spinner/LoadingSpinner";
 
 const ViewDesigner = () => {
-  const { data: designerData, isLoading } = useGetDesignersQuery();
+  const { data: designerData, isLoading, error } = useGetDesignersQuery();
 
   const [
     deleteDesigner,
-    { isSuccess, isError, error, data: deleteDesignerData },
+    { isSuccess, isError, data: deleteDesignerData },
   ] = useDeleteDesignerMutation();
 
   const [globalFilter, setGlobalFilter] = useState("");
@@ -153,7 +154,11 @@ const ViewDesigner = () => {
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <LoadingSpinner />;
+  }
+
+  if (error) {
+    return <div>Error loading designers</div>;
   }
 
   return (
