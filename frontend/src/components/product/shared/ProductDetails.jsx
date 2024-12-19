@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Minus, Plus, ChevronLeft, ChevronRight, ImageIcon } from "lucide-react";
+import {
+  Minus,
+  Plus,
+  ChevronLeft,
+  ChevronRight,
+  ImageIcon,
+  CircleDot,
+  CircleCheckBig,
+} from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import Metadata from "@/components/layout/Metadata/Metadata";
@@ -140,14 +148,14 @@ const ProductDetails = ({ product, containerVariants, itemVariants }) => {
           <motion.div variants={itemVariants} className="flex flex-col h-full">
             {/* Basic Info Section - Always visible */}
             <div className="mb-6">
-              <h1 className="text-4xl font-bold text-white mb-2">
+              <h1 className="text-3xl font-bold text-white mb-2">
                 {product?.product_name || "Unnamed Product"}
               </h1>
 
               <div className="flex items-center gap-1 mb-8">
                 <StarRating rating={product?.ratings || 0} />
                 <span className="text-gray-400 ml-2 text-sm">
-                  ({product?.ratings || 'No ratings'})
+                  ({product?.ratings || "No ratings"})
                 </span>
               </div>
 
@@ -156,9 +164,9 @@ const ProductDetails = ({ product, containerVariants, itemVariants }) => {
                 <span className="text-4xl font-semibold">
                   $
                   {(
-                    ((product?.price || 0) *
-                      (1 - (product?.discount || 0) / 100)).toFixed(2)
-                  )}
+                    (product?.price || 0) *
+                    (1 - (product?.discount || 0) / 100)
+                  ).toFixed(2)}
                 </span>
                 {product?.discount > 0 && (
                   <span className="text-2xl text-red-500 line-through">
@@ -173,29 +181,35 @@ const ProductDetails = ({ product, containerVariants, itemVariants }) => {
               <div className="mb-6">
                 <div className="flex items-center space-x-2">
                   <span
-                    className={`w-2 h-2 rounded-full ${product?.product_availability?.dotColor}`}
+                    className={`w-2 h-2 rounded-full ${
+                      product?.stock > 10
+                        ? "bg-green-500"
+                        : product?.stock > 0
+                        ? "bg-yellow-500"
+                        : "bg-red-500"
+                    }`}
                   ></span>
                   <span
                     className={`${
                       product?.stock > 10
                         ? "text-green-500"
-                        : product.stock > 0 && product.stock < 10
+                        : product?.stock > 0
                         ? "text-yellow-500"
                         : "text-red-500"
-                    } text-md font-medium `}
+                    } text-md font-medium`}
                   >
-                    {product.stock > 10
+                    {product?.stock > 10
                       ? "In Stock"
-                      : product.stock > 0 && product.stock < 10
-                      ? `${product.stock} remaining`
-                      : new Date(
-                          product?.product_availability
-                        ).toLocaleDateString("en-US", {
-                          month: "long",
-                          year: "numeric",
-                          day: "numeric",
-                        })}
+                      : product?.stock > 0
+                      ? `${product?.stock} remaining, Hurry Up!`
+                      : "Out of Stock"}
                   </span>
+                  {product?.pre_order && product?.release_date && (
+                    <span className="text-gray-400 text-sm">
+                      (Available{" "}
+                      {new Date(product.release_date).toLocaleDateString()})
+                    </span>
+                  )}
                 </div>
               </div>
             )}
@@ -238,40 +252,51 @@ const ProductDetails = ({ product, containerVariants, itemVariants }) => {
 
                 {/* Collection Button */}
                 {product?.product_collection &&
-                  product?.product_collection.map((collection, index) => (
+                  product.product_collection.length > 0 && (
                     <Button
-                      key={index}
                       variant="outline"
                       className="bg-slate-800/50 hover:bg-slate-800 hover:text-white hover:scale-105 transition-all duration-300 border-slate-700 inline-flex w-auto text-left justify-start flex-1"
                     >
                       <div className="flex items-center gap-2">
                         <span className="whitespace-nowrap">Collection:</span>
                         <span className="text-gray-400">
-                          {collection?.name}
+                          {product.product_collection
+                            .map((collection) => collection?.name)
+                            .join(", ")}
                         </span>
                       </div>
                     </Button>
-                  ))}
+                  )}
               </div>
             </div>
 
             {/* Description Section */}
             <div className="mb-6">
               {product?.product_description_1 && (
-                <p className="text-gray-300 mb-3 leading-loose">
-                  {product.product_description_1}
-                </p>
+                <div className="flex items-start gap-3 mb-3">
+                  <CircleCheckBig className="w-4 h-4 text-green-500 mt-1.5 flex-shrink-0" />
+                  <p className="text-gray-300 leading-loose">
+                    {product.product_description_1}
+                  </p>
+                </div>
               )}
 
               {product?.product_description_2 && (
-                <p className="text-gray-300 mb-3 leading-loose">
-                  {product.product_description_2}
-                </p>
+                <div className="flex items-start gap-3 mb-3">
+                  <CircleCheckBig className="w-4 h-4 text-green-500 mt-1.5 flex-shrink-0" />
+                  <p className="text-gray-300 leading-loose">
+                    {product.product_description_2}
+                  </p>
+                </div>
               )}
+
               {product?.product_description_3 && (
-                <p className="text-gray-300 leading-loose">
-                  {product.product_description_3}
-                </p>
+                <div className="flex items-start gap-3">
+                  <CircleCheckBig className="w-4 h-4 text-green-500 mt-1.5 flex-shrink-0" />
+                  <p className="text-gray-300 leading-loose">
+                    {product.product_description_3}
+                  </p>
+                </div>
               )}
             </div>
 
