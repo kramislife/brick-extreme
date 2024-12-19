@@ -221,18 +221,21 @@ const ProductDetails = ({ product, containerVariants, itemVariants }) => {
                 <div className="flex-1">
                   {/* Category Button */}
                   {product?.product_category &&
-                    product?.product_category.map((cat, index) => (
+                    product.product_category.length > 0 && (
                       <Button
-                        key={index}
                         variant="outline"
                         className="bg-slate-800/50 hover:bg-slate-800 hover:text-white hover:scale-105 transition-all duration-300 border-slate-700 inline-flex w-full text-left justify-start mb-2"
                       >
-                        <span className="whitespace-nowrap">Category:</span>
                         <div className="flex items-center gap-2">
-                          <span className="text-gray-400">{cat?.name}</span>
+                          <span className="whitespace-nowrap">Category:</span>
+                          <span className="text-gray-400">
+                            {product.product_category
+                              .map((category) => category?.name)
+                              .join(", ")}
+                          </span>
                         </div>
                       </Button>
-                    ))}
+                    )}
 
                   {/* Includes Button */}
                   {product?.product_includes && (
@@ -277,13 +280,14 @@ const ProductDetails = ({ product, containerVariants, itemVariants }) => {
                 product?.product_description_2,
                 product?.product_description_3,
               ]
-                .filter(description => description?.trim()) // Only include non-empty descriptions after trimming whitespace
+                .filter((description) => description?.trim()) // Only include non-empty descriptions after trimming whitespace
                 .map((description, index) => (
-                  <div key={index} className="flex items-start gap-3 mb-3 last:mb-0">
+                  <div
+                    key={index}
+                    className="flex items-start gap-3 mb-3 last:mb-0"
+                  >
                     <CircleCheckBig className="w-4 h-4 text-green-500 mt-1.5 flex-shrink-0" />
-                    <p className="text-gray-300 leading-loose">
-                      {description}
-                    </p>
+                    <p className="text-gray-300 leading-loose">{description}</p>
                   </div>
                 ))}
             </div>
