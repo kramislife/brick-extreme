@@ -51,7 +51,10 @@ const AddSkillLevel = () => {
             <form onSubmit={handleSubmit}>
               <div className="space-y-5">
                 <div className="space-y-3">
-                  <Label htmlFor="name" className="flex items-center gap-2 text-lg font-semibold">
+                  <Label
+                    htmlFor="name"
+                    className="flex items-center gap-2 text-lg font-semibold"
+                  >
                     <FileText className="h-5 w-5 text-blue-600" />
                     Skill Level Name
                   </Label>
@@ -65,7 +68,10 @@ const AddSkillLevel = () => {
                 </div>
 
                 <div className="space-y-3">
-                  <Label htmlFor="description" className="flex items-center gap-2 text-lg font-semibold">
+                  <Label
+                    htmlFor="description"
+                    className="flex items-center gap-2 text-lg font-semibold"
+                  >
                     <BookOpen className="h-5 w-5 text-blue-600" />
                     Description
                   </Label>
@@ -103,4 +109,4 @@ const AddSkillLevel = () => {
   );
 };
 
-export default AddSkillLevel
+export default AddSkillLevel;

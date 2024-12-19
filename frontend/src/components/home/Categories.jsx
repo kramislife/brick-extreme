@@ -1,19 +1,31 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Card, CardFooter } from "@/components/ui/card";
 import { motion, useInView } from "framer-motion";
 import { categoryAnimations } from "@/hooks/animationConfig";
 import { useNavigate } from "react-router-dom";
-import { categories } from "@/pages/Categories/CategoriesPage";
+import image1 from "@/assets/ImageTest/Collection_1.jpg";
+import { toast } from "react-toastify";
+import { useGetCollectionQuery } from "@/redux/api/productApi";
 
 const Categories = () => {
   const navigate = useNavigate();
   const ref = React.useRef(null);
-  const isInView = useInView(ref, { 
-    once: true, 
+  const isInView = useInView(ref, {
+    once: true,
     amount: 0.2,
   });
 
-  const displayedCategories = categories.slice(0, 6);
+  const { data, isError, error } = useGetCollectionQuery();
+
+  useEffect(() => {
+    if (data) {
+      console.log("DATA: ", data.collections);
+    }
+
+    if (isError) {
+      toast.error(error?.data?.message);
+    }
+  }, [data, error, isError]);
 
   return (
     <div ref={ref} className="p-4">
@@ -34,9 +46,9 @@ const Categories = () => {
       >
         <button
           className="py-2 px-6 rounded-md text-white font-semibold bg-red-600 hover:bg-red-700"
-          onClick={() => navigate('/categories')}
+          onClick={() => navigate("/categories")}
         >
-          View All 
+          View All
         </button>
       </motion.div>
 
@@ -46,21 +58,21 @@ const Categories = () => {
         animate={isInView ? "visible" : "hidden"}
         className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mx-auto mb-8"
       >
-        {displayedCategories.map((category, index) => (
+        {data?.collections?.map((collection, index) => (
           <motion.div
-            key={category.id}
+            key={index}
             variants={categoryAnimations.cardVariants}
             custom={index}
           >
             <Card className="overflow-hidden bg-gradient-r border-none rounded-lg cursor-pointer">
-              <motion.div 
+              <motion.div
                 className="relative w-full"
                 whileHover={{ scale: 1.05 }}
                 transition={{ duration: 0.3 }}
               >
                 <motion.img
-                  src={category.image}
-                  alt={category.title}
+                  src={collection.image || image1}
+                  alt={collection.name}
                   className="w-full h-[360px] object-fill"
                   {...categoryAnimations.imageVariants}
                 />
@@ -85,7 +97,7 @@ const Categories = () => {
                     whileHover={{ scale: 1.05 }}
                     transition={{ duration: 0.2 }}
                   >
-                    {category.title}
+                    {collection.name}
                   </motion.h3>
                 </CardFooter>
               </motion.div>
