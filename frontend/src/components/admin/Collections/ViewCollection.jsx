@@ -19,9 +19,10 @@ import {
 import Metadata from "@/components/layout/Metadata/Metadata";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import LoadingSpinner from "@/components/layout/spinner/LoadingSpinner";
 
 const ViewCollection = () => {
-  const { data: collectionData, isLoading } = useGetCollectionQuery();
+  const { data: collectionData, isLoading, error } = useGetCollectionQuery();
 
   const [
     deleteCollection,
@@ -126,7 +127,11 @@ const ViewCollection = () => {
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <LoadingSpinner />;
+  }
+
+  if (error) {
+    return <div>Error loading collections</div>;
   }
 
   return (

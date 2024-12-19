@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import LoginImg from "@/assets/authAssets/Login.png";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { loginAnimations } from "@/hooks/animationConfig";
 import { useEffect, useState } from "react";
 import { useLoginMutation } from "@/redux/api/authApi";
@@ -13,40 +13,45 @@ const Login = () => {
   const [password, setPassword] = useState("");
 
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/";
 
-  const { isAuthenticated } = useSelector((state) => state.auth);
+  const { isAuthenticated, user } = useSelector((state) => state.auth);
+  const [login, { isLoading }] = useLoginMutation();
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate("/");
+      // If user is admin/employee and trying to access admin routes, let them
+      // Otherwise, redirect based on role
+      const isAdminOrEmployee = ["admin", "employee", "superAdmin"].includes(
+        user?.role
+      );
+      
+      if (from.startsWith("/admin")) {
+        if (isAdminOrEmployee) {
+          navigate(from);
+        } else {
+          navigate("/");
+        }
+      } else {
+        navigate(isAdminOrEmployee ? "/admin" : from);
+      }
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, user, navigate, from]);
 
-  const [login, { data, isLoading, isError, error, isSuccess }] =
-    useLoginMutation();
-
-  const submitHandler = (e) => {
+  const submitHandler = async (e) => {
     e.preventDefault();
 
-    const loginData = {
-      email_username,
-      password,
-    };
-
-    login(loginData);
+    try {
+      const result = await login({
+        email_username,
+        password,
+      }).unwrap();
+      toast.success(result?.message);
+    } catch (err) {
+      toast.error(err?.data?.message || "An error occurred during login");
+    }
   };
-
-  useEffect(() => {
-    if (isSuccess) {
-      toast.success(data?.message);
-
-      navigate("/");
-    }
-
-    if (isError) {
-      toast.error(error?.data?.message);
-    }
-  }, [isError, error, isSuccess]);
 
   return (
     <>

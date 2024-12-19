@@ -19,13 +19,14 @@ import {
 import Metadata from "@/components/layout/Metadata/Metadata";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import LoadingSpinner from "@/components/layout/spinner/LoadingSpinner";
 
 const ViewSkillLevel = () => {
-  const { data: skillLevelData, isLoading } = useGetSkillLevelsQuery();
+  const { data: skillLevelData, isLoading, error } = useGetSkillLevelsQuery();
 
   const [
     deleteSkillLevel,
-    { data: DeletedSkillData, isSuccess, isError, error },
+    { data: DeletedSkillData, isSuccess, isError },
   ] = useDeleteSkillLevelMutation();
 
   useEffect(() => {
@@ -120,7 +121,11 @@ const ViewSkillLevel = () => {
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <LoadingSpinner />;
+  }
+
+  if (error) {
+    return <div>Error loading skill levels</div>;
   }
 
   return (

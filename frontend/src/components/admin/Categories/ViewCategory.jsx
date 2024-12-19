@@ -19,12 +19,14 @@ import {
 } from "@/redux/api/productApi";
 import Metadata from "@/components/layout/Metadata/Metadata";
 import { toast } from "react-toastify";
+import LoadingSpinner from "@/components/layout/spinner/LoadingSpinner";
 
 const ViewCategories = () => {
   const {
     data: categoryData,
     isLoading,
     refetch,
+    error,
   } = useGetCategoryQuery(undefined, {
     refetchOnMountOrArgChange: true,
   });
@@ -132,7 +134,11 @@ const ViewCategories = () => {
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <LoadingSpinner />;
+  }
+
+  if (error) {
+    return <div>Error loading categories</div>;
   }
 
   return (
