@@ -1,21 +1,46 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useRef } from "react";
 import {
-  Minus,
-  Plus,
   ChevronLeft,
   ChevronRight,
   ImageIcon,
-  CircleDot,
   CircleCheckBig,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import Metadata from "@/components/layout/Metadata/Metadata";
 import StarRating from "@/components/product/shared/StarRating";
+import ProductStatus from "@/components/product/shared/ProductStatus";
 
 const ProductDetails = ({ product, containerVariants, itemVariants }) => {
-  const [quantity, setQuantity] = useState(1);
+  // const [quantity, setQuantity] = useState(1);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  // Add ref for the thumbnail container
+  const thumbnailContainerRef = useRef(null);
+
+  // Update scrollIntoView helper
+  const scrollThumbnailIntoView = (index) => {
+    if (!thumbnailContainerRef.current) return;
+    const container = thumbnailContainerRef.current;
+    const thumbnails = container.children[0].children;
+
+    if (thumbnails[index]) {
+      // For the first image, scroll to the start
+      if (index === 0) {
+        container.scrollTo({
+          top: 0,
+          left: 0,
+          behavior: "smooth",
+        });
+      } else {
+        thumbnails[index].scrollIntoView({
+          behavior: "smooth",
+          block: "nearest",
+          inline: "nearest",
+        });
+      }
+    }
+  };
 
   // Determine if images are available
   const hasImages =
@@ -41,18 +66,25 @@ const ProductDetails = ({ product, containerVariants, itemVariants }) => {
     </div>
   );
 
+  // Update navigation functions to include scroll
   const nextImage = () => {
     if (!hasImages) return;
-    setCurrentImageIndex((prev) =>
-      prev === product.product_images.length - 1 ? 0 : prev + 1
-    );
+    const newIndex =
+      currentImageIndex === product.product_images.length - 1
+        ? 0
+        : currentImageIndex + 1;
+    setCurrentImageIndex(newIndex);
+    scrollThumbnailIntoView(newIndex);
   };
 
   const prevImage = () => {
     if (!hasImages) return;
-    setCurrentImageIndex((prev) =>
-      prev === 0 ? product.product_images.length - 1 : prev - 1
-    );
+    const newIndex =
+      currentImageIndex === 0
+        ? product.product_images.length - 1
+        : currentImageIndex - 1;
+    setCurrentImageIndex(newIndex);
+    scrollThumbnailIntoView(newIndex);
   };
 
   const selectImage = (index) => {
@@ -73,29 +105,34 @@ const ProductDetails = ({ product, containerVariants, itemVariants }) => {
           {/* Image Gallery Section */}
           <motion.div
             variants={itemVariants}
-            className="relative flex flex-col-reverse md:flex-row gap-4"
+            className="relative flex flex-col-reverse md:flex-row gap-4 h-fit"
           >
             {/* Thumbnails */}
-            <div className="w-full md:w-[130px] overflow-x-auto md:overflow-y-auto scrollbar-none">
-              <div className="flex flex-row md:flex-col gap-2">
+            <div className="w-full md:w-[150px] md:h-[570px] relative">
+              <div
+                className="w-full h-full overflow-y-auto no-scrollbar"
+                ref={thumbnailContainerRef}
+              >
                 {hasImages ? (
-                  product.product_images.map((image, index) => (
-                    <button
-                      key={index}
-                      onClick={() => selectImage(index)}
-                      className={`min-w-[130px] md:min-w-0 aspect-square rounded-lg overflow-hidden border-2 transition-all ${
-                        currentImageIndex === index
-                          ? "border-red-600 border-4"
-                          : "border-transparent"
-                      }`}
-                    >
-                      <img
-                        src={image.url}
-                        alt={`Thumbnail ${index + 1}`}
-                        className="w-full h-full object-fill hover:scale-110 transition-transform duration-300"
-                      />
-                    </button>
-                  ))
+                  <div className="flex flex-row md:flex-col gap-2">
+                    {product.product_images.map((image, index) => (
+                      <button
+                        key={index}
+                        onClick={() => selectImage(index)}
+                        className={`min-w-[130px] md:min-w-0 aspect-square rounded-lg overflow-hidden border-2 transition-all ${
+                          currentImageIndex === index
+                            ? "border-red-600 border-4"
+                            : "border border-slate-700"
+                        }`}
+                      >
+                        <img
+                          src={image.url}
+                          alt={`Thumbnail ${index + 1}`}
+                          className="w-full h-full object-fill transition-transform duration-300"
+                        />
+                      </button>
+                    ))}
+                  </div>
                 ) : (
                   <PlaceholderThumbnail />
                 )}
@@ -129,7 +166,7 @@ const ProductDetails = ({ product, containerVariants, itemVariants }) => {
                     className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70"
                     onClick={prevImage}
                   >
-                    <ChevronLeft className="w-6 h-6" />
+                    <ChevronLeft className="w-6 h-6 text-white" />
                   </Button>
                   <Button
                     variant="ghost"
@@ -137,7 +174,7 @@ const ProductDetails = ({ product, containerVariants, itemVariants }) => {
                     className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70"
                     onClick={nextImage}
                   >
-                    <ChevronRight className="w-6 h-6" />
+                    <ChevronRight className="w-6 h-6 text-white" />
                   </Button>
                 </>
               )}
@@ -153,10 +190,16 @@ const ProductDetails = ({ product, containerVariants, itemVariants }) => {
               </h1>
 
               <div className="flex items-center gap-1 mb-8">
-                <StarRating rating={product?.ratings || 0} />
-                <span className="text-gray-400 ml-2 text-sm">
-                  ({product?.ratings || "No ratings"})
-                </span>
+                {product?.ratings ? (
+                  <>
+                    <StarRating rating={product.ratings} />
+                    <span className="text-gray-400 ml-2 text-sm">
+                      ({product.ratings})
+                    </span>
+                  </>
+                ) : (
+                  <span className="text-gray-400 text-sm">No ratings</span>
+                )}
               </div>
 
               {/* Updated Price Display */}
@@ -169,7 +212,7 @@ const ProductDetails = ({ product, containerVariants, itemVariants }) => {
                   ).toFixed(2)}
                 </span>
                 {product?.discount > 0 && (
-                  <span className="text-2xl text-red-500 line-through">
+                  <span className="text-xl text-red-500 line-through">
                     ${(product?.price || 0).toFixed(2)}
                   </span>
                 )}
@@ -180,30 +223,7 @@ const ProductDetails = ({ product, containerVariants, itemVariants }) => {
             {product?.product_availability && (
               <div className="mb-6">
                 <div className="flex items-center space-x-2">
-                  <span
-                    className={`w-2 h-2 rounded-full ${
-                      product?.stock > 10
-                        ? "bg-green-500"
-                        : product?.stock > 0
-                        ? "bg-yellow-500"
-                        : "bg-red-500"
-                    }`}
-                  ></span>
-                  <span
-                    className={`${
-                      product?.stock > 10
-                        ? "text-green-500"
-                        : product?.stock > 0
-                        ? "text-yellow-500"
-                        : "text-red-500"
-                    } text-md font-medium`}
-                  >
-                    {product?.stock > 10
-                      ? "In Stock"
-                      : product?.stock > 0
-                      ? `${product?.stock} remaining, Hurry Up!`
-                      : "Out of Stock"}
-                  </span>
+                  <ProductStatus stock={product?.stock} variant="dot" />
                   {product?.pre_order && product?.release_date && (
                     <span className="text-gray-400 text-sm">
                       (Available{" "}
@@ -224,7 +244,7 @@ const ProductDetails = ({ product, containerVariants, itemVariants }) => {
                     product.product_category.length > 0 && (
                       <Button
                         variant="outline"
-                        className="bg-slate-800/50 hover:bg-slate-800 hover:text-white hover:scale-105 transition-all duration-300 border-slate-700 inline-flex w-full text-left justify-start mb-2"
+                        className="bg-brand hover:bg-darkBrand hover:text-white transition-all duration-300 border-slate-700 inline-flex w-full text-left justify-start mb-2"
                       >
                         <div className="flex items-center gap-2">
                           <span className="whitespace-nowrap">Category:</span>
@@ -241,7 +261,7 @@ const ProductDetails = ({ product, containerVariants, itemVariants }) => {
                   {product?.product_includes && (
                     <Button
                       variant="outline"
-                      className="bg-slate-800/50 hover:bg-slate-800 hover:text-white hover:scale-105 transition-all duration-300 border-slate-700 inline-flex w-full text-left justify-start"
+                      className="bg-brand hover:bg-darkBrand hover:text-white transition-all duration-300 border-slate-700 inline-flex w-full text-left justify-start"
                     >
                       <div className="flex items-center gap-2">
                         <span className="whitespace-nowrap">Includes:</span>
@@ -258,7 +278,7 @@ const ProductDetails = ({ product, containerVariants, itemVariants }) => {
                   product.product_collection.length > 0 && (
                     <Button
                       variant="outline"
-                      className="bg-slate-800/50 hover:bg-slate-800 hover:text-white hover:scale-105 transition-all duration-300 border-slate-700 inline-flex w-auto text-left justify-start flex-1"
+                      className="bg-brand hover:bg-darkBrand hover:text-white transition-all duration-300 border-slate-700 inline-flex w-auto text-left justify-start flex-1"
                     >
                       <div className="flex items-center gap-2">
                         <span className="whitespace-nowrap">Collection:</span>
@@ -294,7 +314,7 @@ const ProductDetails = ({ product, containerVariants, itemVariants }) => {
 
             {/* Quantity and Cart Section - Always at bottom */}
             <div className="mt-auto">
-              <div className="flex items-center space-x-4 mb-4">
+              {/* <div className="flex items-center space-x-4 mb-4">
                 <div className="flex items-center border rounded-md">
                   <Button
                     className="rounded-r-none"
@@ -314,7 +334,7 @@ const ProductDetails = ({ product, containerVariants, itemVariants }) => {
                     <Plus className="w-4 h-4" />
                   </Button>
                 </div>
-              </div>
+              </div> */}
               <div className="flex space-x-4">
                 <Button
                   className="w-full bg-red-600 hover:bg-red-700 hover:scale-105 transition-all duration-300"
@@ -324,7 +344,7 @@ const ProductDetails = ({ product, containerVariants, itemVariants }) => {
                 </Button>
                 <Button
                   variant="outline"
-                  className="bg-slate-800/50 hover:bg-slate-800 hover:text-white hover:scale-105 transition-all duration-300 border-slate-700 w-full"
+                  className="bg-brand hover:bg-darkBrand hover:text-white hover:scale-105 transition-all duration-300 border-slate-700 w-full"
                   disabled={!product?.stock || product?.stock <= 0}
                 >
                   Buy Now

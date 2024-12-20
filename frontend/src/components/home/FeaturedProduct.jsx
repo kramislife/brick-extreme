@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Button } from "@/components/ui/button";
 import image1 from "@/assets/bannerAssets/Banner-1.png";
 import image2 from "@/assets/bannerAssets/Banner-3.png";
