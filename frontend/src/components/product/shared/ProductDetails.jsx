@@ -12,6 +12,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import Metadata from "@/components/layout/Metadata/Metadata";
 import StarRating from "@/components/product/shared/StarRating";
+import ProductStatus from "@/components/product/shared/ProductStatus";
 
 const ProductDetails = ({ product, containerVariants, itemVariants }) => {
   const [quantity, setQuantity] = useState(1);
@@ -180,30 +181,7 @@ const ProductDetails = ({ product, containerVariants, itemVariants }) => {
             {product?.product_availability && (
               <div className="mb-6">
                 <div className="flex items-center space-x-2">
-                  <span
-                    className={`w-2 h-2 rounded-full ${
-                      product?.stock > 10
-                        ? "bg-green-500"
-                        : product?.stock > 0
-                        ? "bg-yellow-500"
-                        : "bg-red-500"
-                    }`}
-                  ></span>
-                  <span
-                    className={`${
-                      product?.stock > 10
-                        ? "text-green-500"
-                        : product?.stock > 0
-                        ? "text-yellow-500"
-                        : "text-red-500"
-                    } text-md font-medium`}
-                  >
-                    {product?.stock > 10
-                      ? "In Stock"
-                      : product?.stock > 0
-                      ? `${product?.stock} remaining, Hurry Up!`
-                      : "Out of Stock"}
-                  </span>
+                  <ProductStatus stock={product?.stock} variant="dot" />
                   {product?.pre_order && product?.release_date && (
                     <span className="text-gray-400 text-sm">
                       (Available{" "}

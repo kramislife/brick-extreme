@@ -21,6 +21,7 @@ import LoadingSpinner from "@/components/layout/spinner/LoadingSpinner";
 import { useNavigate } from "react-router-dom";
 import Metadata from "@/components/layout/Metadata/Metadata";
 import { toast } from "react-toastify";
+import ProductStatus from "@/components/product/shared/ProductStatus";
 
 const ViewProducts = () => {
   const { data: productData, isLoading, error } = useGetProductsQuery();
@@ -28,7 +29,7 @@ const ViewProducts = () => {
   const [
     deleteProduct,
     {
-      data: deletedProductData, // Corrected typo in your code ("date" -> "data")
+      data: deletedProductData,
       isLoading: isDeleting,
       isError: isDeletingError,
       error: deleteError,
@@ -89,22 +90,11 @@ const ViewProducts = () => {
       {
         header: "Status",
         accessorKey: "status",
-        cell: ({ row }) => {
-          const statusColors = {
-            "In Stock": "bg-green-500 text-black",
-            Low: "bg-yellow-500 text-black",
-            Unavailable: "bg-red-500 text-light",
-          };
-          return (
-            <span
-              className={`px-5 py-1 rounded-full text-xs ${
-                statusColors[row.original.status]
-              }`}
-            >
-              {row.original.status}
-            </span>
-          );
-        },
+        cell: ({ row }) => (
+          <div className="flex justify-center">
+            <ProductStatus stock={row.original.stock} variant="pill" />
+          </div>
+        ),
       },
       {
         header: "Actions",
@@ -157,12 +147,6 @@ const ViewProducts = () => {
           .join(", "),
         stock: product?.stock,
         createdAt: product?.createdAt,
-        status:
-          product?.stock > 50
-            ? "In Stock"
-            : product?.stock > 0
-            ? "Low"
-            : "Unavailable",
       }));
   }, [productData]);
 

@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { ImageIcon } from "lucide-react";
 import StarRating from "@/components/product/shared/StarRating";
+import ProductStatus from "@/components/product/shared/ProductStatus";
 
 const ProductCard = ({ product }) => {
   const navigate = useNavigate();
@@ -30,21 +31,6 @@ const ProductCard = ({ product }) => {
     product?.price && product?.discount
       ? product.price - (product.price * product.discount) / 100
       : product?.price || 0;
-
-  const getStockStatus = () => {
-    if (!product?.stock) {
-      return { text: "Unavailable", color: "text-red-500" };
-    }
-    if (product.stock > 50) {
-      return { text: "In Stock", color: "text-green-500" };
-    }
-    if (product.stock > 0) {
-      return { text: "Low Stock", color: "text-yellow-500" };
-    }
-    return { text: "Unavailable", color: "text-red-500" };
-  };
-
-  const stockStatus = getStockStatus();
 
   return (
     <motion.div
@@ -87,7 +73,7 @@ const ProductCard = ({ product }) => {
       {/* Product Info */}
       <div className="p-5 flex flex-col gap-5">
         {/* Product Name */}
-        <h3 className="text-lg font-semibold tracking-tight transition-colors line-clamp-1">
+        <h3 className="text-lg font-semibold transition-colors line-clamp-1">
           {product?.product_name || "Unnamed Product"}
         </h3>
 
@@ -144,9 +130,7 @@ const ProductCard = ({ product }) => {
 
             {/* Stock Status */}
             <div className="flex items-center h-6">
-              <span className={`text-sm font-medium ${stockStatus.color}`}>
-                {stockStatus.text}
-              </span>
+              <ProductStatus stock={product?.stock} />
             </div>
           </div>
         </div>
