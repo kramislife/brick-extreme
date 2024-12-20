@@ -87,12 +87,12 @@ const ProductCard = ({ product }) => {
       {/* Product Info */}
       <div className="p-5 flex flex-col gap-5">
         {/* Product Name */}
-        <h3 className="text-lg font-semibold tracking-tight transition-colors line-clamp-2">
+        <h3 className="text-lg font-semibold tracking-tight transition-colors line-clamp-1">
           {product?.product_name || "Unnamed Product"}
         </h3>
 
         {/* Categories */}
-        <div className="flex flex-wrap gap-2">
+        {/* <div className="flex flex-wrap gap-1">
           {product?.product_category?.length > 0 ? (
             product.product_category.map((category, index) => (
               <span
@@ -107,7 +107,7 @@ const ProductCard = ({ product }) => {
               No categories
             </span>
           )}
-        </div>
+        </div> */}
 
         {/* Pricing and Ratings */}
         <div className="flex flex-col gap-3 mt-auto">
