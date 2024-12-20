@@ -9,7 +9,6 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Upload, X, ImagePlus, AlertCircle, Info, Trash } from "lucide-react";
 import Metadata from "@/components/layout/Metadata/Metadata";
-import LoadingSpinner from "@/components/layout/spinner/LoadingSpinner";
 import { toast } from "react-toastify";
 
 const ProductImages = () => {
@@ -22,82 +21,50 @@ const ProductImages = () => {
   const [uploadedImages, setUploadedImages] = useState([]);
 
   const { data } = useGetProductDetailsQuery(params?.id);
-
-  const [
-    uploadProductImages,
-    { data: uploadedImage, isLoading, error, isError, isSuccess },
-  ] = useUploadProductImagesMutation();
-
-  const [
-    deleteProductImage,
-    {
-      data: deletedImage,
-      isLoading: isDeleteLoading,
-      error: deleteError,
-      isSuccess: isDeletedSuccessfully,
-    },
-  ] = useDeleteProductImageMutation();
+  const [uploadProductImages, { isLoading, error, isError, isSuccess }] =
+    useUploadProductImagesMutation();
+  const [deleteProductImage] = useDeleteProductImageMutation();
 
   useEffect(() => {
     if (data?.product) {
       setUploadedImages(data?.product?.product_images);
     }
-
-    if (isError) {
-      toast.error(error?.data?.message);
-      console.log(error);
-    }
-
+    if (isError) toast.error(error?.data?.message);
     if (isSuccess) {
-      toast.success(uploadedImage?.message);
+      toast.success("Images uploaded successfully");
       setImagesPreview([]);
       navigate("/admin/products");
     }
-  }, [data, isError, isSuccess, uploadedImage]);
-
-  useEffect(() => {
-    if (deleteError) {
-      toast.error(deleteError?.data?.message);
-    }
-
-    if (isDeletedSuccessfully) {
-      toast.success(deletedImage?.message);
-    }
-  }, [deleteError, isDeletedSuccessfully, deletedImage]);
+  }, [data, isError, isSuccess, error]);
 
   const handleProductImageUpload = (e) => {
     const uploadedFiles = Array.from(e.target.files);
+    const remainingSlots = 10 - (uploadedImages.length + imagesPreview.length);
+
+    if (uploadedFiles.length > remainingSlots) {
+      toast.warning(
+        `You can only upload ${remainingSlots} more image${
+          remainingSlots !== 1 ? "s" : ""
+        }`
+      );
+      return;
+    }
 
     uploadedFiles.forEach((file) => {
       const reader = new FileReader();
-
       reader.onload = () => {
         if (reader.readyState === 2) {
-          setImagesPreview((oldArray) => [...oldArray, reader.result]);
-          setImages((oldArray) => [...oldArray, reader.result]);
+          setImagesPreview((prev) => [...prev, reader.result]);
+          setImages((prev) => [...prev, reader.result]);
         }
       };
-
       reader.readAsDataURL(file);
     });
   };
 
-  const handleResetFileInput = () => {
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
-    }
-  };
-
   const handleImagePreviewDelete = (image) => {
-    const filteredImagesPreview = imagesPreview.filter((img) => img !== image);
-
-    setImages(filteredImagesPreview);
-    setImagesPreview(filteredImagesPreview);
-  };
-
-  const submitHandler = (e) => {
-    e.preventDefault();
-    uploadProductImages({ id: params?.id, body: { images } });
+    setImages((prev) => prev.filter((img) => img !== image));
+    setImagesPreview((prev) => prev.filter((img) => img !== image));
   };
 
   const handleDelete = (imgId) => {
@@ -105,137 +72,145 @@ const ProductImages = () => {
   };
 
   return (
-    <div className="w-full mx-auto ">
+    <div className="mx-auto px-4 py-5">
       <form
-        className="bg-gray-800 shadow-lg rounded-lg flex flex-col gap-4 p-2"
-        encType="multipart/form-data"
-        onSubmit={submitHandler}
+        className="border border-slate-700 shadow-xl rounded-xl p-6 space-y-8"
+        onSubmit={(e) => {
+          e.preventDefault();
+          uploadProductImages({ id: params?.id, body: { images } });
+        }}
       >
-        <h2 className="text-2xl font-semibold text-left text-white">
-          Upload Product Images
-        </h2>
-
-        {/* Product Details Section */}
-        {data?.product && (
-          <div className="text-white flex flex-col">
-            <div className="text-xl font-normal mb-4">{data.product.name}</div>
-            <div className="text-xl font-normal mb-4">
-              Seller: {data.product.seller}
-            </div>
-            <div className="text-xl font-normal mb-4">
-              Category: {data?.product?.category?.join(", ")}
+        {/* Header Section */}
+        <div className="space-y-2 border-b border-slate-700 pb-4">
+          <h2 className="text-3xl font-bold text-light tracking-tight">
+            Product Image Gallery
+          </h2>
+          <div className="flex items-center justify-between">
+            <p className="text-gray-200/70 text-md">
+              Manage product images and upload new ones
+            </p>
+            <div className="flex items-center gap-2">
+              <Info className="w-4 h-4 text-blue-400" />
+              <span className="text-sm text-blue-400">
+                First image will be the main display (
+                {uploadedImages.length + imagesPreview.length}/10)
+              </span>
             </div>
           </div>
-        )}
-
-        {/* Choose Images and Upload Button Section */}
-        <div className="flex flex-col md:flex-row md:gap-5 w-full ">
-          <label className="w-full md:w-1/3 flex items-center justify-center p-2 bg-gray-800 border border-gray-600 rounded-lg cursor-pointer hover:bg-gray-700 transition duration-200">
-            <span className="text-lg text-white">Choose File</span>
-            <input
-              type="file"
-              ref={fileInputRef}
-              name="product_images"
-              className="hidden"
-              id="customFile"
-              onChange={handleProductImageUpload}
-              onClick={handleResetFileInput}
-              multiple
-            />
-          </label>
-          {/* Submit (Upload) Button */}
-          <button
-            id="register_button"
-            type="submit"
-            className={`text-white text-xl font-semibold rounded-lg w-full md:w-1/5 ${
-              images?.length <= 0
-                ? "cursor-not-allowed bg-gray-500"
-                : "bg-blue-600 hover:bg-blue-700"
-            }`}
-            disabled={isLoading || images.length <= 0 || isDeleteLoading}
-          >
-            {isLoading ? "Uploading..." : "Upload"}
-          </button>
         </div>
 
-        <p className="font-normal text-xl">
-          {imagesPreview.length}
-          <span className="ml-2">images selected</span>
-        </p>
-        {/* New Images Section */}
-        {imagesPreview.length > 0 && (
-          <div className="bg-gray-700 flex flex-col rounded-lg items-center w-100 mb-2">
-            <div className="text-white text-2xl font-normal mb-4">
-              New Images
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
-              {imagesPreview.map((img, index) => (
-                <div
-                  key={index}
-                  className="bg-gray-700 rounded-md flex flex-col items-center"
-                >
-                  <img
-                    src={img || DefaultImage}
-                    alt={`Uploaded Image ${index + 1}`}
-                    className="w-full aspect-square object-cover mb-2 rounded"
-                  />
-                  <button
-                    className="w-full bg-red-600 text-white py-1 rounded hover:bg-red-700"
-                    type="button"
-                    onClick={() => handleImagePreviewDelete(img)}
-                  >
-                    <Trash className="inline mr-2" />
-                  </button>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
+        {/* Image Grid */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+          {/* Upload Button - Always First */}
+          {uploadedImages.length + imagesPreview.length < 10 && (
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              className="aspect-square rounded-lg border-2 border-dashed border-slate-700 flex flex-col items-center justify-center gap-2 hover:border-blue-500 transition-colors group"
+            >
+              <div className="flex flex-col items-center gap-2 group-hover:scale-110 transition-transform">
+                <Upload className="w-8 h-8 text-slate-500 group-hover:text-blue-500" />
+                <span className="text-sm text-slate-500 group-hover:text-blue-500">
+                  Add Image
+                </span>
+              </div>
+            </button>
+          )}
 
-        {/* Uploaded Images Section */}
-        {uploadedImages.length > 0 && (
-          <div className=" flex flex-col">
-            <div className="mb-4 text-2xl font-normal">
-              Product Uploaded Images:
-            </div>
-            <div className={`grid grid-cols-1 md:grid-cols-3 gap-2 w-full`}>
-              {uploadedImages.map((img, index) => (
-                <div
-                  key={index}
-                  className="bg-gray-700 flex flex-col rounded-lg items-center w-100"
+          {/* Uploaded Images */}
+          {uploadedImages.map((img, index) => (
+            <div
+              key={index}
+              className={`relative group aspect-square rounded-lg overflow-hidden cursor-pointer
+                ${index === 0 ? "ring-2 ring-red-500" : "ring-1 ring-slate-700"}
+              `}
+            >
+              <img
+                src={img.url}
+                alt={`Product ${index + 1}`}
+                className="w-full h-full object-cover transition-transform duration-200 group-hover:scale-110"
+              />
+              <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity">
+                <button
+                  type="button"
+                  onClick={() => handleDelete(img?.public_id)}
+                  className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-2 bg-red-500 rounded-full hover:bg-red-600"
                 >
-                  <img
-                    src={img.url || DefaultImage}
-                    alt={`Uploaded Image ${index + 1}`}
-                    className="w-full aspect-square object-fill  rounded-t-lg"
-                  />
-                  <button
-                    className={`w-full text-white py-1 rounded rounded-b-lg flex items-center justify-center ${
-                      isDeleteLoading
-                        ? "cursor-not-allowed bg-gray-500"
-                        : "bg-red-600 hover:bg-red-700"
-                    }`}
-                    type="button"
-                    disabled={isLoading || isDeleteLoading}
-                    onClick={() => handleDelete(img?.public_id)}
-                  >
-                    {isLoading || isDeleteLoading ? (
-                      <span className="animate-spin">
-                        <X />
-                      </span>
-                    ) : (
-                      <span className="flex items-center">
-                        <Trash className="mr-2 inline" />
-                      </span>
-                    )}
-                  </button>
+                  <Trash className="w-4 h-4 text-white" />
+                </button>
+              </div>
+              {index === 0 ? (
+                <div className="absolute top-2 left-2 bg-red-500 px-3 pb-1 rounded-md">
+                  <span className="text-xs text-white font-medium">Main</span>
                 </div>
-              ))}
+              ) : (
+                <div className="absolute top-2 left-2 bg-blue-500 px-3 pb-1 rounded-md">
+                  <span className="text-xs text-white font-medium">
+                    Thumbnail {index}
+                  </span>
+                </div>
+              )}
             </div>
-          </div>
-        )}
+          ))}
+
+          {/* Preview Images */}
+          {imagesPreview.map((img, index) => (
+            <div
+              key={`preview-${index}`}
+              className="relative group aspect-square rounded-lg overflow-hidden ring-1 ring-slate-700 cursor-pointer"
+            >
+              <img
+                src={img}
+                alt={`Preview ${index + 1}`}
+                className="w-full h-full object-cover transition-transform duration-200 group-hover:scale-110"
+              />
+              <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity">
+                <button
+                  type="button"
+                  onClick={() => handleImagePreviewDelete(img)}
+                  className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-2 bg-red-500 rounded-full hover:bg-red-600"
+                >
+                  <X className="w-4 h-4 text-white" />
+                </button>
+              </div>
+              <div className="absolute top-2 left-2 bg-green-600 px-3 pb-1 rounded-md">
+                <span className="text-xs text-white font-medium">New</span>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Hidden File Input */}
+        <input
+          type="file"
+          ref={fileInputRef}
+          className="hidden"
+          onChange={handleProductImageUpload}
+          multiple
+          accept="image/*"
+        />
+
+        {/* Upload Button */}
+        <div className="flex justify-end">
+          <Button
+            type="submit"
+            className={`px-8 ${
+              images.length <= 0 || isLoading
+                ? "bg-gray-600 cursor-not-allowed"
+                : "bg-gradient-to-r from-blue-600 to-purple-600"
+            }`}
+            disabled={images.length <= 0 || isLoading}
+          >
+            {isLoading ? (
+              <span className="flex items-center gap-2">Uploading...</span>
+            ) : (
+              "Save Changes"
+            )}
+          </Button>
+        </div>
       </form>
     </div>
   );
 };
+
 export default ProductImages;
