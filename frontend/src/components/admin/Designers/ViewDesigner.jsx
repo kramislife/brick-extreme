@@ -13,6 +13,7 @@ import {
   useGetDesignersQuery,
 } from "@/redux/api/productApi";
 import { toast } from "react-toastify";
+import { createDesignerColumns } from "../table/columns/DesignerColumns";
 
 const ViewDesigner = () => {
   const { data: designerData, isLoading, error } = useGetDesignersQuery();
@@ -39,67 +40,17 @@ const ViewDesigner = () => {
     }
   }, [deleteDesignerSuccess, deleteDesignerError, deleteError]);
 
-  const columns = useMemo(
-    () => [
-      {
-        header: "ID",
-        accessorKey: "id",
-      },
-      {
-        header: "Designer Name",
-        accessorKey: "name",
-      },
-      {
-        header: "Bio",
-        accessorKey: "bio",
-      },
-      {
-        header: "Social Links",
-        accessorKey: "links",
-        cell: ({ row }) => (
-          <div>
-            {row.original.links &&
-              Object.entries(row.original.links).map(
-                ([platform, url]) =>
-                  url && (
-                    <a
-                      key={platform}
-                      href={url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center justify-center gap-1 text-blue-500 hover:text-blue-600 mb-1"
-                    >
-                      <LinkIcon size={14} />
-                      <span className="capitalize">{platform}</span>
-                    </a>
-                  )
-              )}
-          </div>
-        ),
-      },
-      {
-        header: "Actions",
-        cell: ({ row }) => (
-          <div className="flex justify-center gap-2">
-            <button
-              onClick={() => handleEdit(row.original)}
-              className="text-blue-600 hover:text-blue-800 p-1 rounded-full hover:bg-blue-100 transition-colors"
-              title="Edit Designer"
-            >
-              <Edit2 size={18} />
-            </button>
-            <button
-              onClick={() => handleDelete(row.original)}
-              className="text-red-600 hover:text-red-800 p-1 rounded-full hover:bg-red-100 transition-colors"
-              title="Delete Designer"
-            >
-              <Trash2 size={18} />
-            </button>
-          </div>
-        ),
-      },
-    ],
-    []
+  const handleEdit = (designer) => {
+    navigate(`/admin/update-designer/${designer._id}`);
+  };
+
+  const handleDelete = (designer) => {
+    deleteDesigner(designer._id);
+  };
+
+  // column component for table
+  const columns = useMemo(() =>
+    createDesignerColumns(handleEdit, handleDelete)
   );
 
   const data = useMemo(() => {
@@ -127,17 +78,9 @@ const ViewDesigner = () => {
     onGlobalFilterChange: setGlobalFilter,
   });
 
-  const handleEdit = (designer) => {
-    navigate(`/admin/update-designer/${designer._id}`);
-  };
-
-  const handleDelete = (designer) => {
-    deleteDesigner(designer._id);
-  };
-
   return (
     <ViewLayout
-      title="Designers"
+      title="Designer"
       description="Manage your product designers"
       addNewPath="/admin/new-designer"
       isLoading={isLoading}

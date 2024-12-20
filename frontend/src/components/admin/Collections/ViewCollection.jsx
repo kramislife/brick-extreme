@@ -13,6 +13,7 @@ import {
   useGetCollectionQuery,
 } from "@/redux/api/productApi";
 import { toast } from "react-toastify";
+import { createCollectionColumns } from "../table/columns/CollectionColumns";
 
 const ViewCollection = () => {
   const { data: collectionData, isLoading, error } = useGetCollectionQuery();
@@ -39,51 +40,17 @@ const ViewCollection = () => {
     }
   }, [deleteCollectionSuccess, deleteCollectionError, deleteError]);
 
-  const columns = useMemo(
-    () => [
-      {
-        header: "ID",
-        accessorKey: "id",
-      },
-      {
-        header: "Product Collection",
-        accessorKey: "name",
-      },
-      {
-        header: "Description",
-        accessorKey: "description",
-      },
-      {
-        header: "Created At",
-        accessorKey: "createdAt",
-      },
-      {
-        header: "Updated At",
-        accessorKey: "updatedAt",
-      },
-      {
-        header: "Actions",
-        cell: ({ row }) => (
-          <div className="flex justify-center gap-2">
-            <button
-              onClick={() => handleEdit(row.original)}
-              className="text-blue-600 hover:text-blue-800 p-1 rounded-full hover:bg-blue-100 transition-colors"
-              title="Edit Collection"
-            >
-              <Edit2 size={18} />
-            </button>
-            <button
-              onClick={() => handleDelete(row.original)}
-              className="text-red-600 hover:text-red-800 p-1 rounded-full hover:bg-red-100 transition-colors"
-              title="Delete Collection"
-            >
-              <Trash2 size={18} />
-            </button>
-          </div>
-        ),
-      },
-    ],
-    []
+  const handleEdit = (collection) => {
+    navigate(`/admin/update-collection/${collection._id}`);
+  };
+
+  const handleDelete = (collection) => {
+    deleteCollection(collection._id);
+  };
+
+  // column component for table
+  const columns = useMemo(() =>
+    createCollectionColumns(handleEdit, handleDelete)
   );
 
   const data = useMemo(() => {
@@ -113,14 +80,6 @@ const ViewCollection = () => {
     },
     onGlobalFilterChange: setGlobalFilter,
   });
-
-  const handleEdit = (collection) => {
-    navigate(`/admin/update-collection/${collection._id}`);
-  };
-
-  const handleDelete = (collection) => {
-    deleteCollection(collection._id);
-  };
 
   return (
     <ViewLayout

@@ -5,7 +5,6 @@ import {
   getPaginationRowModel,
   getFilteredRowModel,
 } from "@tanstack/react-table";
-import { Edit2, Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import ViewLayout from "@/components/admin/shared/ViewLayout";
 import {
@@ -13,6 +12,7 @@ import {
   useDeleteCategoryMutation,
 } from "@/redux/api/productApi";
 import { toast } from "react-toastify";
+import { createCategoryColumns } from "@/components/admin/table/columns/CategoryColumns";
 
 const ViewCategories = () => {
   const { data: categoryData, isLoading, error } = useGetCategoryQuery();
@@ -39,47 +39,17 @@ const ViewCategories = () => {
     }
   }, [deleteCategorySuccess, deleteCategoryError, deleteError]);
 
+  const handleEdit = (category) => {
+    navigate(`/admin/update-category/${category._id}`);
+  };
+
+  const handleDelete = (category) => {
+    deleteCategory(category._id);
+  };
+
+  // column component for table
   const columns = useMemo(
-    () => [
-      {
-        header: "ID",
-        accessorKey: "id",
-      },
-      {
-        header: "Name",
-        accessorKey: "name",
-      },
-      {
-        header: "Created By",
-        accessorKey: "createdBy",
-      },
-      {
-        header: "Updated By",
-        accessorKey: "updatedBy",
-      },
-      {
-        header: "Actions",
-        cell: ({ row }) => (
-          <div className="flex justify-center gap-2">
-            <button
-              onClick={() => handleEdit(row.original)}
-              className="text-blue-600 hover:text-blue-800 p-1 rounded-full hover:bg-blue-100 transition-colors"
-              title="Edit Category"
-            >
-              <Edit2 size={18} />
-            </button>
-            <button
-              onClick={() => handleDelete(row.original)}
-              className="text-red-600 hover:text-red-800 p-1 rounded-full hover:bg-red-100 transition-colors"
-              title="Delete Category"
-            >
-              <Trash2 size={18} />
-            </button>
-          </div>
-        ),
-      },
-    ],
-    []
+    () => createCategoryColumns(handleEdit, handleDelete)
   );
 
   const data = useMemo(() => {
@@ -108,14 +78,6 @@ const ViewCategories = () => {
     },
     onGlobalFilterChange: setGlobalFilter,
   });
-
-  const handleEdit = (category) => {
-    navigate(`/admin/update-category/${category._id}`);
-  };
-
-  const handleDelete = (category) => {
-    deleteCategory(category._id);
-  };
 
   return (
     <ViewLayout
