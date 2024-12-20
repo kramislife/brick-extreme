@@ -119,7 +119,7 @@ const ProductDetails = ({ product, containerVariants, itemVariants }) => {
                       <button
                         key={index}
                         onClick={() => selectImage(index)}
-                        className={`min-w-[130px] md:min-w-0 aspect-square rounded-lg overflow-hidden border-2 transition-all ${
+                        className={`min-w-[130px] max-w-[130px] md:min-w-0 md:max-w-full aspect-square rounded-lg overflow-hidden border-2 transition-all ${
                           currentImageIndex === index
                             ? "border-red-600 border-4"
                             : "border border-slate-700"
