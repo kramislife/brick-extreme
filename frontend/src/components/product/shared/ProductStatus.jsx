@@ -50,7 +50,7 @@ const ProductStatus = ({ stock, variant = "default" }) => {
         <div className="flex items-center gap-2">
           <div className={`w-2 h-2 rounded-full ${stockStatus.bgColor}`} />
           <span className={`text-sm font-medium ${stockStatus.color}`}>
-            {stockStatus.text}
+            Hurry up, {stock} stocks left!
           </span>
         </div>
       );

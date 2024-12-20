@@ -344,7 +344,7 @@ const ProductDetails = ({ product, containerVariants, itemVariants }) => {
                 </Button>
                 <Button
                   variant="outline"
-                  className="bg-slate-800/50 hover:bg-slate-800 hover:text-white hover:scale-105 transition-all duration-300 border-slate-700 w-full"
+                  className="bg-brand hover:bg-darkBrand hover:text-white hover:scale-105 transition-all duration-300 border-slate-700 w-full"
                   disabled={!product?.stock || product?.stock <= 0}
                 >
                   Buy Now

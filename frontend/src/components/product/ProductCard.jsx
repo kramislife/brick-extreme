@@ -34,7 +34,8 @@ const ProductCard = ({ product }) => {
 
   return (
     <motion.div
-      className="bg-brand-gradient/80 text-slate-100 border border-slate-700 rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-100 group relative"
+      onClick={handleViewDetails}
+      className="bg-brand-gradient/80 text-slate-100 border border-slate-700 rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-100 group relative cursor-pointer"
       layout
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
@@ -63,8 +64,8 @@ const ProductCard = ({ product }) => {
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
         <button
-          onClick={handleViewDetails}
-          className="absolute bottom-4 left-1/2 transform -translate-x-1/2 translate-y-full opacity-0 group-hover:translate-y-0 group-hover:opacity-100 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white px-6 py-2.5 rounded-full font-medium shadow-lg transition-all duration-300 ease-out"
+          onClick={(e) => e.stopPropagation()}
+          className="absolute bottom-4 left-1/2 transform -translate-x-1/2 translate-y-full opacity-0 group-hover:translate-y-0 group-hover:opacity-100 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white px-6 py-2.5 rounded-full font-medium shadow-lg transition-all duration-300 ease-out pointer-events-none"
         >
           View Details
         </button>
@@ -130,7 +131,14 @@ const ProductCard = ({ product }) => {
 
             {/* Stock Status */}
             <div className="flex items-center h-6">
-              <ProductStatus stock={product?.stock} />
+              {product?.product_category?.length > 0 ? (
+                <span className="text-sm bg-blue-500/20 text-blue-400 px-3 py-1 rounded-full">
+                  {product.product_category.map((col) => col.name).join(", ")}
+                </span>
+              ) : (
+                <span className="text-sm text-slate-500">No collection</span>
+              )}
+              {/* <ProductStatus stock={product?.stock} /> */}
             </div>
           </div>
         </div>
