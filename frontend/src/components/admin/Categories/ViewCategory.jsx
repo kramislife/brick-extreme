@@ -4,53 +4,40 @@ import {
   getCoreRowModel,
   getPaginationRowModel,
   getFilteredRowModel,
-  flexRender,
 } from "@tanstack/react-table";
-import { Edit2, Trash2, PlusCircle } from "lucide-react";
+import { Edit2, Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { Card, CardContent } from "@/components/ui/card";
-import SearchBar from "@/components/admin/table/SearchBar";
-import ShowEntries from "@/components/admin/table/ShowEntries";
-import TableLayout from "@/components/admin/table/TableLayout";
-import Pagination from "@/components/admin/table/Pagination";
+import ViewLayout from "@/components/admin/shared/ViewLayout";
 import {
   useGetCategoryQuery,
   useDeleteCategoryMutation,
 } from "@/redux/api/productApi";
-import Metadata from "@/components/layout/Metadata/Metadata";
 import { toast } from "react-toastify";
-import LoadingSpinner from "@/components/layout/spinner/LoadingSpinner";
 
 const ViewCategories = () => {
-  const {
-    data: categoryData,
-    isLoading,
-    refetch,
-    error,
-  } = useGetCategoryQuery(undefined, {
-    refetchOnMountOrArgChange: true,
-  });
-  const [globalFilter, setGlobalFilter] = useState("");
-  const navigate = useNavigate();
+  const { data: categoryData, isLoading, error } = useGetCategoryQuery();
+
   const [
     deleteCategory,
     {
-      data: deleteCategoryData,
-      isLoading: deleteCategoryLoading,
-      error: deleteCategoryError,
       isSuccess: deleteCategorySuccess,
+      isError: deleteCategoryError,
+      error: deleteError,
     },
   ] = useDeleteCategoryMutation();
 
+  const [globalFilter, setGlobalFilter] = useState("");
+  const navigate = useNavigate();
+
   useEffect(() => {
     if (deleteCategorySuccess) {
-      refetch();
+      toast.success("Category deleted successfully");
     }
 
     if (deleteCategoryError) {
-      toast.error("Failed to delete category");
+      toast.error(deleteError?.data?.message || "Failed to delete category");
     }
-  }, [deleteCategoryError, deleteCategorySuccess]);
+  }, [deleteCategorySuccess, deleteCategoryError, deleteError]);
 
   const columns = useMemo(
     () => [
@@ -97,8 +84,6 @@ const ViewCategories = () => {
 
   const data = useMemo(() => {
     if (!categoryData?.categories) return [];
-
-    // Sort categories by creation date (newest first)
     return [...categoryData.categories]
       .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
       .map((category, index) => ({
@@ -129,65 +114,20 @@ const ViewCategories = () => {
   };
 
   const handleDelete = (category) => {
-    // console.log("DELETE ", category._id);
     deleteCategory(category._id);
   };
 
-  if (isLoading) {
-    return <LoadingSpinner />;
-  }
-
-  if (error) {
-    return <div>Error loading categories</div>;
-  }
-
   return (
-    <>
-      <Metadata title="Categories" />
-      <div className="container mx-auto py-6 px-4">
-        <div className="mb-8 flex justify-between items-center">
-          <div className="space-y-2">
-            <h1 className="text-3xl font-bold text-light tracking-tight">
-              Category Management
-            </h1>
-            <p className="text-gray-200/70 text-md">
-              Manage your product categories
-            </p>
-          </div>
-          <button
-            onClick={() => navigate("/admin/new-category")}
-            className="bg-gradient-to-r from-blue-600 to-purple-600 text-white flex items-center gap-2 hover:from-blue-700 hover:to-purple-700 px-4 py-2 rounded-md"
-          >
-            <PlusCircle className="w-5 h-5" />
-            Add New Category
-          </button>
-        </div>
-
-        <Card className="bg-darkBrand border-none">
-          <CardContent className="p-10">
-            <div className="flex flex-col md:flex-row justify-between gap-6 mb-10">
-              <ShowEntries
-                value={table.getState().pagination.pageSize}
-                onChange={table.setPageSize}
-              />
-              <SearchBar
-                value={globalFilter}
-                onChange={setGlobalFilter}
-                placeholder="Search categories..."
-              />
-            </div>
-
-            <TableLayout
-              headerGroups={table.getHeaderGroups()}
-              rows={table.getRowModel().rows}
-              flexRender={flexRender}
-            />
-
-            <Pagination table={table} />
-          </CardContent>
-        </Card>
-      </div>
-    </>
+    <ViewLayout
+      title="Category"
+      description="Manage your product categories"
+      addNewPath="/admin/new-category"
+      isLoading={isLoading}
+      error={error}
+      table={table}
+      globalFilter={globalFilter}
+      setGlobalFilter={setGlobalFilter}
+    />
   );
 };
 

@@ -4,43 +4,40 @@ import {
   getCoreRowModel,
   getPaginationRowModel,
   getFilteredRowModel,
-  flexRender,
 } from "@tanstack/react-table";
-import { Edit2, Trash2, Link as LinkIcon, PlusCircle } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
-import SearchBar from "@/components/admin/table/SearchBar";
-import ShowEntries from "@/components/admin/table/ShowEntries";
-import TableLayout from "@/components/admin/table/TableLayout";
-import Pagination from "@/components/admin/table/Pagination";
+import { Edit2, Trash2, Link as LinkIcon } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import ViewLayout from "@/components/admin/shared/ViewLayout";
 import {
   useDeleteDesignerMutation,
   useGetDesignersQuery,
 } from "@/redux/api/productApi";
-import Metadata from "@/components/layout/Metadata/Metadata";
-import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import LoadingSpinner from "@/components/layout/spinner/LoadingSpinner";
 
 const ViewDesigner = () => {
   const { data: designerData, isLoading, error } = useGetDesignersQuery();
 
   const [
     deleteDesigner,
-    { isSuccess, isError, data: deleteDesignerData },
+    {
+      isSuccess: deleteDesignerSuccess,
+      isError: deleteDesignerError,
+      error: deleteError,
+    },
   ] = useDeleteDesignerMutation();
 
   const [globalFilter, setGlobalFilter] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (isError) {
-      toast.error(error?.data?.message);
+    if (deleteDesignerSuccess) {
+      toast.success("Designer deleted successfully");
     }
 
-    if (isSuccess) {
-      toast.success(deleteDesignerData?.message);
+    if (deleteDesignerError) {
+      toast.error(deleteError?.data?.message || "Failed to delete designer");
     }
-  }, [isError, error, deleteDesignerData, isSuccess]);
+  }, [deleteDesignerSuccess, deleteDesignerError, deleteError]);
 
   const columns = useMemo(
     () => [
@@ -80,17 +77,6 @@ const ViewDesigner = () => {
           </div>
         ),
       },
-      // {
-      //   header: "Status",
-      //   accessorKey: "status",
-      //   cell: ({ row }) => (
-      //     <span className={`px-3 py-1 rounded-full text-sm font-medium
-      //       ${row.original.status ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}
-      //     `}>
-      //       {row.original.status ? 'Active' : 'Inactive'}
-      //     </span>
-      //   ),
-      // },
       {
         header: "Actions",
         cell: ({ row }) => (
@@ -126,10 +112,6 @@ const ViewDesigner = () => {
         name: designer.name,
         bio: designer.bio,
         links: designer.social_links || {},
-        createdBy: new Date(designer.createdAt).toLocaleString(),
-        updatedBy: designer.updatedAt
-          ? new Date(designer.updatedAt).toLocaleString()
-          : "Not Updated",
       }));
   }, [designerData]);
 
@@ -153,61 +135,17 @@ const ViewDesigner = () => {
     deleteDesigner(designer._id);
   };
 
-  if (isLoading) {
-    return <LoadingSpinner />;
-  }
-
-  if (error) {
-    return <div>Error loading designers</div>;
-  }
-
   return (
-    <>
-      <Metadata title="Designers" />
-      <div className="container mx-auto py-6 px-4">
-        <div className="mb-8 space-y-2 flex justify-between items-center">
-          <div className="space-y-2">
-            <h1 className="text-3xl font-bold text-light tracking-tight">
-              Designer Management
-            </h1>
-            <p className="text-gray-200/70 text-md">
-              Manage your product designers
-            </p>
-          </div>
-          <button
-            onClick={() => navigate("/admin/new-designer")}
-            className="bg-gradient-to-r from-blue-600 to-purple-600 text-white flex items-center gap-2 hover:from-blue-700 hover:to-purple-700 px-4 py-2 rounded-md"
-          >
-            <PlusCircle className="w-5 h-5" />
-            Add New Designer
-          </button>
-        </div>
-
-        <Card className="bg-darkBrand border-none">
-          <CardContent className="p-10">
-            <div className="flex flex-col md:flex-row justify-between gap-6 mb-10">
-              <ShowEntries
-                value={table.getState().pagination.pageSize}
-                onChange={table.setPageSize}
-              />
-              <SearchBar
-                value={globalFilter}
-                onChange={setGlobalFilter}
-                placeholder="Search designers..."
-              />
-            </div>
-
-            <TableLayout
-              headerGroups={table.getHeaderGroups()}
-              rows={table.getRowModel().rows}
-              flexRender={flexRender}
-            />
-
-            <Pagination table={table} />
-          </CardContent>
-        </Card>
-      </div>
-    </>
+    <ViewLayout
+      title="Designers"
+      description="Manage your product designers"
+      addNewPath="/admin/new-designer"
+      isLoading={isLoading}
+      error={error}
+      table={table}
+      globalFilter={globalFilter}
+      setGlobalFilter={setGlobalFilter}
+    />
   );
 };
 

@@ -4,29 +4,26 @@ import {
   getCoreRowModel,
   getPaginationRowModel,
   getFilteredRowModel,
-  flexRender,
 } from "@tanstack/react-table";
-import { Edit2, PlusCircle, Trash2 } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
-import SearchBar from "@/components/admin/table/SearchBar";
-import ShowEntries from "@/components/admin/table/ShowEntries";
-import TableLayout from "@/components/admin/table/TableLayout";
-import Pagination from "@/components/admin/table/Pagination";
+import { Edit2, Trash2 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import ViewLayout from "@/components/admin/shared/ViewLayout";
 import {
   useDeleteCollectionMutation,
   useGetCollectionQuery,
 } from "@/redux/api/productApi";
-import Metadata from "@/components/layout/Metadata/Metadata";
-import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import LoadingSpinner from "@/components/layout/spinner/LoadingSpinner";
 
 const ViewCollection = () => {
   const { data: collectionData, isLoading, error } = useGetCollectionQuery();
 
   const [
     deleteCollection,
-    { error: deleteCollectionError, isSuccess: deleteCollectionSuccess },
+    {
+      isSuccess: deleteCollectionSuccess,
+      isError: deleteCollectionError,
+      error: deleteError,
+    },
   ] = useDeleteCollectionMutation();
 
   const [globalFilter, setGlobalFilter] = useState("");
@@ -34,13 +31,13 @@ const ViewCollection = () => {
 
   useEffect(() => {
     if (deleteCollectionSuccess) {
-      toast.success("Collection Deleted Successfully");
+      toast.success("Collection deleted successfully");
     }
 
     if (deleteCollectionError) {
-      toast.error("Error Deleting Collection");
+      toast.error(deleteError?.data?.message || "Failed to delete collection");
     }
-  }, [deleteCollectionSuccess, deleteCollectionError]);
+  }, [deleteCollectionSuccess, deleteCollectionError, deleteError]);
 
   const columns = useMemo(
     () => [
@@ -122,65 +119,20 @@ const ViewCollection = () => {
   };
 
   const handleDelete = (collection) => {
-    // console.log("Delete collection:", collection);
     deleteCollection(collection._id);
   };
 
-  if (isLoading) {
-    return <LoadingSpinner />;
-  }
-
-  if (error) {
-    return <div>Error loading collections</div>;
-  }
-
   return (
-    <>
-      <Metadata title="Collections" />
-      <div className="container mx-auto py-6 px-4">
-        <div className="mb-8 flex justify-between items-center">
-          <div className="space-y-2">
-            <h1 className="text-3xl font-bold text-light tracking-tight">
-              Collection Management
-            </h1>
-            <p className="text-gray-200/70 text-md">
-              Manage your product collections
-            </p>
-          </div>
-          <button
-            onClick={() => navigate("/admin/new-collection")}
-            className="bg-gradient-to-r from-blue-600 to-purple-600 text-white flex items-center gap-2 hover:from-blue-700 hover:to-purple-700 px-4 py-2 rounded-md"
-          >
-            <PlusCircle className="w-5 h-5" />
-            Add New Collection
-          </button>
-        </div>
-
-        <Card className="bg-darkBrand border-none">
-          <CardContent className="p-10">
-            <div className="flex flex-col md:flex-row justify-between gap-6 mb-10">
-              <ShowEntries
-                value={table.getState().pagination.pageSize}
-                onChange={table.setPageSize}
-              />
-              <SearchBar
-                value={globalFilter}
-                onChange={setGlobalFilter}
-                placeholder="Search collections..."
-              />
-            </div>
-
-            <TableLayout
-              headerGroups={table.getHeaderGroups()}
-              rows={table.getRowModel().rows}
-              flexRender={flexRender}
-            />
-
-            <Pagination table={table} />
-          </CardContent>
-        </Card>
-      </div>
-    </>
+    <ViewLayout
+      title="Collections"
+      description="Manage your product collections"
+      addNewPath="/admin/new-collection"
+      isLoading={isLoading}
+      error={error}
+      table={table}
+      globalFilter={globalFilter}
+      setGlobalFilter={setGlobalFilter}
+    />
   );
 };
 
