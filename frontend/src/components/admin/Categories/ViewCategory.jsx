@@ -1,10 +1,4 @@
 import React, { useState, useMemo, useEffect } from "react";
-import {
-  useReactTable,
-  getCoreRowModel,
-  getPaginationRowModel,
-  getFilteredRowModel,
-} from "@tanstack/react-table";
 import { useNavigate } from "react-router-dom";
 import ViewLayout from "@/components/admin/shared/ViewLayout";
 import {
@@ -48,8 +42,8 @@ const ViewCategories = () => {
   };
 
   // column component for table
-  const columns = useMemo(
-    () => createCategoryColumns(handleEdit, handleDelete)
+  const columns = useMemo(() =>
+    createCategoryColumns(handleEdit, handleDelete)
   );
 
   const data = useMemo(() => {
@@ -67,18 +61,6 @@ const ViewCategories = () => {
       }));
   }, [categoryData]);
 
-  const table = useReactTable({
-    data,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    state: {
-      globalFilter,
-    },
-    onGlobalFilterChange: setGlobalFilter,
-  });
-
   return (
     <ViewLayout
       title="Category"
@@ -86,7 +68,8 @@ const ViewCategories = () => {
       addNewPath="/admin/new-category"
       isLoading={isLoading}
       error={error}
-      table={table}
+      data={data}
+      columns={columns}
       globalFilter={globalFilter}
       setGlobalFilter={setGlobalFilter}
     />

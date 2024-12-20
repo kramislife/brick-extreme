@@ -1,7 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { PlusCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { flexRender } from "@tanstack/react-table";
 import { Card, CardContent } from "@/components/ui/card";
 import SearchBar from "@/components/admin/table/SearchBar";
 import ShowEntries from "@/components/admin/table/ShowEntries";
@@ -17,11 +16,13 @@ const ViewLayout = ({
   addNewText,
   isLoading,
   error,
-  table,
+  data,
+  columns,
   globalFilter,
   setGlobalFilter,
 }) => {
   const navigate = useNavigate();
+  const [pageSize, setPageSize] = useState(10);
 
   if (isLoading) {
     return <LoadingSpinner />;
@@ -58,10 +59,7 @@ const ViewLayout = ({
         <Card className="bg-darkBrand border-none">
           <CardContent className="p-10">
             <div className="flex flex-col md:flex-row justify-between gap-6 mb-10">
-              <ShowEntries
-                value={table.getState().pagination.pageSize}
-                onChange={table.setPageSize}
-              />
+              <ShowEntries value={pageSize} onChange={setPageSize} />
               <SearchBar
                 value={globalFilter}
                 onChange={setGlobalFilter}
@@ -70,12 +68,14 @@ const ViewLayout = ({
             </div>
 
             <TableLayout
-              headerGroups={table.getHeaderGroups()}
-              rows={table.getRowModel().rows}
-              flexRender={flexRender}
+              data={data}
+              columns={columns}
+              globalFilter={globalFilter}
+              setGlobalFilter={setGlobalFilter}
+              pageSize={pageSize}
+              setPageSize={setPageSize}
+              renderPagination={(table) => <Pagination table={table} />}
             />
-
-            <Pagination table={table} />
           </CardContent>
         </Card>
       </div>

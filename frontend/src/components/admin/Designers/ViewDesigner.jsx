@@ -1,11 +1,4 @@
 import React, { useState, useMemo, useEffect } from "react";
-import {
-  useReactTable,
-  getCoreRowModel,
-  getPaginationRowModel,
-  getFilteredRowModel,
-} from "@tanstack/react-table";
-import { Edit2, Trash2, Link as LinkIcon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import ViewLayout from "@/components/admin/shared/ViewLayout";
 import {
@@ -66,18 +59,6 @@ const ViewDesigner = () => {
       }));
   }, [designerData]);
 
-  const table = useReactTable({
-    data,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    state: {
-      globalFilter,
-    },
-    onGlobalFilterChange: setGlobalFilter,
-  });
-
   return (
     <ViewLayout
       title="Designer"
@@ -85,7 +66,8 @@ const ViewDesigner = () => {
       addNewPath="/admin/new-designer"
       isLoading={isLoading}
       error={error}
-      table={table}
+      data={data}
+      columns={columns}
       globalFilter={globalFilter}
       setGlobalFilter={setGlobalFilter}
     />

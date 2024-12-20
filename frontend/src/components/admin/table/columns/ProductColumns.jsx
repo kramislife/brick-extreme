@@ -41,22 +41,22 @@ export const createProductColumns = (
     cell: ({ row }) => <div className="text-center">{row.original.stock}</div>,
   },
   {
-    header: "Status",
-    accessorKey: "status",
-    size: 120,
-    cell: ({ row }) => (
-      <div className="flex justify-center">
-        <ProductStatus stock={row.original.stock} variant="pill" />
-      </div>
-    ),
-  },
-  {
     header: "Created At",
     accessorKey: "createdAt",
     size: 120,
     cell: ({ row }) => (
       <div className="text-center">
         {new Date(row.original.createdAt).toLocaleDateString()}
+      </div>
+    ),
+  },
+  {
+    header: "Status",
+    accessorKey: "status",
+    size: 120,
+    cell: ({ row }) => (
+      <div className="flex justify-center">
+        <ProductStatus stock={row.original.stock} variant="pill" />
       </div>
     ),
   },

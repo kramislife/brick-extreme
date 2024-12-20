@@ -1,11 +1,4 @@
 import React, { useState, useMemo, useEffect } from "react";
-import {
-  useReactTable,
-  getCoreRowModel,
-  getPaginationRowModel,
-  getFilteredRowModel,
-  getSortedRowModel,
-} from "@tanstack/react-table";
 import { useNavigate } from "react-router-dom";
 import ViewLayout from "@/components/admin/shared/ViewLayout";
 import {
@@ -28,7 +21,6 @@ const ViewProducts = () => {
   ] = useDeleteProductMutation();
 
   const [globalFilter, setGlobalFilter] = useState("");
-  const [sorting, setSorting] = useState([{ id: "createdAt", desc: true }]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -54,8 +46,8 @@ const ViewProducts = () => {
   };
 
   // column component for table
-  const columns = useMemo(
-    () => createProductColumns(handleEdit, handleDelete, handleViewGallery)
+  const columns = useMemo(() =>
+    createProductColumns(handleEdit, handleDelete, handleViewGallery)
   );
 
   const data = useMemo(() => {
@@ -74,33 +66,19 @@ const ViewProducts = () => {
           .map((collection) => collection.name)
           .join(", "),
         stock: product.stock,
-        createdAt: product.createdAt,
+        createdAt: new Date(product.createdAt).toLocaleString(),
       }));
   }, [productData]);
 
-  const table = useReactTable({
-    data,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    state: {
-      globalFilter,
-      sorting,
-    },
-    onSortingChange: setSorting,
-    onGlobalFilterChange: setGlobalFilter,
-  });
-
   return (
     <ViewLayout
-      title="Products"
+      title="Product"
       description="Manage your product inventory"
       addNewPath="/admin/new-product"
       isLoading={isLoading}
       error={error}
-      table={table}
+      data={data}
+      columns={columns}
       globalFilter={globalFilter}
       setGlobalFilter={setGlobalFilter}
     />
