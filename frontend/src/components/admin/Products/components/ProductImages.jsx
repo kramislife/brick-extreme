@@ -122,7 +122,7 @@ const ProductImages = () => {
             <div
               key={index}
               className={`relative group aspect-square rounded-lg overflow-hidden cursor-pointer
-                ${index === 0 ? "ring-2 ring-red-500" : "ring-1 ring-slate-700"}
+                ${index === 0 ? "ring-2 ring-red-500" : "ring-2"}
               `}
             >
               <img
@@ -157,7 +157,7 @@ const ProductImages = () => {
           {imagesPreview.map((img, index) => (
             <div
               key={`preview-${index}`}
-              className="relative group aspect-square rounded-lg overflow-hidden ring-1 ring-slate-700 cursor-pointer"
+              className="relative group aspect-square rounded-lg overflow-hidden ring-2 ring-slate-700 cursor-pointer"
             >
               <img
                 src={img}
