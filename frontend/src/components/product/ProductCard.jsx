@@ -3,17 +3,15 @@ import { motion } from "framer-motion";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { ImageIcon } from "lucide-react";
 import StarRating from "@/components/product/shared/StarRating";
-import defaultImage from "@/assets/bestSellingAssets/droid.png";
 
 const ProductCard = ({ product }) => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const category = searchParams.get("category");
 
-  // Determine if images are available
-  const hasImages = product?.product_images && product.product_images.length > 0;
+  const hasImages =
+    product?.product_images && product.product_images.length > 0;
 
-  // Placeholder image component
   const PlaceholderImage = () => (
     <div className="w-full h-full bg-brand-gradient flex items-center justify-center">
       <ImageIcon className="w-16 h-16 text-slate-500" />
@@ -22,86 +20,132 @@ const ProductCard = ({ product }) => {
 
   const handleViewDetails = () => {
     if (category) {
-      navigate(`/products/${category}/${product._id}`);
+      navigate(`/products/${category}/${product?._id}`);
     } else {
-      navigate(`/products/${product._id}`);
+      navigate(`/products/${product?._id}`);
     }
   };
 
-  // Calculate discounted price
   const discountedPrice =
-    product?.price - (product?.price * (product?.discount || 0)) / 100;
+    product?.price && product?.discount
+      ? product.price - (product.price * product.discount) / 100
+      : product?.price || 0;
+
+  const getStockStatus = () => {
+    if (!product?.stock) {
+      return { text: "Unavailable", color: "text-red-500" };
+    }
+    if (product.stock > 50) {
+      return { text: "In Stock", color: "text-green-500" };
+    }
+    if (product.stock > 0) {
+      return { text: "Low Stock", color: "text-yellow-500" };
+    }
+    return { text: "Unavailable", color: "text-red-500" };
+  };
+
+  const stockStatus = getStockStatus();
 
   return (
     <motion.div
-      className="bg-brand-gradient text-white border border-gray-700 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 group"
+      className="bg-brand-gradient/80 text-slate-100 border border-slate-700 rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-100 group relative"
       layout
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.95 }}
     >
+      {/* Discount Badge */}
+      {product?.discount > 0 && (
+        <div className="absolute top-4 right-4 z-10">
+          <div className="bg-gradient-to-r from-red-700 to-red-500 px-3 py-1.5 rounded-full text-sm font-medium shadow-lg">
+            {product.discount}% OFF
+          </div>
+        </div>
+      )}
+
       {/* Product Image */}
       <div className="relative overflow-hidden aspect-square">
         {hasImages ? (
           <img
             src={product.product_images[0].url}
-            alt={product.product_name}
-            className="w-full aspect-square transition-transform duration-300 group-hover:scale-110"
+            alt={product.product_name || "Product Image"}
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
           />
         ) : (
           <PlaceholderImage />
         )}
-        <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-50 transition-opacity duration-300"></div>
-        {product.discount > 0 && (
-          <div className="absolute top-2 right-2 bg-red-600 text-white px-2 py-1 rounded-md text-sm font-semibold">
-            {product.discount}% OFF
-          </div>
-        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
         <button
           onClick={handleViewDetails}
-          className="absolute bottom-4 left-1/2 transform -translate-x-1/2 translate-y-full opacity-0 group-hover:translate-y-0 group-hover:opacity-100 bg-red-600 hover:bg-red-700 text-white text-sm font-semibold px-6 py-2 rounded-md transition-all duration-300 ease-in-out"
+          className="absolute bottom-4 left-1/2 transform -translate-x-1/2 translate-y-full opacity-0 group-hover:translate-y-0 group-hover:opacity-100 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white px-6 py-2.5 rounded-full font-medium shadow-lg transition-all duration-300 ease-out"
         >
           View Details
         </button>
       </div>
 
       {/* Product Info */}
-      <div className="p-4 flex flex-col">
+      <div className="p-5 flex flex-col gap-5">
         {/* Product Name */}
-        <h3 className="text-lg font-semibold text-white group-hover:text-red-400 transition-colors mb-5 line-clamp-2">
-          {product.product_name}
+        <h3 className="text-lg font-semibold tracking-tight transition-colors line-clamp-2">
+          {product?.product_name || "Unnamed Product"}
         </h3>
 
-        {/* Pricing and Ratings */}
-        <div className="mt-auto">
-          <div className="flex flex-col gap-2">
-            {/* Pricing */}
-            <div className="flex items-baseline justify-between">
-              <p className="text-red-500 font-semibold text-xl pb-2">
-                ${discountedPrice.toFixed(2)}
-              </p>
-              {product.discount > 0 && (
-                <p className="text-sm text-gray-400 line-through">
-                  ${product.price.toFixed(2)}
-                </p>
-              )}
-            </div>
+        {/* Categories */}
+        <div className="flex flex-wrap gap-2">
+          {product?.product_category?.length > 0 ? (
+            product.product_category.map((category, index) => (
+              <span
+                key={index}
+                className="text-xs px-2.5 py-1 rounded-full border bg-blue-500/20 text-blue-400 border-blue-500/10 transition-colors duration-300"
+              >
+                {category.name}
+              </span>
+            ))
+          ) : (
+            <span className="text-xs px-2.5 py-1 rounded-full border text-gray-500 border-gray-500/20 capitalize transition-colors duration-300">
+              No categories
+            </span>
+          )}
+        </div>
 
-            {/* Ratings and Stock */}
-            <div className="flex items-center justify-between text-sm text-gray-300">
+        {/* Pricing and Ratings */}
+        <div className="flex flex-col gap-3 mt-auto">
+          {/* Pricing */}
+          <div className="flex items-baseline justify-between">
+            {product?.price ? (
+              <>
+                <p className="text-2xl font-bold bg-gradient-to-r from-red-400 to-red-600 bg-clip-text text-transparent">
+                  ${discountedPrice.toFixed(2)}
+                </p>
+                {product?.discount > 0 && (
+                  <p className="text-sm text-slate-500 line-through">
+                    ${product.price.toFixed(2)}
+                  </p>
+                )}
+              </>
+            ) : (
+              <p className="text-sm text-slate-500">$0.00</p>
+            )}
+          </div>
+
+          {/* Ratings */}
+          <div className="flex justify-between items-center pt-2">
+            {product?.ratings ? (
               <div className="flex items-center gap-2">
                 <StarRating rating={product.ratings} />
-                <span>({product.ratings})</span>
+                <span className="text-sm text-slate-300/70">
+                  ({product.ratings})
+                </span>
               </div>
-              {/* <span className="text-green-400 font-medium">In Stock</span> */}
-              <span className="text-green-400 font-medium">
-                {product?.product_category.map((category, index) => {
-                  return (
-                    <span key={index} className="capitalize mr-2">
-                      {category.name}
-                    </span>
-                  );
-                })}
+            ) : (
+              <span className="text-sm text-slate-500">No ratings</span>
+            )}
+
+            {/* Stock Status */}
+            <div className="flex items-center h-6">
+              <span className={`text-sm font-medium ${stockStatus.color}`}>
+                {stockStatus.text}
               </span>
             </div>
           </div>
