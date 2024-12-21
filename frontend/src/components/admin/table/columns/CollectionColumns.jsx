@@ -1,6 +1,10 @@
-import { Edit2, Trash2 } from "lucide-react";
+import { Edit2, ImagePlus, Trash2 } from "lucide-react";
 
-export const createCollectionColumns = (handleEdit, handleDelete) => [
+export const createCollectionColumns = (
+  handleEdit,
+  handleDelete,
+  handleUploadImage
+) => [
   {
     header: "ID",
     accessorKey: "id",
@@ -38,6 +42,13 @@ export const createCollectionColumns = (handleEdit, handleDelete) => [
           title="Delete Collection"
         >
           <Trash2 size={18} />
+        </button>
+        <button
+          onClick={() => handleUploadImage(row.original)}
+          className="text-green-600 hover:text-green-800 p-1 rounded-full hover:bg-green-100 transition-colors"
+          title="Upload Image "
+        >
+          <ImagePlus size={18} />
         </button>
       </div>
     ),
