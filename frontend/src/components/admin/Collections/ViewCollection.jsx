@@ -4,7 +4,7 @@ import ViewLayout from "@/components/admin/shared/ViewLayout";
 import {
   useDeleteCollectionMutation,
   useGetCollectionQuery,
-  useUploadProductImagesMutation,
+  useUploadCollectionImageMutation,
 } from "@/redux/api/productApi";
 import { toast } from "react-toastify";
 import { createCollectionColumns } from "@/components/admin/table/columns/CollectionColumns";
@@ -21,8 +21,10 @@ const ViewCollection = () => {
     },
   ] = useDeleteCollectionMutation();
 
-  const [uploadProductImages, { isLoading: isUploading }] =
-    useUploadProductImagesMutation();
+  const [
+    uploadCollectionImage,
+    { isLoading: isUploading, error: uploadError, isSuccess: uploadSuccess },
+  ] = useUploadCollectionImageMutation();
 
   const [globalFilter, setGlobalFilter] = useState("");
   const navigate = useNavigate();
@@ -37,6 +39,16 @@ const ViewCollection = () => {
     }
   }, [deleteCollectionSuccess, deleteCollectionError, deleteError]);
 
+  useEffect(() => {
+    if (uploadError) {
+      toast.error(error?.data?.message);
+    }
+
+    if (uploadSuccess) {
+      navigate("/");
+    }
+  }, [uploadError, uploadSuccess]);
+
   const handleEdit = (collection) => {
     navigate(`/admin/update-collection/${collection._id}`);
   };
@@ -48,13 +60,13 @@ const ViewCollection = () => {
   const handleImageUpload = async (collection, file) => {
     const reader = new FileReader();
     reader.onload = async () => {
-      if (reader.readyState === 2) {
+      if (reader.readyState === FileReader.DONE) {
         const imageData = reader.result;
 
         try {
-          await uploadProductImages({
+          await uploadCollectionImage({
             id: collection._id,
-            body: { images: [imageData] },
+            body: { image: imageData },
           }).unwrap();
 
           toast.success("Image uploaded successfully");

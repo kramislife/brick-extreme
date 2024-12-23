@@ -65,7 +65,7 @@ const ProductImages = () => {
     setImages((prev) => prev.filter((img) => img !== image));
     setImagesPreview((prev) => prev.filter((img) => img !== image));
   };
-
+ 
   const handleDelete = (imgId) => {
     deleteProductImage({ id: params?.id, body: { public_id: imgId } });
   };

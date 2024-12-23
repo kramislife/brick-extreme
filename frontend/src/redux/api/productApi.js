@@ -94,7 +94,7 @@ export const productApi = createApi({
       invalidatesTags: ["Product"],
     }),
 
-    // --------------------------------- GET CATEGORIES ---------------------------------------
+    // --------------------------------- CATEGORIES ---------------------------------------
 
     getCategory: builder.query({
       query: () => `/categories`,
@@ -139,7 +139,9 @@ export const productApi = createApi({
       invalidatesTags: ["Categories"],
     }),
 
-    // --------------------------------- GET COLLECTIONS ---------------------------------------
+    // --------------------------------- COLLECTIONS ---------------------------------------
+
+    // GET ALl COLLECTIONS
 
     getCollection: builder.query({
       query: () => `/collections`,
@@ -152,8 +154,8 @@ export const productApi = createApi({
       query: (key) => `/collections/${key}`,
     }),
 
-     // GET COLLECTION DETAILS
-     getCollectionDetails: builder.query({
+    // GET COLLECTION DETAILS
+    getCollectionDetails: builder.query({
       query: (id) => `/collections/${id}`,
       providesTags: (result, error, id) => [
         { type: "CollectionDetails", id },
@@ -190,6 +192,19 @@ export const productApi = createApi({
         url: `/admin/collections/${id}`,
         method: "DELETE",
       }),
+      invalidatesTags: ["Collections"],
+    }),
+
+    //ULOAD COLLECTION IMAGE
+
+    uploadCollectionImage: builder.mutation({
+      query({ id, body }) {
+        return {
+          url: `/admin/collections/${id}/upload_image`,
+          method: "PATCH",
+          body,
+        };
+      },
       invalidatesTags: ["Collections"],
     }),
 
@@ -308,4 +323,5 @@ export const {
   useUploadProductImagesMutation,
   useDeleteProductImageMutation,
   useGetCollectionDetailsQuery,
+  useUploadCollectionImageMutation,
 } = productApi;

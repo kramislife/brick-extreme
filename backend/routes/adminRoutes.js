@@ -18,6 +18,7 @@ import {
   createCollection,
   deleteCollectionByID,
   updateCollection,
+  uploadCollectionImage,
 } from "../controllers/collectionControler.js";
 import {
   createDesigners,
@@ -124,6 +125,19 @@ router
       userRoles.EMPLOYEE
     ),
     deleteCollectionByID
+  );
+
+// UPLOAD A COLLECTION IMAGE BY ADMIN
+router
+  .route("/admin/collections/:id/upload_image")
+  .patch(
+    isAuthenticatedUser,
+    isAuthorizedUser(
+      userRoles.SUPER_ADMIN,
+      userRoles.ADMIN,
+      userRoles.EMPLOYEE
+    ),
+    uploadCollectionImage
   );
 
 // ---------------------------------- SKILL --------------------------------------------------

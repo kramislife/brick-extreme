@@ -10,7 +10,7 @@ cloudinary.config({
 });
 
 // CLOUDINARY UPLOAD AVATAR IMAGE FILE
-export const upload_user_avatar_file = (file, folder) => {
+export const upload_single_image = (file, folder) => {
   return new Promise((resolve, reject) => {
     cloudinary.uploader.upload(
       file,
