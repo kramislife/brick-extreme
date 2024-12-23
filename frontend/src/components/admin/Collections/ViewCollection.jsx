@@ -41,6 +41,8 @@ const ViewCollection = () => {
     deleteCollection(collection._id);
   };
 
+  const handleUploadImage = (collection) => {};
+
   // column component for table
   const columns = useMemo(() =>
     createCollectionColumns(handleEdit, handleDelete)

@@ -1,5 +1,4 @@
 import React from "react";
-import { Button } from "@/components/ui/button";
 import image1 from "@/assets/bannerAssets/Banner-1.png";
 import image2 from "@/assets/bannerAssets/Banner-3.png";
 import { motion, useInView } from "framer-motion";
@@ -24,25 +23,10 @@ const FeaturedProducts = () => {
       </motion.h2>
 
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-        transition={{ duration: 0.5, delay: 0.3 }}
-        className="flex items-center justify-center pb-10"
-      >
-        <motion.div
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          transition={{ type: "spring", stiffness: 400, damping: 17 }}
-        >
-          <Button className="bg-red-600 hover:bg-red-700">View All</Button>
-        </motion.div>
-      </motion.div>
-
-      <motion.div
         variants={featuredProductAnimations.containerVariants}
         initial="hidden"
         animate={isInView ? "visible" : "hidden"}
-        className="space-y-3"
+        className="space-y-3 pt-4"
       >
         {[image1, image2].map((image, index) => (
           <motion.div
