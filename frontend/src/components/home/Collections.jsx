@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useGetCollectionQuery } from "@/redux/api/productApi";
 import { ImageIcon } from "lucide-react";
+import default_product from "../../assets/default/default_product.jpg";
 
 const PlaceholderImage = () => (
   <div className="w-full h-[360px] bg-brand-gradient flex items-center justify-center border-slate-700 rounded-lg">
@@ -24,7 +25,6 @@ const Collections = () => {
   const { data, isError, error } = useGetCollectionQuery();
 
   useEffect(() => {
-
     if (isError) {
       toast.error(error?.data?.message);
     }
@@ -81,9 +81,9 @@ const Collections = () => {
               >
                 {collection.image?.url ? (
                   <motion.img
-                    src={collection.image.url}
+                    src={collection?.image?.url || default_product}
                     alt={collection.name}
-                    className="w-full h-[360px] object-cover"
+                    className="w-full h-[360px] object-fill"
                     {...categoryAnimations.imageVariants}
                   />
                 ) : (
