@@ -4,6 +4,7 @@ import ViewLayout from "@/components/admin/shared/ViewLayout";
 import {
   useDeleteCollectionMutation,
   useGetCollectionQuery,
+  useUploadProductImagesMutation,
 } from "@/redux/api/productApi";
 import { toast } from "react-toastify";
 import { createCollectionColumns } from "@/components/admin/table/columns/CollectionColumns";
@@ -19,6 +20,9 @@ const ViewCollection = () => {
       error: deleteError,
     },
   ] = useDeleteCollectionMutation();
+
+  const [uploadProductImages, { isLoading: isUploading }] =
+    useUploadProductImagesMutation();
 
   const [globalFilter, setGlobalFilter] = useState("");
   const navigate = useNavigate();
@@ -42,15 +46,24 @@ const ViewCollection = () => {
   };
 
   const handleImageUpload = async (collection, file) => {
-    const formData = new FormData();
-    formData.append("image", file);
-    formData.append("collectionId", collection._id);
+    const reader = new FileReader();
+    reader.onload = async () => {
+      if (reader.readyState === 2) {
+        const imageData = reader.result;
 
-    try {
-      toast.success("Image uploaded successfully");
-    } catch (error) {
-      toast.error("Failed to upload image");
-    }
+        try {
+          await uploadProductImages({
+            id: collection._id,
+            body: { images: [imageData] },
+          }).unwrap();
+
+          toast.success("Image uploaded successfully");
+        } catch (error) {
+          toast.error(error?.data?.message || "Failed to upload image");
+        }
+      }
+    };
+    reader.readAsDataURL(file);
   };
 
   const columns = useMemo(() =>
@@ -68,6 +81,7 @@ const ViewCollection = () => {
         description: collection.description,
         createdAt: collection.createdAt,
         updatedAt: collection.updatedAt,
+        image: collection.image,
       }));
   }, [collectionData]);
 
