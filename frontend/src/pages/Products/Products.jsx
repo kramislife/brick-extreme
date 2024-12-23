@@ -153,7 +153,7 @@ const Products = () => {
                   No Products Found
                 </h3>
                 <p className="text-gray-400 text-center py-2">
-                  Try adjusting your filters or check back later for new
+                  Try refreshing the page or check back later for new
                   products.
                 </p>
               </div>
