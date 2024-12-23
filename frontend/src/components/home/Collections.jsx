@@ -3,9 +3,15 @@ import { Card, CardFooter } from "@/components/ui/card";
 import { motion, useInView } from "framer-motion";
 import { categoryAnimations } from "@/hooks/animationConfig";
 import { useNavigate } from "react-router-dom";
-import image1 from "@/assets/ImageTest/Collection_1.jpg";
 import { toast } from "react-toastify";
 import { useGetCollectionQuery } from "@/redux/api/productApi";
+import { ImageIcon } from "lucide-react";
+
+const PlaceholderImage = () => (
+  <div className="w-full h-[360px] bg-brand-gradient flex items-center justify-center border-slate-700 rounded-lg">
+    <ImageIcon className="w-16 h-16 text-gray-600" />
+  </div>
+);
 
 const Collections = () => {
   const navigate = useNavigate();
@@ -18,9 +24,6 @@ const Collections = () => {
   const { data, isError, error } = useGetCollectionQuery();
 
   useEffect(() => {
-    if (data) {
-      console.log("DATA: ", data.collections);
-    }
 
     if (isError) {
       toast.error(error?.data?.message);
@@ -76,12 +79,16 @@ const Collections = () => {
                 whileHover={{ scale: 1.05 }}
                 transition={{ duration: 0.3 }}
               >
-                <motion.img
-                  src={collection.image || image1}
-                  alt={collection.name}
-                  className="w-full h-[360px] object-fill"
-                  {...categoryAnimations.imageVariants}
-                />
+                {collection.image?.url ? (
+                  <motion.img
+                    src={collection.image.url}
+                    alt={collection.name}
+                    className="w-full h-[360px] object-cover"
+                    {...categoryAnimations.imageVariants}
+                  />
+                ) : (
+                  <PlaceholderImage />
+                )}
                 <motion.div
                   className="absolute inset-0 bg-black"
                   initial="initial"

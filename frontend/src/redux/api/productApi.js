@@ -152,6 +152,15 @@ export const productApi = createApi({
       query: (key) => `/collections/${key}`,
     }),
 
+     // GET COLLECTION DETAILS
+     getCollectionDetails: builder.query({
+      query: (id) => `/collections/${id}`,
+      providesTags: (result, error, id) => [
+        { type: "CollectionDetails", id },
+        { type: "Collection", id },
+      ],
+    }),
+
     // ADD A NEW COLLECTION
 
     createCollection: builder.mutation({
@@ -298,4 +307,5 @@ export const {
   useDeleteDesignerMutation,
   useUploadProductImagesMutation,
   useDeleteProductImageMutation,
+  useGetCollectionDetailsQuery,
 } = productApi;

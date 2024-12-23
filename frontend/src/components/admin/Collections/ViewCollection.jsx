@@ -6,7 +6,7 @@ import {
   useGetCollectionQuery,
 } from "@/redux/api/productApi";
 import { toast } from "react-toastify";
-import { createCollectionColumns } from "../table/columns/CollectionColumns";
+import { createCollectionColumns } from "@/components/admin/table/columns/CollectionColumns";
 
 const ViewCollection = () => {
   const { data: collectionData, isLoading, error } = useGetCollectionQuery();
@@ -41,13 +41,20 @@ const ViewCollection = () => {
     deleteCollection(collection._id);
   };
 
-  const handleViewGallery = (collection) => {
-    navigate(`/admin/collection-gallery/${collection._id}`);
+  const handleImageUpload = async (collection, file) => {
+    const formData = new FormData();
+    formData.append("image", file);
+    formData.append("collectionId", collection._id);
+
+    try {
+      toast.success("Image uploaded successfully");
+    } catch (error) {
+      toast.error("Failed to upload image");
+    }
   };
 
-  // column component for table
   const columns = useMemo(() =>
-    createCollectionColumns(handleEdit, handleDelete, handleViewGallery)
+    createCollectionColumns(handleEdit, handleDelete, handleImageUpload)
   );
 
   const data = useMemo(() => {
@@ -59,17 +66,15 @@ const ViewCollection = () => {
         _id: collection._id,
         name: collection.name,
         description: collection.description,
-        createdAt: new Date(collection.createdAt).toLocaleDateString(),
-        updatedAt: collection.updatedAt
-          ? new Date(collection.updatedAt).toLocaleDateString()
-          : "Not Updated",
+        createdAt: collection.createdAt,
+        updatedAt: collection.updatedAt,
       }));
   }, [collectionData]);
 
   return (
     <ViewLayout
-      title="Collections"
-      description="Manage your product collections"
+      title="Collection"
+      description="Manage your collections"
       addNewPath="/admin/new-collection"
       isLoading={isLoading}
       error={error}

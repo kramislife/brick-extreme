@@ -119,6 +119,8 @@ export const categoryAnimations = {
       transition: {
         staggerChildren: 0.2,
         delayChildren: 0.3,
+        duration: 0.5,
+        when: "beforeChildren",
       },
     },
   },
@@ -214,146 +216,146 @@ export const subscribeAnimations = {
 // Animation config for Login component
 
 export const loginAnimations = {
-    // Left side image animations
-    imageContainerVariants: {
-      initial: { opacity: 0, x: -100 },
-      animate: { opacity: 1, x: 0 },
-      transition: {
-        duration: 0.8,
-        type: "spring",
-        stiffness: 90,
-        damping: 20,
-      }
+  // Left side image animations
+  imageContainerVariants: {
+    initial: { opacity: 0, x: -100 },
+    animate: { opacity: 1, x: 0 },
+    transition: {
+      duration: 0.8,
+      type: "spring",
+      stiffness: 90,
+      damping: 20,
     },
-  
-    imageVariants: {
-      whileHover: {
-        scale: 1.03,
-        transition: { duration: 0.3, ease: "easeOut" },
-      }
+  },
+
+  imageVariants: {
+    whileHover: {
+      scale: 1.03,
+      transition: { duration: 0.3, ease: "easeOut" },
     },
-  
-    // Form container animations
-    formContainerVariants: {
-      initial: { opacity: 0, x: 100 },
-      animate: { opacity: 1, x: 0 },
-      transition: {
-        duration: 0.8,
-        type: "spring",
-        stiffness: 90,
-        damping: 20,
-        delay: 0.2,
-      }
+  },
+
+  // Form container animations
+  formContainerVariants: {
+    initial: { opacity: 0, x: 100 },
+    animate: { opacity: 1, x: 0 },
+    transition: {
+      duration: 0.8,
+      type: "spring",
+      stiffness: 90,
+      damping: 20,
+      delay: 0.2,
     },
-  
-    // Header animations
-    headerVariants: {
-      initial: { opacity: 0, y: 20 },
-      animate: { opacity: 1, y: 0 },
-      transition: { delay: 0.5, duration: 0.6 }
-    },
-  
-    // Input field animations
-    inputVariants: {
-      initial: { opacity: 0, y: 20 },
-      animate: { opacity: 1, y: 0 }
-    },
-  
-    // Individual input delays
-    emailInputTransition: {
-      delay: 0.6,
-      duration: 0.5
-    },
-  
-    passwordInputTransition: {
-      delay: 0.7,
-      duration: 0.5
-    },
-  
-    // Forgot password link animations
-    forgotPasswordVariants: {
-      initial: { opacity: 0 },
-      animate: { opacity: 1 },
-      transition: { delay: 0.8, duration: 0.5 }
-    },
-  
-    // Button animations
-    buttonVariants: {
-      initial: { opacity: 0, y: 20 },
-      animate: { opacity: 1, y: 0 },
-      transition: { delay: 0.9, duration: 0.5 }
-    },
-  
-    // Register link animations
-    registerLinkVariants: {
-      initial: { opacity: 0 },
-      animate: { opacity: 1 },
-      transition: { delay: 1, duration: 0.5 }
-    }
-  };
+  },
+
+  // Header animations
+  headerVariants: {
+    initial: { opacity: 0, y: 20 },
+    animate: { opacity: 1, y: 0 },
+    transition: { delay: 0.5, duration: 0.6 },
+  },
+
+  // Input field animations
+  inputVariants: {
+    initial: { opacity: 0, y: 20 },
+    animate: { opacity: 1, y: 0 },
+  },
+
+  // Individual input delays
+  emailInputTransition: {
+    delay: 0.6,
+    duration: 0.5,
+  },
+
+  passwordInputTransition: {
+    delay: 0.7,
+    duration: 0.5,
+  },
+
+  // Forgot password link animations
+  forgotPasswordVariants: {
+    initial: { opacity: 0 },
+    animate: { opacity: 1 },
+    transition: { delay: 0.8, duration: 0.5 },
+  },
+
+  // Button animations
+  buttonVariants: {
+    initial: { opacity: 0, y: 20 },
+    animate: { opacity: 1, y: 0 },
+    transition: { delay: 0.9, duration: 0.5 },
+  },
+
+  // Register link animations
+  registerLinkVariants: {
+    initial: { opacity: 0 },
+    animate: { opacity: 1 },
+    transition: { delay: 1, duration: 0.5 },
+  },
+};
 
 // Animation config for Register component
 
 export const registerAnimations = {
-    imageContainerVariants: {
-      initial: { opacity: 0, x: -100 },
-      animate: { opacity: 1, x: 0 },
-      transition: {
-        duration: 0.8,
-        type: "spring",
-        stiffness: 90,
-        damping: 20,
-      }
+  imageContainerVariants: {
+    initial: { opacity: 0, x: -100 },
+    animate: { opacity: 1, x: 0 },
+    transition: {
+      duration: 0.8,
+      type: "spring",
+      stiffness: 90,
+      damping: 20,
     },
-  
-    imageVariants: {
-      whileHover: {
-        scale: 1.03,
-        transition: { duration: 0.3, ease: "easeOut" },
-      }
+  },
+
+  imageVariants: {
+    whileHover: {
+      scale: 1.03,
+      transition: { duration: 0.3, ease: "easeOut" },
     },
-  
-    // Form container animations
-    formContainerVariants: {
-      initial: { opacity: 0, x: 100 },
-      animate: { opacity: 1, x: 0 },
-      transition: {
-        duration: 0.8,
-        type: "spring",
-        stiffness: 90,
-        damping: 20,
-        delay: 0.2,
-      }
+  },
+
+  // Form container animations
+  formContainerVariants: {
+    initial: { opacity: 0, x: 100 },
+    animate: { opacity: 1, x: 0 },
+    transition: {
+      duration: 0.8,
+      type: "spring",
+      stiffness: 90,
+      damping: 20,
+      delay: 0.2,
     },
-  
-    // Header animations
-    headerVariants: {
-      initial: { opacity: 0, y: 20 },
-      animate: { opacity: 1, y: 0 },
-      transition: { delay: 0.5, duration: 0.6 }
-    },
-  
-    // Input field animations with different delays
-    getInputVariants: (delay) => ({
-      initial: { opacity: 0, y: 20 },
-      animate: { opacity: 1, y: 0 },
-      transition: { delay, duration: 0.5 }
-    }),
-  
-    // Button animations
-    buttonVariants: {
-      initial: { opacity: 0, y: 20 },
-      animate: { opacity: 1, y: 0 },
-      transition: { delay: 1.2, duration: 0.5 }
-    },
-  
-    // Login link animations
-    loginLinkVariants: {
-      initial: { opacity: 0 },
-      animate: { opacity: 1 },
-      transition: { delay: 1.3, duration: 0.5 }
-    }
-  };
+  },
+
+  // Header animations
+  headerVariants: {
+    initial: { opacity: 0, y: 20 },
+    animate: { opacity: 1, y: 0 },
+    transition: { delay: 0.5, duration: 0.6 },
+  },
+
+  // Input field animations with different delays
+  getInputVariants: (delay) => ({
+    initial: { opacity: 0, y: 20 },
+    animate: { opacity: 1, y: 0 },
+    transition: { delay, duration: 0.5 },
+  }),
+
+  // Button animations
+  buttonVariants: {
+    initial: { opacity: 0, y: 20 },
+    animate: { opacity: 1, y: 0 },
+    transition: { delay: 1.2, duration: 0.5 },
+  },
+
+  // Login link animations
+  loginLinkVariants: {
+    initial: { opacity: 0 },
+    animate: { opacity: 1 },
+    transition: { delay: 1.3, duration: 0.5 },
+  },
+};
 
 // Animation config for ProductGrid component
 
@@ -391,17 +393,17 @@ export const productGridAnimations = {
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] }
-    }
+      transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] },
+    },
   },
 
   buttonVariants: {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: { duration: 0.8, delay: 0.2 }
-    }
-  }
+      transition: { duration: 0.8, delay: 0.2 },
+    },
+  },
 };
 
 // Add animation config for ProductView component
