@@ -145,7 +145,19 @@ const Products = () => {
                 onSortChange={handleSortChange}
               />
             </div>
-            <ProductSection products={paginatedProducts} />
+            {paginatedProducts && paginatedProducts.length > 0 ? (
+              <ProductSection products={paginatedProducts} />
+            ) : (
+              <div className="flex flex-col items-center justify-center py-16">
+                <h3 className="text-3xl font-semibold text-gray-300 mb-2">
+                  No Products Found
+                </h3>
+                <p className="text-gray-400 text-center py-2">
+                  Try adjusting your filters or check back later for new
+                  products.
+                </p>
+              </div>
+            )}
           </div>
         </div>
 
