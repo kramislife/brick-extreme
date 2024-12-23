@@ -3,11 +3,17 @@ import { Card, CardFooter } from "@/components/ui/card";
 import { motion, useInView } from "framer-motion";
 import { categoryAnimations } from "@/hooks/animationConfig";
 import { useNavigate } from "react-router-dom";
-import image1 from "@/assets/ImageTest/Collection_1.jpg";
 import { toast } from "react-toastify";
 import { useGetCollectionQuery } from "@/redux/api/productApi";
+import { ImageIcon } from "lucide-react";
 
-const Categories = () => {
+const PlaceholderImage = () => (
+  <div className="w-full h-[360px] bg-brand-gradient flex items-center justify-center border-slate-700 rounded-lg">
+    <ImageIcon className="w-16 h-16 text-gray-600" />
+  </div>
+);
+
+const Collections = () => {
   const navigate = useNavigate();
   const ref = React.useRef(null);
   const isInView = useInView(ref, {
@@ -18,14 +24,15 @@ const Categories = () => {
   const { data, isError, error } = useGetCollectionQuery();
 
   useEffect(() => {
-    if (data) {
-      console.log("DATA: ", data.collections);
-    }
 
     if (isError) {
       toast.error(error?.data?.message);
     }
   }, [data, error, isError]);
+
+  const handleCollectionClick = (collectionId) => {
+    navigate(`/products?product_collection=${collectionId}`);
+  };
 
   return (
     <div ref={ref} className="p-4">
@@ -46,9 +53,9 @@ const Categories = () => {
       >
         <button
           className="py-2 px-6 rounded-md text-white font-semibold bg-red-600 hover:bg-red-700"
-          onClick={() => navigate("/categories")}
+          onClick={() => navigate("/collections")}
         >
-          View All
+          View All Collections
         </button>
       </motion.div>
 
@@ -58,11 +65,13 @@ const Categories = () => {
         animate={isInView ? "visible" : "hidden"}
         className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mx-auto mb-8"
       >
-        {data?.collections?.map((collection, index) => (
+        {data?.collections?.slice(0, 6).map((collection) => (
           <motion.div
-            key={index}
+            key={collection._id}
             variants={categoryAnimations.cardVariants}
-            custom={index}
+            custom={collection._id}
+            onClick={() => handleCollectionClick(collection._id)}
+            className="cursor-pointer"
           >
             <Card className="overflow-hidden bg-gradient-r border-none rounded-lg cursor-pointer">
               <motion.div
@@ -70,12 +79,16 @@ const Categories = () => {
                 whileHover={{ scale: 1.05 }}
                 transition={{ duration: 0.3 }}
               >
-                <motion.img
-                  src={collection.image || image1}
-                  alt={collection.name}
-                  className="w-full h-[360px] object-fill"
-                  {...categoryAnimations.imageVariants}
-                />
+                {collection.image?.url ? (
+                  <motion.img
+                    src={collection.image.url}
+                    alt={collection.name}
+                    className="w-full h-[360px] object-cover"
+                    {...categoryAnimations.imageVariants}
+                  />
+                ) : (
+                  <PlaceholderImage />
+                )}
                 <motion.div
                   className="absolute inset-0 bg-black"
                   initial="initial"
@@ -109,4 +122,4 @@ const Categories = () => {
   );
 };
 
-export default Categories;
+export default Collections;

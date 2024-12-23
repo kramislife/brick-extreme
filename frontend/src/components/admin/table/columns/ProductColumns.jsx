@@ -1,4 +1,4 @@
-import { Edit2, Trash2, Image } from "lucide-react";
+import { Edit2, Trash2, ImagePlus } from "lucide-react";
 import ProductStatus from "@/components/product/shared/ProductStatus";
 
 export const createProductColumns = (
@@ -77,7 +77,7 @@ export const createProductColumns = (
           className="text-purple-600 hover:text-purple-800 p-1 rounded-full hover:bg-purple-100 transition-colors"
           title="View Image Gallery"
         >
-          <Image size={18} />
+          <ImagePlus size={18} />
         </button>
         <button
           onClick={() => handleDelete(row.original)}

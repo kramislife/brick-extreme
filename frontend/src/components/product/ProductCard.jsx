@@ -118,19 +118,15 @@ const ProductCard = ({ product }) => {
 
           {/* Ratings */}
           <div className="flex justify-between items-center pt-2">
-            {product?.ratings ? (
-              <div className="flex items-center gap-2">
-                <StarRating rating={product.ratings} />
-                <span className="text-sm text-slate-300/70">
-                  ({product.ratings})
-                </span>
-              </div>
-            ) : (
-              <span className="text-sm text-slate-500">No ratings</span>
-            )}
+            <div className="flex items-center gap-2">
+              <StarRating rating={product?.ratings || 0} />
+              <span className="text-sm text-slate-300/70">
+                ({product?.reviews?.length || 0})
+              </span>
+            </div>
 
             {/* Stock Status */}
-            <div className="flex items-center h-6">
+            {/* <div className="flex items-center h-6">
               {product?.product_category?.length > 0 ? (
                 <span className="text-sm bg-blue-500/20 text-blue-400 px-3 py-1 rounded-full">
                   {product.product_category.map((col) => col.name).join(", ")}
@@ -138,8 +134,8 @@ const ProductCard = ({ product }) => {
               ) : (
                 <span className="text-sm text-slate-500">No collection</span>
               )}
-              {/* <ProductStatus stock={product?.stock} /> */}
-            </div>
+              <ProductStatus stock={product?.stock} />
+            </div> */}
           </div>
         </div>
       </div>

@@ -36,26 +36,29 @@ const FilterAccordion = ({
       category.forEach((option) => {
         counts[categoryKey][option.value] = 0;
       });
-      // console.log(counts, " check ");
     });
 
     // Count products for each filter option
     products.forEach((product) => {
+      // Calculate discounted price using the same logic as ProductCard
+      const discountedPrice =
+        product?.price && product?.discount
+          ? product.price - (product.price * product.discount) / 100
+          : product?.price || 0;
+
       // Price ranges
-      const price = product.price;
       if (categories.price) {
         categories.price.forEach((range) => {
           const [min, maxStr] = range.value.split("-");
           const minPrice = Number(min);
 
           if (range.value === "1000+") {
-            // Explicitly check for "1000+" case
-            if (price >= 1000) {
+            if (discountedPrice >= 1000) {
               counts.price[range.value]++;
             }
           } else {
             const maxPrice = Number(maxStr);
-            if (price >= minPrice && price <= maxPrice) {
+            if (discountedPrice >= minPrice && discountedPrice <= maxPrice) {
               counts.price[range.value]++;
             }
           }
@@ -128,7 +131,7 @@ const FilterAccordion = ({
 
   return (
     <Accordion
-      type="single" 
+      type="single"
       defaultValue="price" // Added defaultValue
       value={openCategories[0]} // Changed to first value since it's single
       onValueChange={(value) => onCategoriesChange(value ? [value] : [])}

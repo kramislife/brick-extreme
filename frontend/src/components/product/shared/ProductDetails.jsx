@@ -115,19 +115,28 @@ const ProductDetails = ({ product, containerVariants, itemVariants }) => {
               >
                 {hasImages ? (
                   <div className="flex flex-row md:flex-col gap-2">
-                    {product.product_images.map((image, index) => (
+                    {product.product_images.map((image) => (
                       <button
-                        key={index}
-                        onClick={() => selectImage(index)}
-                        className={`min-w-[130px] md:min-w-0 aspect-square rounded-lg overflow-hidden border-2 transition-all ${
-                          currentImageIndex === index
+                        key={image.public_id}
+                        onClick={() =>
+                          selectImage(
+                            product.product_images.findIndex(
+                              (img) => img.public_id === image.public_id
+                            )
+                          )
+                        }
+                        className={`min-w-[130px] max-w-[130px] md:min-w-0 md:max-w-full aspect-square rounded-lg overflow-hidden border-2 transition-all ${
+                          currentImageIndex ===
+                          product.product_images.findIndex(
+                            (img) => img.public_id === image.public_id
+                          )
                             ? "border-red-600 border-4"
                             : "border border-slate-700"
                         }`}
                       >
                         <img
                           src={image.url}
-                          alt={`Thumbnail ${index + 1}`}
+                          alt={`Thumbnail ${image.public_id}`}
                           className="w-full h-full object-fill transition-transform duration-300"
                         />
                       </button>
@@ -144,9 +153,9 @@ const ProductDetails = ({ product, containerVariants, itemVariants }) => {
               {hasImages ? (
                 <AnimatePresence mode="wait">
                   <motion.img
-                    key={currentImageIndex}
+                    key={product.product_images[currentImageIndex].public_id}
                     src={product.product_images[currentImageIndex].url}
-                    alt={`Product view ${currentImageIndex + 1}`}
+                    alt={`Product view ${product.product_images[currentImageIndex].public_id}`}
                     className="w-full h-full object-fill"
                     initial={{ opacity: 0, x: 100 }}
                     animate={{ opacity: 1, x: 0 }}

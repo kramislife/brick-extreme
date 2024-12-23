@@ -13,7 +13,7 @@ import ViewProducts from "@/components/admin/Products/ViewProducts";
 import ViewOrder from "@/components/admin/Order/ViewOrder";
 import ViewUsers from "@/components/admin/Users/ViewUsers";
 import ViewReviews from "@/components/admin/Reviews/ViewReviews";
-import CategoriesPage from "@/pages/Categories/CategoriesPage";
+import CollectionsPage from "@/pages/Collections/CollectionsPage";
 import Profile from "@/components/auth/Profile/Profile";
 import Settings from "@/components/auth/Settings/Settings";
 import UpdateProduct from "@/components/admin/Products/UpdateProduct";
@@ -41,7 +41,7 @@ const UserRoutes = (
 
     {/* Product Routes */}
     <Route path="products" element={<Products />} />
-    <Route path="categories" element={<CategoriesPage />} />
+    <Route path="collections" element={<CollectionsPage />} />
     <Route path="products/best-selling/:id" element={<ProductView />} />
     <Route path="products/latest/:id" element={<ProductView />} />
     <Route path="products/:id" element={<ProductView />} />

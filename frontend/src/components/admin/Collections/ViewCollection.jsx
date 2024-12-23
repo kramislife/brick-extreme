@@ -4,9 +4,10 @@ import ViewLayout from "@/components/admin/shared/ViewLayout";
 import {
   useDeleteCollectionMutation,
   useGetCollectionQuery,
+  useUploadProductImagesMutation,
 } from "@/redux/api/productApi";
 import { toast } from "react-toastify";
-import { createCollectionColumns } from "../table/columns/CollectionColumns";
+import { createCollectionColumns } from "@/components/admin/table/columns/CollectionColumns";
 
 const ViewCollection = () => {
   const { data: collectionData, isLoading, error } = useGetCollectionQuery();
@@ -19,6 +20,9 @@ const ViewCollection = () => {
       error: deleteError,
     },
   ] = useDeleteCollectionMutation();
+
+  const [uploadProductImages, { isLoading: isUploading }] =
+    useUploadProductImagesMutation();
 
   const [globalFilter, setGlobalFilter] = useState("");
   const navigate = useNavigate();
@@ -41,11 +45,29 @@ const ViewCollection = () => {
     deleteCollection(collection._id);
   };
 
-  const handleUploadImage = (collection) => {};
+  const handleImageUpload = async (collection, file) => {
+    const reader = new FileReader();
+    reader.onload = async () => {
+      if (reader.readyState === 2) {
+        const imageData = reader.result;
 
-  // column component for table
+        try {
+          await uploadProductImages({
+            id: collection._id,
+            body: { images: [imageData] },
+          }).unwrap();
+
+          toast.success("Image uploaded successfully");
+        } catch (error) {
+          toast.error(error?.data?.message || "Failed to upload image");
+        }
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
   const columns = useMemo(() =>
-    createCollectionColumns(handleEdit, handleDelete)
+    createCollectionColumns(handleEdit, handleDelete, handleImageUpload)
   );
 
   const data = useMemo(() => {
@@ -57,17 +79,16 @@ const ViewCollection = () => {
         _id: collection._id,
         name: collection.name,
         description: collection.description,
-        createdAt: new Date(collection.createdAt).toLocaleDateString(),
-        updatedAt: collection.updatedAt
-          ? new Date(collection.updatedAt).toLocaleDateString()
-          : "Not Updated",
+        createdAt: collection.createdAt,
+        updatedAt: collection.updatedAt,
+        image: collection.image,
       }));
   }, [collectionData]);
 
   return (
     <ViewLayout
-      title="Collections"
-      description="Manage your product collections"
+      title="Collection"
+      description="Manage your collections"
       addNewPath="/admin/new-collection"
       isLoading={isLoading}
       error={error}
