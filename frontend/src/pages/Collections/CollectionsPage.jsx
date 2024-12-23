@@ -3,57 +3,21 @@ import { Card, CardFooter } from "@/components/ui/card";
 import { motion } from "framer-motion";
 import image1 from "@/assets/ImageTest/Collection_1.jpg";
 import Metadata from "@/components/layout/Metadata/Metadata";
+import { useGetCollectionQuery } from "@/redux/api/productApi";
+import { useNavigate } from "react-router-dom";
 
-// Export categories data so it can be imported by other components
-export const categories = [
-  {
-    id: 1,
-    title: "Space Odyssey",
-    image: image1,
-  },
-  {
-    id: 2,
-    title: "Fantasy",
-    image: image1,
-  },
-  {
-    id: 3,
-    title: "Castles",
-    image: image1,
-  },
-  {
-    id: 4,
-    title: "Characters",
-    image: image1,
-  },
-  {
-    id: 5,
-    title: "Brick Art",
-    image: image1,
-  },
-  {
-    id: 6,
-    title: "Micro-Builds",
-    image: image1,
-  },
-  {
-    id: 7,
-    title: "Movie Memorabilia",
-    image: image1,
-  },
-  {
-    id: 8,
-    title: "Retro Gaming",
-    image: image1,
-  },
-];
+const CollectionsPage = () => {
+  const navigate = useNavigate();
+  const { data } = useGetCollectionQuery();
 
-const CategoriesPage = () => {
+  const handleCollectionClick = (collectionId) => {
+    navigate(`/products?product_collection=${collectionId}`);
+  };
   return (
     <>
       <Metadata title="All Collections" />
       <div className="min-h-screen bg-brand-gradient">
-        <div className=" mx-auto p-8">
+        <div className="mx-auto p-8">
           <motion.h1
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -67,14 +31,16 @@ const CategoriesPage = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3  gap-6"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
           >
-            {categories.map((category, index) => (
+            {data?.collections?.map((collection) => (
               <motion.div
-                key={category.id}
+                key={collection._id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
+                transition={{ delay: 0.1 }}
+                onClick={() => handleCollectionClick(collection._id)}
+                className="cursor-pointer"
               >
                 <Card className="overflow-hidden bg-gradient-r border-none rounded-lg cursor-pointer">
                   <motion.div
@@ -83,8 +49,8 @@ const CategoriesPage = () => {
                     transition={{ duration: 0.3 }}
                   >
                     <motion.img
-                      src={category.image}
-                      alt={category.title}
+                      src={collection.image || image1}
+                      alt={collection.name}
                       className="w-full h-[30vh] object-fill"
                       whileHover={{ scale: 1.1 }}
                       transition={{ duration: 0.3 }}
@@ -103,7 +69,7 @@ const CategoriesPage = () => {
                       whileHover={{ scale: 1.05 }}
                       transition={{ duration: 0.2 }}
                     >
-                      {category.title}
+                      {collection.name}
                     </motion.h3>
                   </CardFooter>
                 </Card>
@@ -116,4 +82,4 @@ const CategoriesPage = () => {
   );
 };
 
-export default CategoriesPage;
+export default CollectionsPage;

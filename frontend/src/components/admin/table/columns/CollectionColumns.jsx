@@ -37,18 +37,18 @@ export const createCollectionColumns = (
           <Edit2 size={18} />
         </button>
         <button
+          onClick={() => handleUploadImage(row.original)}
+          className="text-purple-600 hover:text-purple-800 p-1 rounded-full hover:bg-purple-100 transition-colors"
+          title="Upload Image "
+        >
+          <ImagePlus size={18} />
+        </button>
+        <button
           onClick={() => handleDelete(row.original)}
           className="text-red-600 hover:text-red-800 p-1 rounded-full hover:bg-red-100 transition-colors"
           title="Delete Collection"
         >
           <Trash2 size={18} />
-        </button>
-        <button
-          onClick={() => handleUploadImage(row.original)}
-          className="text-green-600 hover:text-green-800 p-1 rounded-full hover:bg-green-100 transition-colors"
-          title="Upload Image "
-        >
-          <ImagePlus size={18} />
         </button>
       </div>
     ),

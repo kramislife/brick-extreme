@@ -1,7 +1,7 @@
 import React from "react";
 import Banner from "@/components/home/Banner";
 import BestSelling from "@/components/home/BestSelling";
-import Categories from "@/components/home/Categories";
+import Collections from "@/components/home/Collections";
 import FeaturedProduct from "@/components/home/FeaturedProduct";
 import LatestProduct from "@/components/home/LatestProduct";
 import Subscribe from "@/components/home/Subscribe";
@@ -25,7 +25,7 @@ const Home = () => {
           <FeaturedProduct />
         </div>
         <div className="lg:min-h-[90vh] bg-brand-gradient-r">
-          <Categories />
+          <Collections />
         </div>
         <div className="lg:min-h-[90vh] bg-brand-gradient">
           <Subscribe />

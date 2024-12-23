@@ -41,11 +41,13 @@ const ViewCollection = () => {
     deleteCollection(collection._id);
   };
 
-  const handleUploadImage = (collection) => {};
+  const handleViewGallery = (collection) => {
+    navigate(`/admin/collection-gallery/${collection._id}`);
+  };
 
   // column component for table
   const columns = useMemo(() =>
-    createCollectionColumns(handleEdit, handleDelete)
+    createCollectionColumns(handleEdit, handleDelete, handleViewGallery)
   );
 
   const data = useMemo(() => {

@@ -11,8 +11,8 @@ const ProductSection = ({ products }) => {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
       >
-        {products.map((product, index) => (
-          <ProductCard key={index} product={product} />
+        {products.map((product) => (
+          <ProductCard key={product._id} product={product} />
         ))}
       </motion.div>
     </div>
