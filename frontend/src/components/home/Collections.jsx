@@ -5,12 +5,18 @@ import { categoryAnimations } from "@/hooks/animationConfig";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useGetCollectionQuery } from "@/redux/api/productApi";
-import { ImageIcon } from "lucide-react";
-import default_product from "../../assets/default/default_product.jpg";
+import { ImageIcon, Clock } from "lucide-react";
+import default_product from "@/assets/default/default_product.jpg";
 
 const PlaceholderImage = () => (
-  <div className="w-full h-[360px] bg-brand-gradient flex items-center justify-center border-slate-700 rounded-lg">
-    <ImageIcon className="w-16 h-16 text-gray-600" />
+  <div className="w-full h-[360px] bg-brand-gradient flex flex-col items-center justify-center gap-4 border border-slate-700 rounded-lg">
+    <ImageIcon className="w-12 h-12 text-slate-600" />
+    <div className="flex items-center gap-2 px-4 py-2 bg-slate-800/50 rounded-full">
+      <Clock className="w-4 h-4 text-slate-400" />
+      <span className="text-sm font-medium text-slate-400">
+        Image Coming Soon
+      </span>
+    </div>
   </div>
 );
 
@@ -65,7 +71,7 @@ const Collections = () => {
         animate={isInView ? "visible" : "hidden"}
         className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mx-auto mb-8"
       >
-        {data?.collections?.slice(0, 6).map((collection) => (
+        {data?.collections?.slice(2, 8).map((collection) => (
           <motion.div
             key={collection._id}
             variants={categoryAnimations.cardVariants}
