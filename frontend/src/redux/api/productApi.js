@@ -294,6 +294,42 @@ export const productApi = createApi({
       }),
       invalidatesTags: ["Designers"],
     }),
+
+    // --------------------------------- GET COLORS ---------------------------------------
+
+    getColors: builder.query({
+      query: () => `/admin/colors`,
+      providesTags: ["Colors"],
+    }),
+
+    // ADD A NEW COLOR
+    createColor: builder.mutation({
+      query: (data) => ({
+        url: "/admin/newColor",
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["Colors"],
+    }),
+
+    // UPDATE A COLOR
+    updateColor: builder.mutation({
+      query: ({ id, ...data }) => ({
+        url: `/admin/colors/${id}`,
+        method: "PATCH",
+        body: data,
+      }),
+      invalidatesTags: ["Colors"],
+    }),
+
+    // DELETE A COLOR
+    deleteColor: builder.mutation({
+      query: (id) => ({
+        url: `/admin/colors/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Colors"],
+    }),
   }),
 });
 
@@ -324,4 +360,8 @@ export const {
   useDeleteProductImageMutation,
   useGetCollectionDetailsQuery,
   useUploadCollectionImageMutation,
+  useGetColorsQuery,
+  useCreateColorMutation,
+  useUpdateColorMutation,
+  useDeleteColorMutation,
 } = productApi;

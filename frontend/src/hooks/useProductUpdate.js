@@ -1,13 +1,16 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useGetProductDetailsQuery, useUpdateProductMutation } from '@/redux/api/productApi';
-import { useSelector } from 'react-redux';
-import { toast } from 'react-toastify';
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  useGetProductDetailsQuery,
+  useUpdateProductMutation,
+} from "@/redux/api/productApi";
+import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
 const useProductUpdate = (id) => {
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.auth);
-  
+
   const [formData, setFormData] = useState({
     // Basic Information
     name: "",
@@ -43,14 +46,18 @@ const useProductUpdate = (id) => {
     availability: null,
     preorder: false,
     preorderDate: null,
+    productColors: [],
   });
 
   const { data, isLoading, isError, error } = useGetProductDetailsQuery(id);
-  const [updateProduct, { 
-    isLoading: updateProductIsLoading, 
-    isError: updateProductIsError, 
-    error: updateProductError 
-  }] = useUpdateProductMutation();
+  const [
+    updateProduct,
+    {
+      isLoading: updateProductIsLoading,
+      isError: updateProductIsError,
+      error: updateProductError,
+    },
+  ] = useUpdateProductMutation();
 
   // Populate form data when API data is received
   useEffect(() => {
@@ -71,13 +78,18 @@ const useProductUpdate = (id) => {
           { name: "length", value: data?.product?.product_length || "" },
           { name: "width", value: data?.product?.product_width || "" },
           { name: "height", value: data?.product?.product_height || "" },
-          { name: "piece_count", value: data?.product?.product_piece_count || "" },
+          {
+            name: "piece_count",
+            value: data?.product?.product_piece_count || "",
+          },
         ],
         manufacturer: data?.product?.manufacturer || "",
         seller: data?.product?.seller || "",
         tags: data?.product?.tags?.join(", ") || "",
-        productCategories: data?.product?.product_category.map((cat) => cat._id) || [],
-        productCollections: data?.product?.product_collection.map((col) => col._id) || [],
+        productCategories:
+          data?.product?.product_category.map((cat) => cat._id) || [],
+        productCollections:
+          data?.product?.product_collection.map((col) => col._id) || [],
         productIncludes: data?.product?.product_includes?.split(", ") || [],
         skillLevel: data?.product?.product_skill_level?._id || "",
         productDesigner: data?.product?.product_designer?._id || "",
@@ -87,6 +99,9 @@ const useProductUpdate = (id) => {
         preorderDate: data?.product?.preorder_date
           ? new Date(data?.product?.preorder_date)
           : null,
+        productColors: data?.product?.product_color
+          ? [data.product.product_color._id]
+          : [],
       });
     }
   }, [isError, error, data]);
@@ -94,29 +109,31 @@ const useProductUpdate = (id) => {
   // Handle update errors
   useEffect(() => {
     if (updateProductError) {
-      toast.error(updateProductError?.data?.message || "Failed to update product");
+      toast.error(
+        updateProductError?.data?.message || "Failed to update product"
+      );
     }
   }, [updateProductError]);
 
   const handleChange = (e) => {
     const { name, value, type } = e.target;
-    
+
     if (["length", "width", "height", "piece_count"].includes(name)) {
-      setFormData(prevData => ({
+      setFormData((prevData) => ({
         ...prevData,
-        specifications: prevData.specifications.map(spec =>
+        specifications: prevData.specifications.map((spec) =>
           spec.name === name ? { ...spec, value: value } : spec
-        )
+        ),
       }));
-    } else if (type === 'radio') {
-      setFormData(prevData => ({
+    } else if (type === "radio") {
+      setFormData((prevData) => ({
         ...prevData,
-        [name]: value
+        [name]: value,
       }));
     } else {
-      setFormData(prevData => ({
+      setFormData((prevData) => ({
         ...prevData,
-        [name]: value
+        [name]: value,
       }));
     }
   };
@@ -147,31 +164,42 @@ const useProductUpdate = (id) => {
       return;
     }
 
+    if (!formData.productColors || formData.productColors.length === 0) {
+      toast.error("Please select a color for the product");
+      return;
+    }
+
     const productData = {
       product_name: formData.name,
       price: parseFloat(formData.price),
-      discount: parseFloat(formData.discount),
-      stock: parseInt(formData.stock, 10),
+      discount: parseFloat(formData.discount) || 0,
+      stock: parseInt(formData.stock, 10) || 0,
       product_description_1: formData.description1,
       product_description_2: formData.description2 || "",
       product_description_3: formData.description3 || "",
       product_category: formData.productCategories,
       product_collection: formData.productCollections,
       product_piece_count: parseInt(
-        formData.specifications.find((spec) => spec.name === "piece_count")?.value || 0,
+        formData.specifications.find((spec) => spec.name === "piece_count")
+          ?.value || 0,
         10
       ),
-      product_availability: formData.availability === "In Stock"
-        ? null
-        : formData.preorder_availability_date || new Date().toISOString().split("T")[0],
+      product_availability:
+        formData.availability === "In Stock"
+          ? null
+          : formData.preorder_availability_date ||
+            new Date().toISOString().split("T")[0],
       product_length: parseFloat(
-        formData.specifications.find((spec) => spec.name === "length")?.value || 0
+        formData.specifications.find((spec) => spec.name === "length")?.value ||
+          0
       ),
       product_width: parseFloat(
-        formData.specifications.find((spec) => spec.name === "width")?.value || 0
+        formData.specifications.find((spec) => spec.name === "width")?.value ||
+          0
       ),
       product_height: parseFloat(
-        formData.specifications.find((spec) => spec.name === "height")?.value || 0
+        formData.specifications.find((spec) => spec.name === "height")?.value ||
+          0
       ),
       product_includes: formData.productIncludes.join(", "),
       product_skill_level: formData.skillLevel,
@@ -185,10 +213,12 @@ const useProductUpdate = (id) => {
       preorder_date: formData.preorderDate
         ? formData.preorderDate.toISOString().split("T")[0]
         : null,
-      createdBy: user?._id || "",
+      product_color: formData.productColors[0],
+      createdBy: user?._id,
     };
 
     try {
+      console.log("Updating product with color:", productData.product_color);
       await updateProduct({ id, productData }).unwrap();
       toast.success("Product updated successfully!");
       navigate("/admin/products");
@@ -200,7 +230,7 @@ const useProductUpdate = (id) => {
 
   return {
     formData,
-    isLoading: isLoading || updateProductIsLoading,
+    isLoading,
     handleChange,
     handleCheckboxChange,
     handleSubmit,

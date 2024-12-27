@@ -8,7 +8,8 @@ import {
   ChartColumnStacked,
   FolderKanban,
   Gauge,
-  Pencil
+  Pencil,
+  Palette,
 } from "lucide-react";
 
 export const adminNavigation = [
@@ -21,6 +22,11 @@ export const adminNavigation = [
     icon: Package,
     label: "Products",
     path: "/admin/products",
+  },
+  {
+    icon: Palette,
+    label: "Product Colors",
+    path: "/admin/colors",
   },
   {
     icon: ChartColumnStacked,
@@ -57,7 +63,7 @@ export const adminNavigation = [
     label: "Reviews",
     path: "/admin/reviews",
   },
-   // {
+  // {
   //   icon: PackagePlus,
   //   label: "New Product",
   //   path: "",

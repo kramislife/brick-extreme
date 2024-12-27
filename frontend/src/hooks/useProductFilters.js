@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 
 export const useProductFilters = (filterData) => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [openCategories, setOpenCategories] = useState([]);
+  const [openCategories, setOpenCategories] = useState(["price"]);
   const [selectedFilters, setSelectedFilters] = useState({});
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
@@ -97,59 +97,33 @@ export const useProductFilters = (filterData) => {
 
   // Initialize filters from URL parameters
   useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const categoryFromUrl = urlParams.get("product_category");
-    const collectionFromUrl = urlParams.get("product_collection");
-
     const initialFilters = {};
+    searchParams.forEach((value, key) => {
+      if (filterOptions[key]) {
+        initialFilters[key] = value.split(",");
+      }
+    });
+    setSelectedFilters(initialFilters);
+  }, [searchParams]);
 
-    if (categoryFromUrl) {
-      initialFilters.product_category = [categoryFromUrl];
-    }
-
-    if (collectionFromUrl) {
-      initialFilters.product_collection = [collectionFromUrl];
-    }
-
+  const handleFilterChange = (category, newFilters) => {
     setSelectedFilters((prev) => ({
       ...prev,
-      ...initialFilters,
+      [category]: newFilters,
     }));
-  }, []);
 
-  const handleFilterChange = (category, value) => {
     const newSearchParams = new URLSearchParams(searchParams);
-    const collectionId = searchParams.get("product_collection");
 
-    setSelectedFilters((prev) => {
-      const updated = {
-        ...prev,
-        [category]: prev[category]?.includes(value)
-          ? prev[category].filter((v) => v !== value)
-          : [...(prev[category] || []), value],
-      };
+    // If the filter array is empty, remove the parameter
+    if (newFilters.length === 0) {
+      newSearchParams.delete(category);
+    } else {
+      newSearchParams.set(category, newFilters.join(","));
+    }
 
-      // Preserve the collection ID if it exists
-      if (collectionId && category !== "product_collection") {
-        updated.product_collection = [collectionId];
-      }
-
-      Object.entries(updated).forEach(([key, values]) => {
-        if (values && values.length > 0) {
-          newSearchParams.set(key, values.join(","));
-        } else {
-          // Don't delete collection parameter if we're preserving it
-          if (!(key === "product_collection" && collectionId)) {
-            newSearchParams.delete(key);
-          }
-        }
-      });
-
-      newSearchParams.delete("page");
-      setSearchParams(newSearchParams);
-
-      return updated;
-    });
+    // Reset to page 1 when filters change
+    newSearchParams.set("page", "1");
+    setSearchParams(newSearchParams);
   };
 
   return {
