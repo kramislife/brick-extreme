@@ -42,6 +42,12 @@ import {
   getSingleUser,
   updateSingleUser,
 } from "../controllers/adminController.js";
+import {
+  deleteColorbyId,
+  getAllColors,
+  getColorById,
+  updateColorById,
+} from "../controllers/colorController.js";
 
 const router = express.Router();
 
@@ -299,11 +305,11 @@ router
     deleteAllProducts
   );
 
-// ---------------------------------- PRODUCTS --------------------------------------------------
+// ---------------------------------- COLOR --------------------------------------------------
 
-// GET ALL USERS
+// GET ALL COLORS
 router
-  .route("/admin/users")
+  .route("/admin/colors")
   .get(
     isAuthenticatedUser,
     isAuthorizedUser(
@@ -311,12 +317,12 @@ router
       userRoles.ADMIN,
       userRoles.EMPLOYEE
     ),
-    getAllUsers
+    getAllColors
   );
 
-// GET SPECIFIC USER
+// GET SPECIFIC COLOR INFORMATION
 router
-  .route("/admin/users/:id")
+  .route("/admin/colors/:id")
   .get(
     isAuthenticatedUser,
     isAuthorizedUser(
@@ -324,13 +330,13 @@ router
       userRoles.ADMIN,
       userRoles.EMPLOYEE
     ),
-    getSingleUser
+    getColorById
   );
 
-// UPDATE SPECIFIC USER INFORMATION
+// UPDATE SPECIFIC COLOR INFORMATION
 
 router
-  .route("/admin/users/:id")
+  .route("/admin/colors/:id")
   .patch(
     isAuthenticatedUser,
     isAuthorizedUser(
@@ -338,16 +344,16 @@ router
       userRoles.ADMIN,
       userRoles.EMPLOYEE
     ),
-    updateSingleUser
+    updateColorById
   );
 
-// DELETE SPECIFIC USER
+// DELETE SPECIFIC COLOR
 router
   .route("/admin/users/:id")
   .delete(
     isAuthenticatedUser,
     isAuthorizedUser(userRoles.SUPER_ADMIN, userRoles.ADMIN),
-    deleteSingleUser
+    deleteColorbyId
   );
 
 export default router;
