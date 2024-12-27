@@ -26,12 +26,6 @@ const productSchema = new mongoose.Schema(
       type: Number,
       min: [0, "Discount cannot be negative"],
       max: [100, "Discount cannot be more than 100%"],
-      validate: {
-        validator: function (v) {
-          return v <= this.price;
-        },
-        message: "Discount cannot exceed the price of the product",
-      },
     },
     product_description_1: {
       type: String,
@@ -162,6 +156,11 @@ const productSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: [false, "Only Employee or Admin can update products"],
+    },
+    product_color: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Color",
+      required: [true, "Please specify the product color"],
     },
   },
   { timestamps: true }

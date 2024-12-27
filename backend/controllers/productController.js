@@ -23,7 +23,8 @@ export const getProduct = catchAsyncErrors(async (req, res, next) => {
     .populate("product_category", "name")
     .populate("product_collection", "name")
     .populate("product_skill_level", "name")
-    .populate("product_designer", "name");
+    .populate("product_designer", "name")
+    .populate("product_color", "name");
 
   const filteredProductCount = allFilteredProducts.length;
 
@@ -36,7 +37,8 @@ export const getProduct = catchAsyncErrors(async (req, res, next) => {
     .populate("product_category", "name")
     .populate("product_collection", "name")
     .populate("product_skill_level", "name")
-    .populate("product_designer", "name");
+    .populate("product_designer", "name")
+    .populate("product_color", "name");
 
   // Calculate total pages
   const totalPages = Math.ceil(filteredProductCount / resPerPage);
@@ -89,7 +91,8 @@ export const getProductById = catchAsyncErrors(async (req, res, next) => {
     .populate("product_category", "name")
     .populate("product_collection", "name")
     .populate("product_designer", "name")
-    .populate("product_skill_level", "name");
+    .populate("product_skill_level", "name")
+    .populate("product_color", "name");
 
   if (!product) {
     return next(new ErrorHandler("Product not found", 400));
