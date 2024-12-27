@@ -2,7 +2,7 @@ import catchAsyncErrors from "../middlewares/catchAsyncErrors.js";
 import Color from "../models/color.model.js";
 import ErrorHandler from "../Utills/customErrorHandler.js";
 
-// -------------------------------------- GET ALL DESIGNERS => GET /designers --------------------------------------
+// -------------------------------------- GET ALL COLOR => GET /COLOR --------------------------------------
 
 export const getAllColors = catchAsyncErrors(async (req, res, next) => {
   const prod_color = await Color.find();
@@ -11,12 +11,12 @@ export const getAllColors = catchAsyncErrors(async (req, res, next) => {
     return res.status(404).json({ message: "No colors found" });
   }
   res.status(200).json({
-    message: `${colors.length} colors found`,
+    message: `${prod_color.length} colors found`,
     prod_color,
   });
 });
 
-// -------------------------------------- GET ALL DESIGNERS => GET /designers/:id --------------------------------------
+// -------------------------------------- GET ALL COLOR => GET /COLOR/:id --------------------------------------
 
 export const getColorById = catchAsyncErrors(async (req, res, next) => {
   const { id } = req.params;
@@ -31,7 +31,7 @@ export const getColorById = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
-// -------------------------------------- CREATE NEW DESIGNER => POST admin/newDesigners --------------------------------------
+// -------------------------------------- CREATE NEW COLOR => POST admin/newColor --------------------------------------
 
 export const createColor = catchAsyncErrors(async (req, res, next) => {
   const newColor = await Color.create(req.body);
@@ -46,7 +46,7 @@ export const createColor = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
-// -------------------------------------- UPDATE A DESIGNER => PUT admin/designers/:id --------------------------------------
+// -------------------------------------- UPDATE A COLOR => PUT admin/color/:id --------------------------------------
 
 export const updateColorById = catchAsyncErrors(async (req, res, next) => {
   const updatedColor = await Color.findByIdAndUpdate(req.params.id, req.body, {
@@ -63,12 +63,12 @@ export const updateColorById = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
-// -------------------------------------- DELETE A DESIGNER => DELETE admin/designers/:id --------------------------------------
+// -------------------------------------- DELETE A COLOR => DELETE admin/color/:id --------------------------------------
 
 export const deleteColorbyId = catchAsyncErrors(async (req, res, next) => {
-  const deletedColor = await Designer.findByIdAndDelete(req.params.id);
+  const deletedColor = await Color.findByIdAndDelete(req.params.id);
 
-  if (!deletedColor) return next(new ErrorHandler("Designer not found", 404));
+  if (!deletedColor) return next(new ErrorHandler("Color not found", 404));
 
   res.status(200).json({
     message: "Color Deleted",

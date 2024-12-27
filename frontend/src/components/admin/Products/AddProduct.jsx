@@ -23,7 +23,7 @@ const AddProduct = () => {
     handleCheckboxChange,
     handleSubmit,
     isLoading,
-    handleDateChange, // <-- Ensure this is returned
+    handleDateChange,
   } = useProductForm();
 
   return (
@@ -37,7 +37,11 @@ const AddProduct = () => {
             </CardHeader>
 
             <CardContent className="p-6 space-y-8">
-              <BasicInformation formData={formData} onChange={handleChange} />
+              <BasicInformation
+                formData={formData}
+                onChange={handleChange}
+                onCheckboxChange={handleCheckboxChange}
+              />
               <Separator className="my-6" />
 
               <ProductDescriptions

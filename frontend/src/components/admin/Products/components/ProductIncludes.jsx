@@ -2,7 +2,7 @@ import React from 'react';
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 
-const INCLUDES = ['Instructions', 'Minifigures'];
+const INCLUDES = ['Brick Guide and Instructions', 'Minifigures'];
 
 const INCLUDES_COLORS = {
   Instructions: 'bg-blue-100 dark:bg-blue-800 text-blue-700 dark:text-blue-300',

@@ -47,6 +47,7 @@ import {
   getAllColors,
   getColorById,
   updateColorById,
+  createColor,
 } from "../controllers/colorController.js";
 
 const router = express.Router();
@@ -320,6 +321,19 @@ router
     getAllColors
   );
 
+// CREATE NEW COLOR
+router
+  .route("/admin/newColor")
+  .post(
+    isAuthenticatedUser,
+    isAuthorizedUser(
+      userRoles.SUPER_ADMIN,
+      userRoles.ADMIN,
+      userRoles.EMPLOYEE
+    ),
+    createColor
+  );
+
 // GET SPECIFIC COLOR INFORMATION
 router
   .route("/admin/colors/:id")
@@ -349,10 +363,14 @@ router
 
 // DELETE SPECIFIC COLOR
 router
-  .route("/admin/users/:id")
+  .route("/admin/colors/:id")
   .delete(
     isAuthenticatedUser,
-    isAuthorizedUser(userRoles.SUPER_ADMIN, userRoles.ADMIN),
+    isAuthorizedUser(
+      userRoles.SUPER_ADMIN,
+      userRoles.ADMIN,
+      userRoles.EMPLOYEE
+    ),
     deleteColorbyId
   );
 

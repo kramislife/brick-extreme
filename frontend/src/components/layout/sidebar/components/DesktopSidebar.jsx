@@ -17,6 +17,7 @@ const DesktopSidebar = ({ isMinimized, toggleMinimize }) => {
     // Map of parent paths and their related paths
     const relatedPaths = {
       '/admin/products': ['/admin/products', '/admin/new-product', '/admin/update-product', '/admin/product-gallery'],
+      '/admin/colors': ['/admin/colors', '/admin/new-color', '/admin/update-color'],
       '/admin/categories': ['/admin/categories', '/admin/new-category', '/admin/update-category'],
       '/admin/collections': ['/admin/collections', '/admin/new-collection', '/admin/update-collection'],
       '/admin/skill-levels': ['/admin/skill-levels', '/admin/new-skill-level', '/admin/update-skill-level'],
@@ -55,14 +56,14 @@ const DesktopSidebar = ({ isMinimized, toggleMinimize }) => {
         </Button>
 
         {!isMinimized && (
-          <div className="p-6">
+          <div className="px-8 pt-9 pb-5">
             <h1 className="text-xl font-bold tracking-wide">Brick Admin Panel</h1>
           </div>
         )}
 
         <nav
           className={`
-            p-4 space-y-3 overflow-y-auto h-full
+            p-4 space-y-2 overflow-y-auto h-full
             ${isMinimized ? "flex flex-col items-center" : ""}
           `}
         >

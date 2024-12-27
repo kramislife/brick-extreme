@@ -1,5 +1,5 @@
 import { useCreateProductMutation } from "@/redux/api/productApi";
-import {  useState } from "react";
+import { useState } from "react";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -7,8 +7,7 @@ import { useNavigate } from "react-router-dom";
 const useProductForm = () => {
   const { user } = useSelector((state) => state.auth);
   const navigate = useNavigate();
-  const [createProduct, { isLoading }] =
-    useCreateProductMutation();
+  const [createProduct, { isLoading }] = useCreateProductMutation();
 
   const [formData, setFormData] = useState({
     // Basic Information
@@ -45,12 +44,13 @@ const useProductForm = () => {
     availability: null,
     preorder: false,
     preorderDate: null, // Add this for pre-order date
+    productColors: [], // Add this for color variants
   });
 
   // Handle changes to input fields
   const handleChange = (e) => {
     const { name, value, type } = e.target;
-    
+
     // Handle specification fields differently
     if (["length", "width", "height", "piece_count"].includes(name)) {
       setFormData((prev) => ({
@@ -105,6 +105,11 @@ const useProductForm = () => {
       return;
     }
 
+    if (!formData.productColors || formData.productColors.length === 0) {
+      toast.error("Please select a color for the product");
+      return;
+    }
+
     const newProduct = {
       product_name: formData.name,
       price: parseFloat(formData.price),
@@ -125,7 +130,6 @@ const useProductForm = () => {
           ? null
           : formData.preorder_availability_date ||
             new Date().toISOString().split("T")[0],
-
       product_length: parseFloat(
         formData.specifications.find((spec) => spec.name === "length")?.value ||
           0
@@ -141,24 +145,27 @@ const useProductForm = () => {
       product_includes: formData.productIncludes.join(", "),
       product_skill_level: formData.skillLevel,
       product_designer: formData.productDesigner,
-      ratings: 0, // Default value
+      ratings: 0,
       seller: formData.seller || "Brick Extreme",
       tags: formData.tags.split(",").map((tag) => tag.trim()) || [],
       is_active: formData.isActive === "yes" ? true : false,
-      manufacturer: formData.manufacturer || "Unknown", // Fallback to "Unknown" if manufacturer is empty
+      manufacturer: formData.manufacturer || "Unknown",
       is_preorder: formData.preorder,
       preorder_date: formData.preorderDate
         ? formData.preorderDate.toISOString().split("T")[0]
-        : null, // Format date for preorder
+        : null,
       createdBy: user?._id,
+      product_color: formData.productColors[0],
     };
 
     try {
-      await createProduct(newProduct).unwrap();
+      console.log("Submitting product with color:", newProduct.product_color);
+      const response = await createProduct(newProduct).unwrap();
+      console.log("Creation response:", response);
       toast.success("Product created successfully!");
       navigate("/admin/products");
     } catch (error) {
-      console.error("Creation error:", error);
+      console.error("Creation error details:", error);
       toast.error(error?.data?.message || "Failed to create product");
     }
   };
