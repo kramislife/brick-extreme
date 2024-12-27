@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useMemo } from "react";
 import {
   Accordion,
   AccordionContent,
@@ -129,11 +129,25 @@ const FilterAccordion = ({
     return counts;
   }, [categories, products]);
 
+  const handleFilterClick = (key, value) => {
+    const currentFilters = selectedFilters[key] || [];
+    const isSelected = currentFilters.includes(value);
+
+    // If the value is already selected, remove it
+    // If not, add it to the array
+    const newFilters = isSelected
+      ? currentFilters.filter((item) => item !== value)
+      : [...currentFilters, value];
+
+    // Call onFilterChange with the new array
+    onFilterChange(key, newFilters);
+  };
+
   return (
     <Accordion
       type="single"
-      defaultValue="price" // Added defaultValue
-      value={openCategories[0]} // Changed to first value since it's single
+      defaultValue="price"
+      value={openCategories[0]}
       onValueChange={(value) => onCategoriesChange(value ? [value] : [])}
       className="space-y-2"
     >
@@ -167,8 +181,8 @@ const FilterAccordion = ({
                     <Checkbox
                       id={`${key}-${option.value}`}
                       checked={selectedFilters[key]?.includes(option.value)}
-                      onCheckedChange={(checked) =>
-                        !isDisabled && onFilterChange(key, option.value)
+                      onCheckedChange={() =>
+                        !isDisabled && handleFilterClick(key, option.value)
                       }
                       disabled={isDisabled}
                       className="border-gray-600 data-[state=checked]:bg-red-600 data-[state=checked]:border-red-600 disabled:opacity-50"
