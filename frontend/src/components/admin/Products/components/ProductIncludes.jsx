@@ -5,7 +5,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 const INCLUDES = ['Brick Guide and Instructions', 'Minifigures'];
 
 const INCLUDES_COLORS = {
-  Instructions: 'bg-blue-100 dark:bg-blue-800 text-blue-700 dark:text-blue-300',
+  Brick: 'bg-blue-100 dark:bg-blue-800 text-blue-700 dark:text-blue-300',
   Minifigures: 'bg-yellow-100 dark:bg-yellow-800 text-yellow-700 dark:text-yellow-300',
 };
 

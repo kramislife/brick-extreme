@@ -6,48 +6,53 @@ import {
   useGetProductsQuery,
 } from "@/redux/api/productApi";
 import { toast } from "react-toastify";
-import { createProductColumns } from "@/components/admin/table/columns/ProductColumns";
+import { createProductColumns } from "@/components/admin/shared/table/columns/ProductColumns";
+import DeleteDialog from "@/components/admin/shared/DeleteDialog";
 
 const ViewProducts = () => {
   const { data: productData, isLoading, error } = useGetProductsQuery();
 
-  const [
-    deleteProduct,
-    {
-      isSuccess: deleteProductSuccess,
-      isError: deleteProductError,
-      error: deleteError,
-    },
-  ] = useDeleteProductMutation();
+  // delete product
+  const [deleteProduct, { isLoading: isDeleting }] = useDeleteProductMutation();
 
   const [globalFilter, setGlobalFilter] = useState("");
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (deleteProductSuccess) {
-      toast.success("Product deleted successfully");
-    }
-
-    if (deleteProductError) {
-      toast.error(deleteError?.data?.message || "Failed to delete product");
-    }
-  }, [deleteProductSuccess, deleteProductError, deleteError]);
-
+  // handle edit
   const handleEdit = (product) => {
     navigate(`/admin/update-product/${product._id}`);
   };
 
+  // handle view gallery
   const handleViewGallery = (product) => {
     navigate(`/admin/product-gallery/${product._id}`);
   };
 
-  const handleDelete = (product) => {
-    deleteProduct(product._id);
+  // delete dialog
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [productToDelete, setProductToDelete] = useState(null);
+
+  // handle delete click
+  const handleDeleteClick = (product) => {
+    setProductToDelete(product);
+    setDeleteDialogOpen(true);
+  };
+
+  // handle delete confirm
+  const handleDeleteConfirm = async () => {
+    try {
+      await deleteProduct(productToDelete._id).unwrap();
+      toast.success("Product deleted successfully");
+      setDeleteDialogOpen(false);
+      setProductToDelete(null);
+    } catch (error) {
+      toast.error(error?.data?.message || "Failed to delete product");
+    }
   };
 
   // column component for table
   const columns = useMemo(() =>
-    createProductColumns(handleEdit, handleDelete, handleViewGallery)
+    createProductColumns(handleEdit, handleDeleteClick, handleViewGallery)
   );
 
   const data = useMemo(() => {
@@ -71,17 +76,40 @@ const ViewProducts = () => {
   }, [productData]);
 
   return (
-    <ViewLayout
-      title="Product"
-      description="Manage your product inventory"
-      addNewPath="/admin/new-product"
-      isLoading={isLoading}
-      error={error}
-      data={data}
-      columns={columns}
-      globalFilter={globalFilter}
-      setGlobalFilter={setGlobalFilter}
-    />
+    <>
+      <ViewLayout
+        title="Product"
+        description="Manage your product inventory"
+        addNewPath="/admin/new-product"
+        isLoading={isLoading}
+        error={error}
+        data={data}
+        columns={columns}
+        globalFilter={globalFilter}
+        setGlobalFilter={setGlobalFilter}
+      />
+
+      {/* delete dialog */}
+      <DeleteDialog
+        isOpen={deleteDialogOpen}
+        onClose={() => {
+          setDeleteDialogOpen(false);
+          setProductToDelete(null);
+        }}
+        onConfirm={handleDeleteConfirm}
+        title="Delete Product"
+        description={
+          <>
+            Are you sure you want to delete{" "}
+            <span className="font-semibold text-red-500">
+              {productToDelete?.name}
+            </span>
+            ? This action cannot be undone.
+          </>
+        }
+        isLoading={isDeleting}
+      />
+    </>
   );
 };
 
