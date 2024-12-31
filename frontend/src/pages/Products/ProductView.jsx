@@ -17,7 +17,10 @@ const ProductView = () => {
     if (isError) {
       toast.error(error?.data?.message);
     }
-  }, [error, isError]);
+    if (data) {
+      console.log(data);
+    }
+  }, [error, isError, data]);
 
   return (
     <>
@@ -26,7 +29,6 @@ const ProductView = () => {
         <LoadingSpinner />
       ) : (
         <div className="min-h-screen bg-brand-gradient">
-
           {/* Product Details */}
           <ProductDetails
             product={data?.product}

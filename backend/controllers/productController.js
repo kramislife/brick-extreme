@@ -87,20 +87,40 @@ export const getBestSellerProduct = catchAsyncErrors(async (req, res, next) => {
 //------------------------------------  GET A PRODUCT BY ID  => GET /products/:id  ------------------------------------
 
 export const getProductById = catchAsyncErrors(async (req, res, next) => {
-  const product = await Product.findById(req?.params?.id)
+  const productId = req.params.id;
+  const allProducts = [];
+  const product = await Product.findById(productId);
+
+  if (!product) {
+    return next(new ErrorHandler("Product not found", 400));
+  }
+  console.log("PRODUCT", product.product_name);
+
+  // Escape special characters in the product_name
+  const escapedProductName = product.product_name.replace(
+    /[.*+?^${}()|[\]\\]/g,
+    "\\$&"
+  );
+
+  const similarProducts = await Product.find({
+    product_name: { $regex: escapedProductName, $options: "i" }, // Case-insensitive partial match
+    _id: { $ne: productId }, // Exclude the current product
+  })
     .populate("product_category", "name")
     .populate("product_collection", "name")
     .populate("product_designer", "name")
     .populate("product_skill_level", "name")
     .populate("product_color", "name");
 
-  if (!product) {
-    return next(new ErrorHandler("Product not found", 400));
-  }
+  console.log("SIMILAR PRODUCTS", similarProducts);
+  // if (product || similarProducts) {
+  //   allProducts(...product, ...similarProducts);
+  // }
 
   res.status(200).json({
     message: "Product retrieved successfully",
     product,
+    similarProducts,
   });
 });
 

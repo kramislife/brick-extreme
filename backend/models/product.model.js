@@ -169,35 +169,60 @@ const productSchema = new mongoose.Schema(
 // ----------------------------------- PRE-SAVE HOOK TO GENERATE PRODUCT KEY -----------------------------------
 
 productSchema.pre("save", async function (next) {
-  if (this.product_name && !this.key) {
+  if (this.product_name && this.product_color && !this.key) {
     this.product_name = this.product_name.trim();
-    this.key = this.product_name.toLowerCase().trim().replace(/\s+/g, "_");
+    this.product_color = this.product_color.trim();
+    this.key = `${this.product_name
+      .toLowerCase()
+      .replace(/\s+/g, "_")}_${this.product_color
+      .toLowerCase()
+      .replace(/\s+/g, "_")}`;
   }
 
   // ---------------------------------- CHECK FOR UNIQUE KEY CONSTRAINT -----------------------------------------------
 
-  const existingProduct = await mongoose
-    .model("Product")
-    .findOne({ key: this.key });
-  if (existingProduct) {
-    return next(new Error("Product key must be unique."));
+  try {
+    const existingProduct = await mongoose
+      .model("Product")
+      .findOne({ key: this.key });
+
+    if (existingProduct) {
+      return next(new Error("Product with this key already exists"));
+    }
+    next();
+  } catch (error) {
+    return next(error);
   }
-  next();
 });
 
 // -------------------------------------- PRE-UPDATE HOOK TO CHECK FOR UNIQUE KEY DURING UPDATE ---------------------------------------------------------
 
 productSchema.pre("findOneAndUpdate", async function (next) {
   const update = this.getUpdate();
-  if (update.product_name) {
-    update.key = update.product_name.toLowerCase().trim().replace(/\s+/g, "_");
+  if (update.product_name || update.product_color) {
+    const productName = update.product_name
+      ? update.product_name.trim()
+      : this.getQuery().product_name;
+    const productColor = update.product_color
+      ? update.product_color.trim()
+      : this.getQuery().product_color;
+
+    update.key = `${productName
+      .toLowerCase()
+      .replace(/\s+/g, "_")}_${productColor
+      .toLowerCase()
+      .replace(/\s+/g, "_")}`;
 
     // ------------------------------------------- CHECK IF THE KEY IS UNIQUE -------------------------------------------------------------
-    const existingProduct = await mongoose
-      .model("Product")
-      .findOne({ key: update.key, _id: { $ne: this.getQuery()._id } });
-    if (existingProduct) {
-      return next(new Error("Product key must be unique."));
+    try {
+      const existingProduct = await mongoose
+        .model("Product")
+        .findOne({ key: update.key, _id: { $ne: this.getQuery()._id } });
+      if (existingProduct) {
+        return next(new Error("Product key must be unique."));
+      }
+    } catch (error) {
+      return next(error); // Pass any database error to the next middleware
     }
   }
   next();
