@@ -30,7 +30,7 @@ const ProductSpecification = ({ product }) => {
     if (product?.product_length) dims.push(`L: ${product.product_length}`);
     if (product?.product_width) dims.push(`W: ${product.product_width}`);
     if (product?.product_height) dims.push(`H: ${product.product_height}`);
-    return dims.length > 0 ? [dims.join(' × ')] : [];
+    return dims.length > 0 ? [dims.join(" × ")] : ["Dimensions not specified"];
   };
 
   const specifications = [
@@ -42,13 +42,13 @@ const ProductSpecification = ({ product }) => {
               product?.product_piece_count === 1 ? "piece" : "pieces"
             }`,
           ]
-        : [],
+        : ["Piece count not specified"],
     },
     {
       ...DEFAULT_SPECS.skillLevel,
       items: product?.product_skill_level?.name
         ? [product.product_skill_level.name]
-        : [],
+        : ["Skill level not specified"],
     },
     {
       ...DEFAULT_SPECS.dimensions,
@@ -58,9 +58,9 @@ const ProductSpecification = ({ product }) => {
       ...DEFAULT_SPECS.designer,
       items: product?.product_designer?.name
         ? [product.product_designer.name]
-        : [],
+        : ["Designer not specified"],
     },
-  ].filter((spec) => spec.items.length > 0);
+  ];
 
   return (
     <div className="bg-gradient-to-b from-brand-start to-brand-end py-20 px-4">
