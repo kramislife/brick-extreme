@@ -11,7 +11,7 @@ export const getAllCategories = catchAsyncErrors(async (req, res, next) => {
   }
   res.status(200).json({
     categories,
-    message: "Categories retrieved successfully",
+    message: "Categories Retrieved Successfully",
   });
 });
 
@@ -24,7 +24,7 @@ export const getCategoryByKey = catchAsyncErrors(async (req, res, next) => {
     return next(new ErrorHandler("Category not found", 404));
   }
   res.status(200).json({
-    message: "Category retrieved successfully",
+    message: "Category Retrieved Successfully",
     category,
   });
 });
@@ -40,7 +40,7 @@ export const getCategoryById = catchAsyncErrors(async (req, res, next) => {
     return next(new ErrorHandler("Category not found", 404));
   }
   res.status(200).json({
-    message: "Category retrieved successfully",
+    message: "Category Retrieved Successfully",
     category,
   });
 });
@@ -56,7 +56,7 @@ export const createCategory = catchAsyncErrors(async (req, res, next) => {
 
   res.status(201).json({
     newCategory,
-    message: "Category created successfully",
+    message: "Category Created Successfully",
   });
 });
 
@@ -77,7 +77,7 @@ export const updateCategory = catchAsyncErrors(async (req, res, next) => {
 
   res.status(200).json({
     updatedCategory,
-    message: "Category updated successfully",
+    message: "Category Updated Successfully",
   });
 });
 
@@ -93,6 +93,6 @@ export const deleteCategoryByID = catchAsyncErrors(async (req, res, next) => {
 
   res.status(200).json({
     deletedCategory,
-    message: "Category deleted successfully",
+    message: "Category Deleted Successfully",
   });
 });

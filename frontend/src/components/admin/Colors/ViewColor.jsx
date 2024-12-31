@@ -36,8 +36,8 @@ const ViewColor = () => {
   // handle delete confirm
   const handleDeleteConfirm = async () => {
     try {
-      await deleteColor(colorToDelete._id).unwrap();
-      toast.success("Color deleted successfully");
+      const response = await deleteColor(colorToDelete._id).unwrap();
+      toast.success(response.message || "Color deleted successfully");
       setDeleteDialogOpen(false);
       setColorToDelete(null);
     } catch (error) {

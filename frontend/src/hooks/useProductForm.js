@@ -159,10 +159,8 @@ const useProductForm = () => {
     };
 
     try {
-      console.log("Submitting product with color:", newProduct.product_color);
       const response = await createProduct(newProduct).unwrap();
-      console.log("Creation response:", response);
-      toast.success("Product created successfully!");
+      toast.success(response.message || "Product created successfully!");
       navigate("/admin/products");
     } catch (error) {
       console.error("Creation error details:", error);

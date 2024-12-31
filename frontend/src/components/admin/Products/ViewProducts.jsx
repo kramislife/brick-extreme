@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import ViewLayout from "@/components/admin/shared/ViewLayout";
 import {
@@ -41,8 +41,8 @@ const ViewProducts = () => {
   // handle delete confirm
   const handleDeleteConfirm = async () => {
     try {
-      await deleteProduct(productToDelete._id).unwrap();
-      toast.success("Product deleted successfully");
+      const response = await deleteProduct(productToDelete._id).unwrap();
+      toast.success(response.message || "Product deleted successfully");
       setDeleteDialogOpen(false);
       setProductToDelete(null);
     } catch (error) {

@@ -31,11 +31,11 @@ const UpdateSkillLevel = () => {
     };
 
     try {
-      await updateSkillLevel({ 
+      const response = await updateSkillLevel({ 
         id: id,
         ...skillLevelData 
       }).unwrap();
-      toast.success("Skill level updated successfully!");
+      toast.success(response.message || "Skill level updated successfully!");
       navigate("/admin/skill-levels");
     } catch (error) {
       toast.error(error?.data?.message || "Failed to update skill level");

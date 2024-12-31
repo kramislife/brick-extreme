@@ -12,7 +12,7 @@ export const getAllSkillLevels = catchAsyncErrors(async (req, res, next) => {
   }
 
   res.status(200).json({
-    message: `${skillLevels.length} skills retrieved successfully`,
+    message: `${skillLevels.length} Skills Retrieved Successfully`,
     skillLevels,
   });
 });
@@ -29,7 +29,7 @@ export const getSkillLevelById = catchAsyncErrors(async (req, res) => {
   }
 
   res.status(200).json({
-    message: "Skill retrived successfully",
+    message: "Skill Retrieved Successfully",
     skillLevel,
   });
 });
@@ -44,7 +44,7 @@ export const createSkillLevel = catchAsyncErrors(async (req, res) => {
   }
 
   res.status(201).json({
-    message: "Skill level created successfully",
+    message: "Skill Level Created Successfully",
     newSkillLevel,
   });
 });
@@ -65,7 +65,7 @@ export const updateSkillLevel = catchAsyncErrors(async (req, res) => {
 
   if (updatedSkillLevel) {
     res.status(200).json({
-      message: "Skill level updated successfully",
+      message: "Skill Level Updated Successfully",
       updatedSkillLevel,
     });
   }
@@ -81,7 +81,7 @@ export const deleteSkillByID = catchAsyncErrors(async (req, res, next) => {
     return next(new ErrorHandler("Skill level not found"), 404);
 
   res.status(200).json({
-    message: "Skill level deleted successfully",
+    message: "Skill Level Deleted Successfully",
     deletedSkillLevel,
   });
 });

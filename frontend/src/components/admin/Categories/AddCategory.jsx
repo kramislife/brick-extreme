@@ -26,8 +26,8 @@ const AddCategory = () => {
     };
 
     try {
-      await createCategory(categoryData).unwrap();
-      toast.success("Category created successfully!");
+      const response = await createCategory(categoryData).unwrap();
+      toast.success(response.message || "Category created successfully!");
       navigate("/admin/categories");
     } catch (error) {
       toast.error(error?.data?.message || "Failed to create category");

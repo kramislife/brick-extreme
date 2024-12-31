@@ -55,8 +55,8 @@ const ViewCollection = () => {
   // handle delete confirm
   const handleDeleteConfirm = async () => {
     try {
-      await deleteCollection(collectionToDelete._id).unwrap();
-      toast.success("Collection deleted successfully");
+      const response = await deleteCollection(collectionToDelete._id).unwrap();
+      toast.success(response.message || "Collection deleted successfully");
       setDeleteDialogOpen(false);
       setCollectionToDelete(null);
     } catch (error) {
@@ -99,7 +99,7 @@ const ViewCollection = () => {
         id: index + 1,
         _id: collection._id,
         name: collection.name,
-        description: collection.description,
+        description: collection.description || "No description",
         createdAt: collection.createdAt,
         updatedAt: collection.updatedAt,
         image: collection.image,

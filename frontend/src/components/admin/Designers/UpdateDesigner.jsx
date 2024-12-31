@@ -48,11 +48,11 @@ const UpdateDesigner = () => {
     designerData.append("updatedBy", user?._id);
 
     try {
-      await updateDesigner({ 
+      const response = await updateDesigner({ 
         id: id,
         ...Object.fromEntries(designerData) 
       }).unwrap();
-      toast.success("Designer updated successfully!");
+      toast.success(response.message || "Designer updated successfully!");
       navigate("/admin/designers");
     } catch (error) {
       toast.error(error?.data?.message || "Failed to update designer");

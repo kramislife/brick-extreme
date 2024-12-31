@@ -29,12 +29,12 @@ const UpdateCategory = () => {
     };
 
     try {
-      await updateCategory({ 
+      const response = await updateCategory({ 
         id: id,
         ...categoryData 
       }).unwrap();
       
-      toast.success("Category updated successfully!");
+      toast.success(response.message || "Category updated successfully!");
       navigate("/admin/categories");
     } catch (error) {
       toast.error(error?.data?.message || "Failed to update category");

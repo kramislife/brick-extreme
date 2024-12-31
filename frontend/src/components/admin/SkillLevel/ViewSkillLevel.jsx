@@ -37,8 +37,8 @@ const ViewSkillLevel = () => {
   // handle delete confirm
   const handleDeleteConfirm = async () => {
     try {
-      await deleteSkillLevel(skillLevelToDelete._id).unwrap();
-      toast.success("Skill level deleted successfully");
+      const response = await deleteSkillLevel(skillLevelToDelete._id).unwrap();
+      toast.success(response.message || "Skill level deleted successfully");
       setDeleteDialogOpen(false);
       setSkillLevelToDelete(null);
     } catch (error) {

@@ -37,8 +37,8 @@ const ViewCategories = () => {
   // handle delete confirm
   const handleDeleteConfirm = async () => {
     try {
-      await deleteCategory(categoryToDelete._id).unwrap();
-      toast.success("Category deleted successfully");
+      const response = await deleteCategory(categoryToDelete._id).unwrap();
+      toast.success(response.message || "Category deleted successfully");
       setDeleteDialogOpen(false);
       setCategoryToDelete(null);
     } catch (error) {

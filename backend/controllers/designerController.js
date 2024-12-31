@@ -26,7 +26,7 @@ export const getDesignerById = catchAsyncErrors(async (req, res, next) => {
     return next(new ErrorHandler("No designers found"), 404);
   }
   res.status(200).json({
-    message: "All Designers found",
+    message: "All Designers Found",
     designers,
   });
 });
@@ -41,7 +41,7 @@ export const createDesigners = catchAsyncErrors(async (req, res, next) => {
   }
 
   res.status(201).json({
-    message: "New Designer created successfully",
+    message: "New Designer Created Successfully",
     newDesigner,
   });
 });
@@ -64,7 +64,7 @@ export const updateDesignerById = catchAsyncErrors(async (req, res, next) => {
   }
 
   res.status(200).json({
-    message: "Designer updated successfully",
+    message: "Designer Updated Successfully",
     updatedDesigner,
   });
 });
@@ -78,7 +78,7 @@ export const deleteDesignerById = catchAsyncErrors(async (req, res, next) => {
     return next(new ErrorHandler("Designer not found", 404));
 
   res.status(200).json({
-    message: "Designer Deleted",
+    message: "Designer Deleted Successfully",
     deletedDesigner,
   });
 });

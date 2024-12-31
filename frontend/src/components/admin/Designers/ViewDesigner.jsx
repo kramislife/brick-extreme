@@ -37,8 +37,8 @@ const ViewDesigner = () => {
   // handle delete confirm
   const handleDeleteConfirm = async () => {
     try {
-      await deleteDesigner(designerToDelete._id).unwrap();
-      toast.success("Designer deleted successfully");
+      const response = await deleteDesigner(designerToDelete._id).unwrap();
+      toast.success(response.message || "Designer deleted successfully");
       setDeleteDialogOpen(false);
       setDesignerToDelete(null);
     } catch (error) {
@@ -59,7 +59,7 @@ const ViewDesigner = () => {
         id: index + 1,
         _id: designer._id,
         name: designer.name,
-        bio: designer.bio,
+        bio: designer.bio || "No bio available",
         links: designer.social_links || {},
       }));
   }, [designerData]);

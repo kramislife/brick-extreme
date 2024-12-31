@@ -30,8 +30,8 @@ const AddSkillLevel = () => {
     };
 
     try {
-      await createSkillLevel(skillLevelData).unwrap();
-      toast.success("Skill level created successfully!");
+      const response = await createSkillLevel(skillLevelData).unwrap();
+      toast.success(response.message || "Skill level created successfully!");
       navigate("/admin/skill-levels");
     } catch (error) {
       toast.error(error?.data?.message || "Failed to create skill level");
