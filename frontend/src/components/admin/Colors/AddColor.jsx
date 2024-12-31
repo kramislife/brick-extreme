@@ -54,8 +54,8 @@ const AddColor = () => {
     };
 
     try {
-      await createColor(colorData).unwrap();
-      toast.success("Color created successfully!");
+      const response = await createColor(colorData).unwrap();
+      toast.success(response.message || "Color created successfully!");
       navigate("/admin/colors");
     } catch (error) {
       toast.error(error?.data?.message || "Failed to create color");

@@ -30,7 +30,7 @@ export const getCollectionById = catchAsyncErrors(async (req, res, next) => {
     return next(new ErrorHandler("Failed to retrive all collections", 404));
   }
   res.status(200).json({
-    message: "Collection retrived",
+    message: "Collection Retrieved Successfully",
     collection,
   });
 });
@@ -47,7 +47,7 @@ export const createCollection = catchAsyncErrors(async (req, res, next) => {
   }
 
   res.status(201).json({
-    message: "Collection created successfully",
+    message: "Collection Created Successfully",
     newCollection,
   });
 });
@@ -73,7 +73,7 @@ export const updateCollection = catchAsyncErrors(async (req, res) => {
 
   res.status(200).json({
     updatedCollection,
-    message: "Collection updated successfully",
+    message: "Collection Updated Successfully",
   });
 });
 
@@ -92,7 +92,7 @@ export const deleteCollectionByID = async (req, res) => {
     }
 
     res.status(200).json({
-      message: "Collection deleted successfully",
+      message: "Collection Deleted Successfully",
     });
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -131,7 +131,7 @@ export const uploadCollectionImage = catchAsyncErrors(
 
       res.status(200).json({
         success: true,
-        message: "Image uploaded successfully",
+        message: "Image Uploaded Successfully",
         data: collection,
       });
     } catch (error) {

@@ -218,9 +218,8 @@ const useProductUpdate = (id) => {
     };
 
     try {
-      console.log("Updating product with color:", productData.product_color);
-      await updateProduct({ id, productData }).unwrap();
-      toast.success("Product updated successfully!");
+      const response = await updateProduct({ id, productData }).unwrap();
+      toast.success(response.message || "Product updated successfully!");
       navigate("/admin/products");
     } catch (error) {
       console.error("Update error:", error);

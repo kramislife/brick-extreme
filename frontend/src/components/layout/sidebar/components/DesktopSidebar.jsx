@@ -10,27 +10,54 @@ const DesktopSidebar = ({ isMinimized, toggleMinimize }) => {
   // Helper function to check if current path matches navigation item
   const isPathActive = (itemPath) => {
     // Handle dashboard route separately
-    if (itemPath === '/admin') {
+    if (itemPath === "/admin") {
       return location.pathname === itemPath;
     }
 
     // Map of parent paths and their related paths
     const relatedPaths = {
-      '/admin/products': ['/admin/products', '/admin/new-product', '/admin/update-product', '/admin/product-gallery'],
-      '/admin/colors': ['/admin/colors', '/admin/new-color', '/admin/update-color'],
-      '/admin/categories': ['/admin/categories', '/admin/new-category', '/admin/update-category'],
-      '/admin/collections': ['/admin/collections', '/admin/new-collection', '/admin/update-collection'],
-      '/admin/skill-levels': ['/admin/skill-levels', '/admin/new-skill-level', '/admin/update-skill-level'],
-      '/admin/designers': ['/admin/designers', '/admin/new-designer', '/admin/update-designer'],
-      '/admin/users': ['/admin/users'],
-      '/admin/orders': ['/admin/orders'],
-      '/admin/reviews': ['/admin/reviews'],
+      "/admin/products": [
+        "/admin/products",
+        "/admin/new-product",
+        "/admin/update-product",
+        "/admin/product-gallery",
+      ],
+      "/admin/colors": [
+        "/admin/colors",
+        "/admin/new-color",
+        "/admin/update-color",
+      ],
+      "/admin/categories": [
+        "/admin/categories",
+        "/admin/new-category",
+        "/admin/update-category",
+      ],
+      "/admin/collections": [
+        "/admin/collections",
+        "/admin/new-collection",
+        "/admin/update-collection",
+      ],
+      "/admin/skill-levels": [
+        "/admin/skill-levels",
+        "/admin/new-skill-level",
+        "/admin/update-skill-level",
+      ],
+      "/admin/designers": [
+        "/admin/designers",
+        "/admin/new-designer",
+        "/admin/update-designer",
+      ],
+      "/admin/users": ["/admin/users"],
+      "/admin/orders": ["/admin/orders"],
+      "/admin/reviews": ["/admin/reviews"],
     };
 
     // Check if current path starts with any of the related paths
-    return relatedPaths[itemPath]?.some(path => 
-      location.pathname.startsWith(path)
-    ) || false;
+    return (
+      relatedPaths[itemPath]?.some((path) =>
+        location.pathname.startsWith(path)
+      ) || false
+    );
   };
 
   return (
@@ -57,7 +84,9 @@ const DesktopSidebar = ({ isMinimized, toggleMinimize }) => {
 
         {!isMinimized && (
           <div className="px-8 pt-9 pb-5">
-            <h1 className="text-xl font-bold tracking-wide">Brick Admin Panel</h1>
+            <h1 className="text-xl font-bold tracking-wide">
+              Brick Admin Panel
+            </h1>
           </div>
         )}
 

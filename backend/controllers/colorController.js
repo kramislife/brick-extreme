@@ -41,7 +41,7 @@ export const createColor = catchAsyncErrors(async (req, res, next) => {
   }
 
   res.status(201).json({
-    message: "New Color created successfully",
+    message: "New Color Created Successfully",
     newColor,
   });
 });
@@ -58,7 +58,7 @@ export const updateColorById = catchAsyncErrors(async (req, res, next) => {
   }
 
   res.status(200).json({
-    message: "Color updated successfully",
+    message: "Color Updated Successfully",
     updatedColor,
   });
 });
@@ -71,7 +71,7 @@ export const deleteColorbyId = catchAsyncErrors(async (req, res, next) => {
   if (!deletedColor) return next(new ErrorHandler("Color not found", 404));
 
   res.status(200).json({
-    message: "Color Deleted",
+    message: "Color Deleted Successfully",
     deletedColor,
   });
 });

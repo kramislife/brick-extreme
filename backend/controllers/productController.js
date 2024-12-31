@@ -118,7 +118,7 @@ export const getProductById = catchAsyncErrors(async (req, res, next) => {
   // }
 
   res.status(200).json({
-    message: "Product retrieved successfully",
+    message: "Product Retrieved Successfully",
     product,
     similarProducts,
   });
@@ -138,7 +138,7 @@ export const newProduct = catchAsyncErrors(async (req, res, next) => {
   }
 
   res.status(201).json({
-    message: "Product created successfully",
+    message: "Product Created Successfully",
     product,
   });
 });
@@ -157,7 +157,7 @@ export const updateProduct = catchAsyncErrors(async (req, res, next) => {
   }
 
   res.status(200).json({
-    message: "Product updated successfully",
+    message: "Product Updated Successfully",
     updatedProduct,
   });
 });
@@ -173,7 +173,7 @@ export const deleteProductByID = catchAsyncErrors(async (req, res, next) => {
   }
 
   res.status(200).json({
-    message: "Product deleted successfully",
+    message: "Product Deleted Successfully",
     deletedProduct,
   });
 });
@@ -214,7 +214,7 @@ export const uploadProductImage = catchAsyncErrors(async (req, res, next) => {
 
   res.status(200).json({
     success: true,
-    message: "Images uploaded successfully",
+    message: "Images Uploaded Successfully",
     data: product,
   });
 });
@@ -253,7 +253,7 @@ export const deleteProductImage = catchAsyncErrors(async (req, res, next) => {
 
   return res.status(200).json({
     success: true,
-    message: "Image deleted successfully",
+    message: "Image Deleted Successfully",
     product: updatedProduct,
   });
 });

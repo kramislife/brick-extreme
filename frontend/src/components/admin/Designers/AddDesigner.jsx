@@ -66,11 +66,11 @@ const AddDesigner = () => {
     };
 
     try {
-      await createDesigner(designerData).unwrap();
-      toast.success("Designer created successfully!");
+      const response = await createDesigner(designerData).unwrap();
+      toast.success(response.message || "Designer created successfully!");
       navigate("/admin/designers"); // Redirect to designers list
     } catch (error) {
-      toast.error("Failed to create designer. Please try again.");
+      toast.error(error?.data?.message || "Failed to create designer");
     }
   };
 

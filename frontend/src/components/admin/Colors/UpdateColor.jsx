@@ -35,12 +35,12 @@ const UpdateColor = () => {
     };
 
     try {
-      await updateColor({
+      const response = await updateColor({
         id: id,
         ...colorData,
       }).unwrap();
 
-      toast.success("Color updated successfully!");
+      toast.success(response.message || "Color updated successfully!");
       navigate("/admin/colors");
     } catch (error) {
       toast.error(error?.data?.message || "Failed to update color");

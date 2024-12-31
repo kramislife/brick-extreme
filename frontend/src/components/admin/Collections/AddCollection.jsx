@@ -27,8 +27,8 @@ const AddCollection = () => {
     };
 
     try {
-      await createCollection(collectionData).unwrap();
-      toast.success("Collection created successfully!");
+      const response = await createCollection(collectionData).unwrap();
+      toast.success(response.message || "Collection created successfully!");
       navigate("/admin/collections");
     } catch (error) {
       toast.error(error?.data?.message || "Failed to create collection");

@@ -30,11 +30,11 @@ const UpdateCollection = () => {
     };
 
     try {
-      await updateCollection({ 
+      const response = await updateCollection({ 
         id: id,
         ...collectionData 
       }).unwrap();
-      toast.success("Collection updated successfully!");
+      toast.success(response.message || "Collection updated successfully!");
       navigate("/admin/collections");
     } catch (error) {
       toast.error(error?.data?.message || "Failed to update collection");
