@@ -88,16 +88,23 @@ export const getBestSellerProduct = catchAsyncErrors(async (req, res, next) => {
 
 export const getProductById = catchAsyncErrors(async (req, res, next) => {
   const productId = req.params.id;
-  const allProducts = [];
-  const product = await Product.findById(productId);
+  const product = await Product.findById(productId)
+    .populate("product_category", "name")
+    .populate("product_collection", "name")
+    .populate("product_designer", "name")
+    .populate("product_skill_level", "name")
+    .populate("product_color", "name");
 
   if (!product) {
     return next(new ErrorHandler("Product not found", 400));
   }
   console.log("PRODUCT", product.product_name);
 
+  // Extract the base product name (before any parentheses or color variations)
+  const baseProductName = product.product_name.split(/[\(\-]/)[0].trim();
+
   // Escape special characters in the product_name
-  const escapedProductName = product.product_name.replace(
+  const escapedProductName = baseProductName.replace(
     /[.*+?^${}()|[\]\\]/g,
     "\\$&"
   );

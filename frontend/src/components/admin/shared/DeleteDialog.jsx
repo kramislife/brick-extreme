@@ -22,7 +22,7 @@ const Dialog = ({ open, onClose, children }) => {
       />
       
       {/* Dialog */}
-      <div className="fixed left-[50%] top-[50%] z-50 w-full max-w-[450px] translate-x-[-50%] translate-y-[-50%] duration-200 animate-in fade-in-0 zoom-in-95 slide-in-from-left-1/2 slide-in-from-top-[48%]">
+      <div className="fixed left-[50%] top-[50%] z-50 w-full max-w-[450px] translate-x-[-50%] translate-y-[-50%] duration-200 animate-in fade-in-0 zoom-in-95 slide-in-from-left-1/2 slide-in-from-top-[48%] sm:max-w-[450px]">
         {children}
       </div>
     </div>
@@ -39,16 +39,16 @@ const DeleteConfirmDialog = ({
 }) => {
   return (
     <Dialog open={isOpen} onClose={onClose}>
-      <div className="relative rounded-lg border bg-white shadow-lg">
+      <div className="relative rounded-lg border bg-darkBrand shadow-lg border-none">
         {/* Content */}
         <div className="p-6">
           {/* Header */}
-          <div className="space-y-1.5">
-            <h2 className="flex gap-2 items-center text-red-500 font-semibold text-lg leading-none tracking-tight pb-3">
-              <AlertTriangle className="h-5 w-5" />
+          <div className="space-y-3">
+            <h2 className="flex gap-2 items-center text-gray-300 font-semibold text-lg leading-none tracking-tight pb-3 border-b border-gray-700">
+              <AlertTriangle className="h-5 w-5 text-red-500" />
               {title || "Confirm Deletion"}
             </h2>
-            <p className="leading-relaxed text-gray-800 text-sm">
+            <p className="leading-loose text-gray-300 text-sm font-light">
               {description || "This action cannot be undone. Are you sure you want to delete this item?"}
             </p>
           </div>
@@ -56,6 +56,7 @@ const DeleteConfirmDialog = ({
           {/* Footer */}
           <div className="flex gap-2 justify-end mt-6">
             <Button
+              className="text-gray-800"
               variant="outline"
               onClick={onClose}
               disabled={isLoading}
@@ -77,7 +78,7 @@ const DeleteConfirmDialog = ({
           onClick={onClose}
           className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none"
         >
-          <X className="h-4 w-4 text-black" />
+          <X className="h-4 w-4" />
           <span className="sr-only">Close</span>
         </button>
       </div>
