@@ -1,14 +1,19 @@
 import React, { useState, useRef, useMemo, useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { addToCart } from "@/redux/features/cartSlice";
 import {
   ChevronLeft,
   ChevronRight,
   CircleCheckBig,
+  ShoppingCart,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import Metadata from "@/components/layout/Metadata/Metadata";
 import StarRating from "@/components/product/shared/StarRating";
 import ProductStatus from "@/components/product/shared/ProductStatus";
+import { toast } from "react-toastify";
+import CartSheet from "@/components/layout/header/components/CartSheet";
 
 const ProductDetails = ({
   product,
@@ -16,9 +21,13 @@ const ProductDetails = ({
   containerVariants,
   itemVariants,
 }) => {
+  const dispatch = useDispatch();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [currentProduct, setCurrentProduct] = useState(product);
   const thumbnailContainerRef = useRef(null);
+  const [showAnimation, setShowAnimation] = useState(false);
+  const buttonRef = useRef(null);
+  const [isCartOpen, setIsCartOpen] = useState(false);
 
   // Determine what to display based on similarProducts prop
   const displayItems = useMemo(() => {
@@ -76,6 +85,40 @@ const ProductDetails = ({
       currentImageIndex === 0 ? displayItems.length - 1 : currentImageIndex - 1;
     setCurrentImageIndex(newIndex);
     scrollThumbnailIntoView(newIndex);
+  };
+
+  // Handle add to cart with animation
+  const handleAddToCart = () => {
+    try {
+      const discountedPrice =
+        currentProduct.price * (1 - (currentProduct.discount || 0) / 100);
+
+      // Trigger the animation
+      setShowAnimation(true);
+
+      // Delay the actual cart addition to match animation
+      setTimeout(() => {
+        dispatch(
+          addToCart({
+            product: currentProduct._id,
+            name: currentProduct.product_name,
+            quantity: 1,
+            price: discountedPrice,
+            image: currentProduct.product_images[0]?.url,
+            includes: currentProduct.product_includes,
+          })
+        );
+
+        setShowAnimation(false);
+        // Open cart sheet after animation completes
+        setIsCartOpen(true);
+      }, 800);
+
+      // console.log(`Added to cart: ${currentProduct.product_name}`);
+    } catch (error) {
+      toast.error("Failed to add item to cart");
+      console.error("Add to cart error:", error);
+    }
   };
 
   return (
@@ -312,38 +355,45 @@ const ProductDetails = ({
                 ))}
             </div>
 
-            {/* Quantity and Cart Section - Always at bottom */}
-            <div className="mt-auto">
-              {/* <div className="flex items-center space-x-4 mb-4">
-                <div className="flex items-center border rounded-md">
-                  <Button
-                    className="rounded-r-none"
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  >
-                    <Minus className="w-4 h-4" />
-                  </Button>
-                  <span className="w-12 text-center">{quantity}</span>
-                  <Button
-                    className="rounded-l-none"
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => setQuantity(quantity + 1)}
-                  >
-                    <Plus className="w-4 h-4" />
-                  </Button>
-                </div>
-              </div> */}
+            {/* Cart Section - Simplified */}
+            <div className="mt-auto relative">
               <div className="flex space-x-4">
                 <Button
-                  className="w-full bg-red-600 hover:bg-red-700 hover:scale-105 transition-all duration-300"
+                  ref={buttonRef}
+                  className="w-full bg-red-600 hover:bg-red-700 hover:scale-105 transition-all duration-300 relative"
                   disabled={
                     !currentProduct?.stock || currentProduct?.stock <= 0
                   }
+                  onClick={handleAddToCart}
                 >
                   Add to Cart
                 </Button>
+
+                {/* Floating Animation */}
+                <AnimatePresence>
+                  {showAnimation && (
+                    <motion.div
+                      className="fixed z-50"
+                      initial={{
+                        scale: 1,
+                        x: buttonRef.current?.getBoundingClientRect().left || 0,
+                        y: buttonRef.current?.getBoundingClientRect().top || 0,
+                      }}
+                      animate={{
+                        scale: 0.5,
+                        x: window.innerWidth - 100,
+                        y: 20,
+                      }}
+                      exit={{ scale: 0, opacity: 0 }}
+                      transition={{ duration: 0.8, ease: "easeInOut" }}
+                    >
+                      <div className="bg-red-500 rounded-full p-2">
+                        <ShoppingCart className="w-4 h-4 text-white" />
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
                 <Button
                   variant="outline"
                   className="bg-brand hover:bg-darkBrand hover:text-white hover:scale-105 transition-all duration-300 border-slate-700 w-full"
@@ -358,6 +408,9 @@ const ProductDetails = ({
           </motion.div>
         </div>
       </motion.div>
+
+      {/* Cart Sheet */}
+      <CartSheet isOpen={isCartOpen} setIsOpen={setIsCartOpen} />
     </>
   );
 };
