@@ -5,7 +5,6 @@ import {
   ChevronLeft,
   ChevronRight,
   CircleCheckBig,
-  ShoppingCart,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -355,7 +354,7 @@ const ProductDetails = ({
                 ))}
             </div>
 
-            {/* Cart Section - Simplified */}
+            {/* Cart Section */}
             <div className="mt-auto relative">
               <div className="flex space-x-4">
                 <Button
@@ -368,31 +367,6 @@ const ProductDetails = ({
                 >
                   Add to Cart
                 </Button>
-
-                {/* Floating Animation */}
-                <AnimatePresence>
-                  {showAnimation && (
-                    <motion.div
-                      className="fixed z-50"
-                      initial={{
-                        scale: 1,
-                        x: buttonRef.current?.getBoundingClientRect().left || 0,
-                        y: buttonRef.current?.getBoundingClientRect().top || 0,
-                      }}
-                      animate={{
-                        scale: 0.5,
-                        x: window.innerWidth - 100,
-                        y: 20,
-                      }}
-                      exit={{ scale: 0, opacity: 0 }}
-                      transition={{ duration: 0.8, ease: "easeInOut" }}
-                    >
-                      <div className="bg-red-500 rounded-full p-2">
-                        <ShoppingCart className="w-4 h-4 text-white" />
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
 
                 <Button
                   variant="outline"
