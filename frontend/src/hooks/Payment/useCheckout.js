@@ -10,14 +10,15 @@ const useCheckout = () => {
   const { cartItems } = useSelector((state) => state.cart);
   const [email, setEmail] = useState("");
   const [address, setAddress] = useState({
-    [FORM_FIELDS.ADDRESS.FIRST_NAME]: "",
-    [FORM_FIELDS.ADDRESS.LAST_NAME]: "",
-    [FORM_FIELDS.ADDRESS.PHONE]: "",
-    [FORM_FIELDS.ADDRESS.STREET]: "",
-    [FORM_FIELDS.ADDRESS.CITY]: "",
-    [FORM_FIELDS.ADDRESS.STATE]: "",
-    [FORM_FIELDS.ADDRESS.ZIP_CODE]: "",
-    [FORM_FIELDS.ADDRESS.COUNTRY]: "",
+    [FORM_FIELDS.SHIPPING_ADDRESS.FIRST_NAME]: "",
+    [FORM_FIELDS.SHIPPING_ADDRESS.LAST_NAME]: "",
+    [FORM_FIELDS.SHIPPING_ADDRESS.PHONE]: "",
+    [FORM_FIELDS.SHIPPING_ADDRESS.STREET]: "",
+    [FORM_FIELDS.SHIPPING_ADDRESS.APARTMENT]: "",
+    [FORM_FIELDS.SHIPPING_ADDRESS.CITY]: "",
+    [FORM_FIELDS.SHIPPING_ADDRESS.STATE]: "",
+    [FORM_FIELDS.SHIPPING_ADDRESS.ZIP_CODE]: "",
+    [FORM_FIELDS.SHIPPING_ADDRESS.COUNTRY]: "",
   });
   const [paymentMethod, setPaymentMethod] = useState(
     PAYMENT_METHODS.CREDIT_CARD
@@ -93,7 +94,6 @@ const useCheckout = () => {
 
   const handleUseSameAddressChange = (checked) => {
     setUseSameAddress(checked);
-    // If checked, reset billing address
     if (checked) {
       setBillingAddress({
         [FORM_FIELDS.BILLING_ADDRESS.FIRST_NAME]: "",

@@ -8,7 +8,7 @@ import Select from "react-select";
 const BillingSection = ({ address, onAddressChange }) => {
   const { userCountry, setUserCountry, countryOptions, customStyles } =
     useCountries((countryLabel) =>
-      onAddressChange(FORM_FIELDS.ADDRESS.COUNTRY, countryLabel)
+      onAddressChange(FORM_FIELDS.BILLING_ADDRESS.COUNTRY, countryLabel)
     );
 
   const inputClassName =
@@ -26,7 +26,7 @@ const BillingSection = ({ address, onAddressChange }) => {
         value={userCountry}
         onChange={(option) => {
           setUserCountry(option);
-          onAddressChange(FORM_FIELDS.ADDRESS.COUNTRY, option.label);
+          onAddressChange(FORM_FIELDS.BILLING_ADDRESS.COUNTRY, option.label);
         }}
         styles={customStyles}
         placeholder="Country/Region"
@@ -42,17 +42,23 @@ const BillingSection = ({ address, onAddressChange }) => {
       <div className="grid grid-cols-2 gap-4">
         <Input
           placeholder="First name (optional)"
-          value={address?.[FORM_FIELDS.ADDRESS.FIRST_NAME] ?? ""}
+          value={address?.[FORM_FIELDS.BILLING_ADDRESS.FIRST_NAME] ?? ""}
           onChange={(e) =>
-            onAddressChange(FORM_FIELDS.ADDRESS.FIRST_NAME, e.target.value)
+            onAddressChange(
+              FORM_FIELDS.BILLING_ADDRESS.FIRST_NAME,
+              e.target.value
+            )
           }
           className={inputClassName}
         />
         <Input
           placeholder="Last name"
-          value={address?.[FORM_FIELDS.ADDRESS.LAST_NAME] ?? ""}
+          value={address?.[FORM_FIELDS.BILLING_ADDRESS.LAST_NAME] ?? ""}
           onChange={(e) =>
-            onAddressChange(FORM_FIELDS.ADDRESS.LAST_NAME, e.target.value)
+            onAddressChange(
+              FORM_FIELDS.BILLING_ADDRESS.LAST_NAME,
+              e.target.value
+            )
           }
           className={inputClassName}
           required
@@ -61,9 +67,9 @@ const BillingSection = ({ address, onAddressChange }) => {
 
       <Input
         placeholder="Street address"
-        value={address?.[FORM_FIELDS.ADDRESS.STREET] ?? ""}
+        value={address?.[FORM_FIELDS.BILLING_ADDRESS.STREET] ?? ""}
         onChange={(e) =>
-          onAddressChange(FORM_FIELDS.ADDRESS.STREET, e.target.value)
+          onAddressChange(FORM_FIELDS.BILLING_ADDRESS.STREET, e.target.value)
         }
         className={inputClassName}
         required
@@ -71,9 +77,9 @@ const BillingSection = ({ address, onAddressChange }) => {
 
       <Input
         placeholder="Apartment, suite, etc. (optional)"
-        value={address?.[FORM_FIELDS.ADDRESS.APARTMENT] ?? ""}
+        value={address?.[FORM_FIELDS.BILLING_ADDRESS.APARTMENT] ?? ""}
         onChange={(e) =>
-          onAddressChange(FORM_FIELDS.ADDRESS.APARTMENT, e.target.value)
+          onAddressChange(FORM_FIELDS.BILLING_ADDRESS.APARTMENT, e.target.value)
         }
         className={inputClassName}
       />
@@ -81,18 +87,21 @@ const BillingSection = ({ address, onAddressChange }) => {
       <div className="grid grid-cols-2 gap-4">
         <Input
           placeholder="Postal code"
-          value={address?.[FORM_FIELDS.ADDRESS.ZIP_CODE] ?? ""}
+          value={address?.[FORM_FIELDS.BILLING_ADDRESS.ZIP_CODE] ?? ""}
           onChange={(e) =>
-            onAddressChange(FORM_FIELDS.ADDRESS.ZIP_CODE, e.target.value)
+            onAddressChange(
+              FORM_FIELDS.BILLING_ADDRESS.ZIP_CODE,
+              e.target.value
+            )
           }
           className={inputClassName}
           required
         />
         <Input
           placeholder="City"
-          value={address?.[FORM_FIELDS.ADDRESS.CITY] ?? ""}
+          value={address?.[FORM_FIELDS.BILLING_ADDRESS.CITY] ?? ""}
           onChange={(e) =>
-            onAddressChange(FORM_FIELDS.ADDRESS.CITY, e.target.value)
+            onAddressChange(FORM_FIELDS.BILLING_ADDRESS.CITY, e.target.value)
           }
           className={inputClassName}
           required
@@ -101,9 +110,9 @@ const BillingSection = ({ address, onAddressChange }) => {
 
       <Input
         placeholder="Region/State"
-        value={address?.[FORM_FIELDS.ADDRESS.STATE] ?? ""}
+        value={address?.[FORM_FIELDS.BILLING_ADDRESS.STATE] ?? ""}
         onChange={(e) =>
-          onAddressChange(FORM_FIELDS.ADDRESS.STATE, e.target.value)
+          onAddressChange(FORM_FIELDS.BILLING_ADDRESS.STATE, e.target.value)
         }
         className={inputClassName}
         required
@@ -112,9 +121,9 @@ const BillingSection = ({ address, onAddressChange }) => {
       <Input
         type="tel"
         placeholder="Phone Number"
-        value={address?.[FORM_FIELDS.ADDRESS.PHONE] ?? ""}
+        value={address?.[FORM_FIELDS.BILLING_ADDRESS.PHONE] ?? ""}
         onChange={(e) =>
-          onAddressChange(FORM_FIELDS.ADDRESS.PHONE, e.target.value)
+          onAddressChange(FORM_FIELDS.BILLING_ADDRESS.PHONE, e.target.value)
         }
         className={inputClassName}
         required
