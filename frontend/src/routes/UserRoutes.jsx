@@ -34,6 +34,7 @@ import ProductImages from "@/components/admin/Products/components/ProductImages"
 import ViewColor from "@/components/admin/Colors/ViewColor";
 import AddColor from "@/components/admin/Colors/AddColor";
 import UpdateColor from "@/components/admin/Colors/UpdateColor";
+import Checkout from "@/pages/Checkout/Checkout";
 
 const UserRoutes = (
   <>
@@ -67,6 +68,14 @@ const UserRoutes = (
       element={
         <ProtectedRoutes>
           <Settings />
+        </ProtectedRoutes>
+      }
+    />
+    <Route
+      path="checkout"
+      element={
+        <ProtectedRoutes>
+          <Checkout />
         </ProtectedRoutes>
       }
     />

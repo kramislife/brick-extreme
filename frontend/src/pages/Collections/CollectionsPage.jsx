@@ -7,7 +7,7 @@ import LoadingSpinner from "@/components/layout/spinner/LoadingSpinner";
 import Metadata from "@/components/layout/Metadata/Metadata";
 import { ImageIcon } from "lucide-react";
 import { Card, CardFooter } from "@/components/ui/card";
-import { categoryAnimations } from "@/hooks/animationConfig";
+import { categoryAnimations } from "@/hooks/Animation/animationConfig";
 
 const PlaceholderImage = () => (
   <div className="w-full h-[360px] bg-brand-gradient flex items-center justify-center border-slate-700 rounded-lg">

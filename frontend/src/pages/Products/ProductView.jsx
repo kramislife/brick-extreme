@@ -7,7 +7,7 @@ import Metadata from "@/components/layout/Metadata/Metadata";
 import { useGetProductDetailsQuery } from "@/redux/api/productApi";
 import { toast } from "react-toastify";
 import LoadingSpinner from "@/components/layout/spinner/LoadingSpinner";
-import { productViewAnimations } from "@/hooks/animationConfig";
+import { productViewAnimations } from "@/hooks/Animation/animationConfig";
 
 const ProductView = () => {
   const { id } = useParams();
@@ -17,7 +17,7 @@ const ProductView = () => {
     if (!data?.product) return [];
 
     const mainProduct = data.product;
-    
+
     // If there are similar products, return main product + similar products
     if (data.similarProducts?.length > 0) {
       return [mainProduct, ...data.similarProducts].filter(Boolean);
@@ -45,14 +45,16 @@ const ProductView = () => {
           {/* Product Details */}
           <ProductDetails
             product={data?.product}
-            similarProducts={data?.similarProducts?.length > 0 ? displayProducts : null}
+            similarProducts={
+              data?.similarProducts?.length > 0 ? displayProducts : null
+            }
             containerVariants={productViewAnimations.containerVariants}
             itemVariants={productViewAnimations.itemVariants}
           />
-          
+
           {/* Product Specification */}
           <ProductSpecification product={data?.product} />
-          
+
           {/* Product Rating */}
           <ProductRating product={data?.product} />
         </div>
