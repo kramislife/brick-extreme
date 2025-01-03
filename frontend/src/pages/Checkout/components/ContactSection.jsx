@@ -14,7 +14,7 @@ const ContactSection = ({ email, onEmailChange }) => {
     <Card className="bg-darkBrand/20 backdrop-blur-xl border-white/10">
       <CardHeader>
         <CardTitle className="text-white flex items-center gap-2 text-lg">
-          <User className="w-5 h-5 text-blue-500" />
+          <User className="w-5 h-5 text-blue-400" />
           Contact Information
         </CardTitle>
         <CardDescription className="text-gray-400">

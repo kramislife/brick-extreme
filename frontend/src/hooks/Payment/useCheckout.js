@@ -2,12 +2,19 @@ import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { PAYMENT_METHODS, FORM_FIELDS } from "@/constant/paymentMethod";
-import { updateQuantity, removeFromCart } from "@/redux/features/cartSlice";
+import {
+  updateQuantity,
+  removeFromCart,
+  clearCart,
+} from "@/redux/features/cartSlice";
+// import { useSubmitCheckoutMutation } from "@/redux/api/checkoutApi";
+import { toast } from "react-toastify";
 
 const useCheckout = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { cartItems } = useSelector((state) => state.cart);
+  // const [submitCheckout, { isLoading }] = useSubmitCheckoutMutation();
 
   // Form states
   const [email, setEmail] = useState("");
@@ -84,15 +91,31 @@ const useCheckout = () => {
         items: cartItems,
       };
 
-      console.log("Processing checkout...", orderData);
+      console.log("Order Checkout Data", orderData);
 
-      if (paymentMethod === PAYMENT_METHODS.BANK_TRANSFER) {
-        setOrderStatus("pending");
-        navigate("/bank-transfer-instructions");
-      }
+      // const response = await submitCheckout(orderData).unwrap();
+
+      // // Handle successful checkout
+      // setOrderStatus("success");
+      // toast.success("Order placed successfully!");
+
+      // // Clear cart after successful checkout
+      // dispatch(clearCart());
+
+      // // Redirect based on payment method
+      // if (paymentMethod === PAYMENT_METHODS.BANK_TRANSFER) {
+      //   navigate("/bank-transfer-instructions", {
+      //     state: { orderId: response.orderId },
+      //   });
+      // } else {
+      //   navigate("/order-confirmation", {
+      //     state: { orderId: response.orderId },
+      //   });
+      // }
     } catch (error) {
       console.error("Checkout error:", error);
       setOrderStatus("error");
+      toast.error(error.data?.message || "Failed to process checkout");
     }
   };
 
@@ -114,6 +137,7 @@ const useCheckout = () => {
     cartItems,
     total,
     orderStatus,
+    // isLoading,
     useShippingAddress,
     handleEmailChange,
     handleAddressChange,

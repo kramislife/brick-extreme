@@ -32,7 +32,7 @@ const PaymentSection = ({
     <Card className="bg-darkBrand/20 backdrop-blur-xl border-white/10">
       <CardHeader>
         <CardTitle className="text-white flex items-center gap-2 text-lg">
-          <CreditCard className="w-5 h-5 text-blue-500" />
+          <CreditCard className="w-5 h-5 text-blue-400" />
           Payment Details
         </CardTitle>
       </CardHeader>
