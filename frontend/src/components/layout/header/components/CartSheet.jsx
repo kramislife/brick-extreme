@@ -8,13 +8,18 @@ import {
 import { Button } from "@/components/ui/button";
 import { useSelector, useDispatch } from "react-redux";
 import { removeFromCart, updateQuantity } from "@/redux/features/cartSlice";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import { toast } from "react-toastify";
+import { useState } from "react";
 
 const CartSheet = ({ isOpen, setIsOpen }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { cartItems } = useSelector((state) => state.cart);
+  const { isAuthenticated } = useSelector((state) => state.auth);
+  const [showLoginMessage, setShowLoginMessage] = useState(false);
+  const [checkoutDisabled, setCheckoutDisabled] = useState(false);
 
   // Calculate total
   const total = cartItems.reduce(
@@ -28,6 +33,22 @@ const CartSheet = ({ isOpen, setIsOpen }) => {
     } else {
       dispatch(updateQuantity({ product, quantity: newQuantity }));
     }
+  };
+
+  const handleCheckout = () => {
+    if (!isAuthenticated) {
+      setShowLoginMessage(true);
+      setCheckoutDisabled(true);
+      return;
+    }
+
+    if (cartItems.length === 0) {
+      toast.error("Your cart is empty");
+      return;
+    }
+
+    setIsOpen(false);
+    navigate("/checkout");
   };
 
   return (
@@ -146,22 +167,40 @@ const CartSheet = ({ isOpen, setIsOpen }) => {
 
           {/* Footer with Total and Checkout */}
           {cartItems.length > 0 && (
-            <div className="sticky bottom-0 px-6 py-4 bg-brand border-t border-white/10">
+            <div className="sticky bottom-0 px-6 py-5 bg-brand border-t border-white/10">
               <div className="flex justify-between items-center mb-4">
                 <span className="text-gray-400">Total</span>
                 <span className="text-white text-xl font-semibold">
                   ${total.toFixed(2)}
                 </span>
               </div>
-              <Button
-                className="w-full bg-red-600 hover:bg-red-700"
-                onClick={() => {
-                  setIsOpen(false);
-                  navigate("/checkout");
-                }}
-              >
-                Proceed to Checkout
-              </Button>
+
+              <div className="space-y-5">
+                <Button
+                  className="w-full flex items-center justify-center gap-2 transition-all duration-200 bg-red-600 hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  onClick={handleCheckout}
+                  disabled={checkoutDisabled}
+                >
+                  <ShoppingCart size={18} />
+                  Proceed to Checkout
+                </Button>
+                {showLoginMessage && !isAuthenticated && (
+                  <p className="text-right text-sm animate-fade-in">
+                    <span className="text-blue-400">Please </span>
+                    <Link
+                      to="/login"
+                      className="underline text-blue-400 hover:text-blue-300 transition-colors"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      login
+                    </Link>
+                    <span className="text-blue-400">
+                      {" "}
+                      to proceed with checkout
+                    </span>
+                  </p>
+                )}
+              </div>
             </div>
           )}
         </div>

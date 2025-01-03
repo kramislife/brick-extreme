@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { motion, useInView } from "framer-motion";
 import ProductCard from "@/components/product/ProductCard";
 import { PackageX } from "lucide-react";
-import { productGridAnimations } from "@/hooks/animationConfig";
+import { productGridAnimations } from "@/hooks/Animation/animationConfig";
 
 // return an empty array if products is not provided
 const ProductGrid = ({ title, products, baseUrl }) => {

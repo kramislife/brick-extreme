@@ -66,10 +66,10 @@ const ViewProducts = () => {
         price: product.price,
         category: product.product_category
           .map((category) => category?.name)
-          .join(", "),
+          .join(", ") || "N/A",
         collection: product.product_collection
           .map((collection) => collection.name)
-          .join(", "),
+          .join(", ") || "N/A",
         stock: product.stock,
         createdAt: new Date(product.createdAt).toLocaleString(),
       }));
