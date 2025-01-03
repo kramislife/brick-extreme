@@ -5,20 +5,6 @@ export const PAYMENT_METHODS = {
   BANK_TRANSFER: "bank_transfer",
 };
 
-// Shipping options (if you want to add different shipping methods later)
-export const SHIPPING_METHODS = {
-  FREE: "free",
-  EXPRESS: "express",
-};
-
-// Order status constants
-export const ORDER_STATUS = {
-  PENDING: "pending",
-  PROCESSING: "processing",
-  COMPLETED: "completed",
-  CANCELLED: "cancelled",
-};
-
 // Form field names (for consistency across components)
 export const FORM_FIELDS = {
   EMAIL: "email",
@@ -28,26 +14,16 @@ export const FORM_FIELDS = {
     SECURITY_CODE: "securityCode",
     NAME_ON_CARD: "nameOnCard",
   },
-  BILLING_ADDRESS: {
-    COUNTRY: "billing_country",
-    FIRST_NAME: "billing_first_name",
-    LAST_NAME: "billing_last_name",
-    STREET: "billing_street",
-    APARTMENT: "billing_apartment",
-    ZIP_CODE: "billing_zip_code",
-    CITY: "billing_city",
-    STATE: "billing_state",
-    PHONE: "billing_phone",
-  },
-  SHIPPING_ADDRESS: {
-    COUNTRY: "shipping_country",
-    FIRST_NAME: "shipping_first_name",
-    LAST_NAME: "shipping_last_name",
-    STREET: "shipping_street",
-    APARTMENT: "shipping_apartment",
-    ZIP_CODE: "shipping_zip_code",
-    CITY: "shipping_city",
-    STATE: "shipping_state",
-    PHONE: "shipping_phone",
+  // Shared address fields that can be used for both shipping and billing
+  ADDRESS: {
+    COUNTRY: "country",
+    FIRST_NAME: "first_name",
+    LAST_NAME: "last_name",
+    STREET: "street",
+    APARTMENT: "apartment",
+    ZIP_CODE: "zip_code",
+    CITY: "city",
+    STATE: "state",
+    PHONE: "phone",
   },
 };

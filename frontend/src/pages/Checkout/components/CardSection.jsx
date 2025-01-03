@@ -3,16 +3,16 @@ import { Input } from "@/components/ui/input";
 import { Calendar, HelpCircle } from "lucide-react";
 import Stripe from "@/assets/Stripe.svg";
 import Mastercard from "@/assets/Mastercard.svg";
-import DeliverySection from "./ShippingSection";
 import BillingSection from "./BillingSection";
+import { FORM_FIELDS } from "@/constant/paymentMethod";
 
 const CardSection = ({
   useShippingAddress,
   setUseShippingAddress,
   billingAddress,
-  setBillingAddress,
-  onSubmit,
+  onBillingAddressChange,
   address,
+  onSubmit,
 }) => {
   // Input styles
   const inputClassName =
@@ -20,9 +20,15 @@ const CardSection = ({
 
   useEffect(() => {
     if (useShippingAddress && address) {
-      setBillingAddress(address);
+      // Update all billing address fields to match shipping address
+      Object.keys(FORM_FIELDS.ADDRESS).forEach((field) => {
+        onBillingAddressChange(
+          FORM_FIELDS.ADDRESS[field],
+          address[FORM_FIELDS.ADDRESS[field]]
+        );
+      });
     }
-  }, [useShippingAddress, address]);
+  }, [useShippingAddress, address, onBillingAddressChange]);
 
   return (
     <div className="space-y-6">
@@ -95,7 +101,7 @@ const CardSection = ({
             <svg
               className={`absolute inset-0 w-full h-full stroke-white stroke-[4] ${
                 useShippingAddress ? "opacity-100" : "opacity-0"
-              } transition-opacity duration-200`}
+              } transition-opacity duration-200`} 
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -112,17 +118,12 @@ const CardSection = ({
         </label>
       </div>
 
-      {/* Delivery section - If shipping address is false shows the delivery section fields*/}
+      {/* Billing section - If shipping address is false shows the billing section fields*/}
       {!useShippingAddress && (
         <div className="mt-6">
           <BillingSection
             address={billingAddress}
-            onAddressChange={(field, value) => {
-              setBillingAddress((prev) => ({
-                ...prev,
-                [field]: value,
-              }));
-            }}
+            onAddressChange={onBillingAddressChange}
           />
         </div>
       )}

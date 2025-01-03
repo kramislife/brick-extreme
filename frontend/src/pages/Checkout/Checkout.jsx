@@ -9,19 +9,19 @@ const Checkout = () => {
   const {
     email,
     address,
+    billingAddress,
     paymentMethod,
     cartItems,
     total,
+    useShippingAddress,
     handleEmailChange,
     handleAddressChange,
+    handleBillingAddressChange,
     handlePaymentMethodChange,
     handleSubmit,
+    handleUseShippingAddressChange,
     handleUpdateQuantity,
     handleRemoveItem,
-    useShippingAddress,
-    billingAddress,
-    handleBillingAddressChange,
-    handleUseShippingAddressChange,
   } = useCheckout();
 
   return (
@@ -29,7 +29,7 @@ const Checkout = () => {
       <div className="mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
           {/* Left Column - Forms */}
-          <div className="space-y-6 overflow-y-auto ">
+          <div className="space-y-6 overflow-y-auto">
             <form onSubmit={handleSubmit} className="space-y-5">
               <ContactSection email={email} onEmailChange={handleEmailChange} />
               <ShippingSection
@@ -44,6 +44,7 @@ const Checkout = () => {
                 setUseShippingAddress={handleUseShippingAddressChange}
                 billingAddress={billingAddress}
                 onBillingAddressChange={handleBillingAddressChange}
+                address={address}
                 onSubmit={handleSubmit}
               />
             </form>

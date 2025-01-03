@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PAYMENT_METHODS } from "@/constant/paymentMethod";
 import CreditCard from "@/assets/Creditcard.png";
@@ -12,11 +12,11 @@ const PaymentSection = ({
   total,
   address,
   onSubmit,
+  useShippingAddress,
+  setUseShippingAddress,
+  billingAddress,
+  onBillingAddressChange,
 }) => {
-  const [useShippingAddress, setUseShippingAddress] = useState(true);
-  const [billingAddress, setBillingAddress] = useState({});
-
-  // Get payment button styles
   const getPaymentButtonStyles = (isSelected) => {
     return `w-full h-10 rounded-md transition-all duration-200 flex items-center justify-center ${
       isSelected
@@ -56,18 +56,17 @@ const PaymentSection = ({
           </button>
         </div>
 
-        {/* Card Section - If payment method is credit and debit card */}
         {paymentMethod === PAYMENT_METHODS.CREDIT_CARD && (
           <CardSection
             useShippingAddress={useShippingAddress}
             setUseShippingAddress={setUseShippingAddress}
             billingAddress={billingAddress}
-            setBillingAddress={setBillingAddress}
+            onBillingAddressChange={onBillingAddressChange}
+            address={address}
             onSubmit={onSubmit}
           />
         )}
 
-        {/* PayPal Section - If payment method is PayPal */}
         {paymentMethod === PAYMENT_METHODS.PAYPAL && <PayPalSection />}
       </CardContent>
     </Card>

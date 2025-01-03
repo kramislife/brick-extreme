@@ -8,34 +8,26 @@ const useCheckout = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { cartItems } = useSelector((state) => state.cart);
+
+  // Form states
   const [email, setEmail] = useState("");
-  const [address, setAddress] = useState({
-    [FORM_FIELDS.SHIPPING_ADDRESS.FIRST_NAME]: "",
-    [FORM_FIELDS.SHIPPING_ADDRESS.LAST_NAME]: "",
-    [FORM_FIELDS.SHIPPING_ADDRESS.PHONE]: "",
-    [FORM_FIELDS.SHIPPING_ADDRESS.STREET]: "",
-    [FORM_FIELDS.SHIPPING_ADDRESS.APARTMENT]: "",
-    [FORM_FIELDS.SHIPPING_ADDRESS.CITY]: "",
-    [FORM_FIELDS.SHIPPING_ADDRESS.STATE]: "",
-    [FORM_FIELDS.SHIPPING_ADDRESS.ZIP_CODE]: "",
-    [FORM_FIELDS.SHIPPING_ADDRESS.COUNTRY]: "",
+  const [shippingAddress, setShippingAddress] = useState({
+    [FORM_FIELDS.ADDRESS.FIRST_NAME]: "",
+    [FORM_FIELDS.ADDRESS.LAST_NAME]: "",
+    [FORM_FIELDS.ADDRESS.PHONE]: "",
+    [FORM_FIELDS.ADDRESS.STREET]: "",
+    [FORM_FIELDS.ADDRESS.APARTMENT]: "",
+    [FORM_FIELDS.ADDRESS.CITY]: "",
+    [FORM_FIELDS.ADDRESS.STATE]: "",
+    [FORM_FIELDS.ADDRESS.ZIP_CODE]: "",
+    [FORM_FIELDS.ADDRESS.COUNTRY]: "",
   });
+  const [billingAddress, setBillingAddress] = useState({ ...shippingAddress });
+  const [useShippingAddress, setUseShippingAddress] = useState(true);
   const [paymentMethod, setPaymentMethod] = useState(
     PAYMENT_METHODS.CREDIT_CARD
   );
   const [orderStatus, setOrderStatus] = useState(null);
-  const [useSameAddress, setUseSameAddress] = useState(true);
-  const [billingAddress, setBillingAddress] = useState({
-    [FORM_FIELDS.BILLING_ADDRESS.FIRST_NAME]: "",
-    [FORM_FIELDS.BILLING_ADDRESS.LAST_NAME]: "",
-    [FORM_FIELDS.BILLING_ADDRESS.PHONE]: "",
-    [FORM_FIELDS.BILLING_ADDRESS.STREET]: "",
-    [FORM_FIELDS.BILLING_ADDRESS.APARTMENT]: "",
-    [FORM_FIELDS.BILLING_ADDRESS.CITY]: "",
-    [FORM_FIELDS.BILLING_ADDRESS.STATE]: "",
-    [FORM_FIELDS.BILLING_ADDRESS.ZIP_CODE]: "",
-    [FORM_FIELDS.BILLING_ADDRESS.COUNTRY]: "",
-  });
 
   // Calculate total
   const total = cartItems.reduce(
@@ -43,77 +35,65 @@ const useCheckout = () => {
     0
   );
 
-  const handleEmailChange = (value) => {
-    setEmail(value);
-  };
+  const handleEmailChange = (value) => setEmail(value);
 
   const handleAddressChange = (field, value) => {
-    setAddress((prev) => ({ ...prev, [field]: value }));
+    const updatedShippingAddress = {
+      ...shippingAddress,
+      [field]: value,
+    };
+    setShippingAddress(updatedShippingAddress);
+
+    // Only sync with billing address if useShippingAddress is true
+    if (useShippingAddress) {
+      setBillingAddress(updatedShippingAddress);
+    }
   };
 
-  const handlePaymentMethodChange = (value) => {
-    setPaymentMethod(value);
+  const handleBillingAddressChange = (field, value) => {
+    // Only update billing address if we're not using shipping address
+    if (!useShippingAddress) {
+      setBillingAddress((prev) => ({
+        ...prev,
+        [field]: value,
+      }));
+    }
   };
 
-  const handlePaypalSuccess = (details) => {
-    setOrderStatus("processing");
-    // Handle successful payment
-    console.log("Payment successful!", details);
-    // Navigate to success page or show success message
-    navigate("/order-success");
+  const handleUseShippingAddressChange = (checked) => {
+    setUseShippingAddress(checked);
+    if (checked) {
+      // If checkbox is checked, copy shipping address to billing
+      setBillingAddress({ ...shippingAddress });
+    }
+    // If unchecked, keep the current billing address (don't reset it)
   };
+
+  const handlePaymentMethodChange = (value) => setPaymentMethod(value);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      // Process the checkout here
       const orderData = {
         email,
-        address,
+        shippingAddress,
+        billingAddress: useShippingAddress ? shippingAddress : billingAddress,
         paymentMethod,
         total,
         items: cartItems,
-        status: "pending",
       };
 
       console.log("Processing checkout...", orderData);
 
-      // If it's PayPal, the PayPal component will handle the payment
       if (paymentMethod === PAYMENT_METHODS.BANK_TRANSFER) {
-        // Handle bank transfer logic
         setOrderStatus("pending");
-        // You might want to navigate to a bank transfer instructions page
         navigate("/bank-transfer-instructions");
       }
     } catch (error) {
       console.error("Checkout error:", error);
       setOrderStatus("error");
     }
-  };
-
-  const handleUseSameAddressChange = (checked) => {
-    setUseSameAddress(checked);
-    if (checked) {
-      setBillingAddress({
-        [FORM_FIELDS.BILLING_ADDRESS.FIRST_NAME]: "",
-        [FORM_FIELDS.BILLING_ADDRESS.LAST_NAME]: "",
-        [FORM_FIELDS.BILLING_ADDRESS.PHONE]: "",
-        [FORM_FIELDS.BILLING_ADDRESS.STREET]: "",
-        [FORM_FIELDS.BILLING_ADDRESS.APARTMENT]: "",
-        [FORM_FIELDS.BILLING_ADDRESS.CITY]: "",
-        [FORM_FIELDS.BILLING_ADDRESS.STATE]: "",
-        [FORM_FIELDS.BILLING_ADDRESS.ZIP_CODE]: "",
-        [FORM_FIELDS.BILLING_ADDRESS.COUNTRY]: "",
-      });
-    }
-  };
-
-  const handleBillingAddressChange = (field, value) => {
-    setBillingAddress((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
   };
 
   const handleUpdateQuantity = (productId, newQuantity) => {
@@ -128,20 +108,19 @@ const useCheckout = () => {
 
   return {
     email,
-    address,
+    address: shippingAddress,
+    billingAddress,
     paymentMethod,
     cartItems,
     total,
     orderStatus,
+    useShippingAddress,
     handleEmailChange,
     handleAddressChange,
-    handlePaymentMethodChange,
-    handlePaypalSuccess,
-    handleSubmit,
-    useSameAddress,
-    billingAddress,
-    handleUseSameAddressChange,
     handleBillingAddressChange,
+    handlePaymentMethodChange,
+    handleSubmit,
+    handleUseShippingAddressChange,
     handleUpdateQuantity,
     handleRemoveItem,
   };
