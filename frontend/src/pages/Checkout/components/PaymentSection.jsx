@@ -1,10 +1,13 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PAYMENT_METHODS } from "@/constant/paymentMethod";
-import CreditCard from "@/assets/Creditcard.png";
+import MasterCard from "@/assets/mastercard.svg";
+import Visa from "@/assets/visa.png";
+import Stripe from "@/assets/stripe.svg";
 import PayPal from "@/assets/Paypal.png";
 import CardSection from "./CardSection";
 import PayPalSection from "./PayPalSection";
+import { CreditCard } from "lucide-react";
 
 const PaymentSection = ({
   paymentMethod,
@@ -28,7 +31,8 @@ const PaymentSection = ({
   return (
     <Card className="bg-darkBrand/20 backdrop-blur-xl border-white/10">
       <CardHeader>
-        <CardTitle className="text-white flex items-center gap-2">
+        <CardTitle className="text-white flex items-center gap-2 text-lg">
+          <CreditCard className="w-5 h-5 text-blue-500" />
           Payment Details
         </CardTitle>
       </CardHeader>
@@ -40,9 +44,10 @@ const PaymentSection = ({
               paymentMethod === PAYMENT_METHODS.CREDIT_CARD
             )} bg-white`}
           >
-            <div className="flex items-center gap-2">
-              <img src={CreditCard} alt="Credit Card" className="h-8 w-auto" />
-              <span className="text-black">Credit and Debit Card</span>
+            <div className="flex items-center gap-1">
+              <img src={MasterCard} alt="Credit Card" className="h-8 w-auto" />
+              <img src={Visa} alt="Credit Card" className="h-8 w-auto" />
+              <img src={Stripe} alt="Credit Card" className="h-6 w-auto" />
             </div>
           </button>
 

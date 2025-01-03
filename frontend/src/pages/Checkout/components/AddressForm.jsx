@@ -10,10 +10,11 @@ const AddressForm = ({ address, onAddressChange, formFields }) => {
     );
 
   const inputClassName =
-    "bg-brand/5 border-white/5 border rounded-lg px-4 py-2 transition duration-300 focus:outline-none focus:border-blue-500 hover:border-blue-300 h-12 placeholder:text-white/80 font-extralight text-white";
+    "bg-brand/5 border-white/5 border rounded-lg px-4 py-2 transition duration-300 focus:outline-none focus:border-blue-500 hover:border-blue-300 h-12 placeholder:text-white/80 font-light text-white";
 
   return (
     <div className="space-y-4">
+      {/* Select Country */}
       <Select
         options={countryOptions}
         value={userCountry}
@@ -32,6 +33,7 @@ const AddressForm = ({ address, onAddressChange, formFields }) => {
         required
       />
 
+      {/* Name */}
       <div className="grid grid-cols-2 gap-4">
         <Input
           placeholder="First name (optional)"
@@ -52,6 +54,7 @@ const AddressForm = ({ address, onAddressChange, formFields }) => {
         />
       </div>
 
+      {/* Street Address */}
       <Input
         placeholder="Street address"
         value={address?.[formFields.STREET] ?? ""}
@@ -60,6 +63,7 @@ const AddressForm = ({ address, onAddressChange, formFields }) => {
         required
       />
 
+      {/* Apartment, suite, etc. */}
       <Input
         placeholder="Apartment, suite, etc. (optional)"
         value={address?.[formFields.APARTMENT] ?? ""}
@@ -67,6 +71,7 @@ const AddressForm = ({ address, onAddressChange, formFields }) => {
         className={inputClassName}
       />
 
+      {/* Postal code and City */}
       <div className="grid grid-cols-2 gap-4">
         <Input
           placeholder="Postal code"
@@ -84,6 +89,7 @@ const AddressForm = ({ address, onAddressChange, formFields }) => {
         />
       </div>
 
+      {/* Region/State */}
       <Input
         placeholder="Region/State"
         value={address?.[formFields.STATE] ?? ""}
@@ -92,6 +98,7 @@ const AddressForm = ({ address, onAddressChange, formFields }) => {
         required
       />
 
+      {/* Phone Number */}
       <Input
         type="tel"
         placeholder="Phone Number"

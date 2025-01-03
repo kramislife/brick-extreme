@@ -5,6 +5,7 @@ import Stripe from "@/assets/Stripe.svg";
 import Mastercard from "@/assets/Mastercard.svg";
 import BillingSection from "./BillingSection";
 import { FORM_FIELDS } from "@/constant/paymentMethod";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const CardSection = ({
   useShippingAddress,
@@ -16,7 +17,7 @@ const CardSection = ({
 }) => {
   // Input styles
   const inputClassName =
-    "bg-brand/10 border-white/10 border rounded-lg px-4 py-2 transition duration-300 focus:outline-none focus:border-blue-500 hover:border-blue-300 h-12 placeholder:text-white/80 font-extralight text-white";
+    "bg-brand/10 border-white/10 border rounded-lg px-4 py-2 transition duration-300 focus:outline-none focus:border-blue-500 hover:border-blue-300 h-12 placeholder:text-white/80 font-light text-white";
 
   useEffect(() => {
     if (useShippingAddress && address) {
@@ -42,8 +43,13 @@ const CardSection = ({
             required
             maxLength="19"
             pattern="\d*"
+            onChange={(e) => {
+              const value = e.target.value.replace(/[^\d]/g, "");
+              const formatted = value.match(/.{1,4}/g)?.join("-") || value;
+              e.target.value = formatted;
+            }}
           />
-          <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-2">
+          <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center">
             <img src={Mastercard} alt="Mastercard" className="h-6 w-auto" />
             <img src={Stripe} alt="Stripe" className="h-6 w-auto" />
           </div>
@@ -57,24 +63,37 @@ const CardSection = ({
               className={`${inputClassName} pr-10`}
               required
               maxLength="5"
+              pattern="\d*"
+              onChange={(e) => {
+                const value = e.target.value.replace(/[^\d]/g, "");
+                const formatted = value.match(/.{1,2}/g)?.join("/") || value;
+                e.target.value = formatted;
+              }}
             />
             <div className="absolute right-3 top-1/2 -translate-y-1/2">
               <Calendar className="h-5 w-5 text-gray-400" />
             </div>
           </div>
 
-          {/* Security code input */}
-          <div className="relative">
+          {/* Security code (CVV) input */}
+          <div className="relative group">
             <Input
               type="text"
-              placeholder="Security code"
+              placeholder="CVV"
               className={`${inputClassName} pr-10`}
               required
               maxLength="4"
               pattern="\d*"
+              onChange={(e) => {
+                const value = e.target.value.replace(/[^\d]/g, "");
+                e.target.value = value;
+              }}
             />
-            <div className="absolute right-3 top-1/2 -translate-y-1/2">
+            <div className="absolute right-3 top-1/2 -translate-y-1/2 cursor-help">
               <HelpCircle className="h-5 w-5 text-gray-400" />
+              <div className="invisible group-hover:visible absolute right-0 bottom-full mb-2 w-60 p-2 bg-gray-900 text-white text-xs rounded-lg shadow-lg leading-relaxed font-light">
+                A 3-4 digit security code on back of your card
+              </div>
             </div>
           </div>
         </div>
@@ -90,32 +109,20 @@ const CardSection = ({
 
       {/* Use shipping address as billing address checkbox */}
       <div className="mt-6">
-        <label className="inline-flex items-center cursor-pointer">
-          <input
-            type="checkbox"
+        <div className="flex items-center space-x-2">
+          <Checkbox
+            id="shipping-billing"
             checked={useShippingAddress}
-            onChange={(e) => setUseShippingAddress(e.target.checked)}
-            className="sr-only peer"
+            onCheckedChange={setUseShippingAddress}
+            className="border-white/20 data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-500"
           />
-          <div className="relative w-5 h-5 border border-white/20 rounded peer-checked:bg-blue-500 peer-checked:border-blue-500 transition-all duration-200">
-            <svg
-              className={`absolute inset-0 w-full h-full stroke-white stroke-[4] ${
-                useShippingAddress ? "opacity-100" : "opacity-0"
-              } transition-opacity duration-200`} 
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="4"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <polyline points="20 6 9 17 4 12"></polyline>
-            </svg>
-          </div>
-          <span className="ml-3 text-sm text-white/90">
+          <label
+            htmlFor="shipping-billing"
+            className="text-sm leading-none text-white/90"
+          >
             Use shipping address as billing address
-          </span>
-        </label>
+          </label>
+        </div>
       </div>
 
       {/* Billing section - If shipping address is false shows the billing section fields*/}

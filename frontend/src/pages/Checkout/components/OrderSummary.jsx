@@ -130,7 +130,9 @@ const OrderSummary = ({ cartItems, total, updateQuantity, removeItem }) => {
             <div className="flex justify-between text-white font-medium pt-5 border-t border-white/10">
               <span>Total</span>
               <div>
-                <span className="text-green-500 text-xl">${total.toFixed(2)}</span>
+                <span className="text-green-500 text-xl">
+                  ${total.toFixed(2)}
+                </span>
               </div>
             </div>
           </div>
