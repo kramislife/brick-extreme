@@ -1,12 +1,6 @@
 import React from "react";
 import { Input } from "@/components/ui/input";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { User } from "lucide-react";
 
 const ContactSection = ({ email, onEmailChange }) => {
@@ -17,12 +11,7 @@ const ContactSection = ({ email, onEmailChange }) => {
           <User className="w-5 h-5 text-blue-400" />
           Contact Information
         </CardTitle>
-        <CardDescription className="text-gray-400 lg:ml-7">
-          Enter your email for order updates
-        </CardDescription>
       </CardHeader>
-
-      {/* Email input */}
       <CardContent>
         <Input
           variant="floating"

@@ -8,7 +8,6 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  DialogDescription,
 } from "@/components/ui/dialog";
 import { Plus, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -16,12 +15,10 @@ import { Checkbox } from "@/components/ui/checkbox";
 import {
   useCreateAddressMutation,
   useUpdateAddressMutation,
-  useGetUserAddressesQuery,
 } from "@/redux/api/userApi";
 import { toast } from "react-toastify";
 
 const AddressForm = ({
-  address,
   onAddressChange,
   formFields,
   isEdit = false,
@@ -38,6 +35,7 @@ const AddressForm = ({
     postal_code: "",
     country: "",
     is_default: false,
+    full_name: userName,
   });
 
   const { userCountry, setUserCountry, countryOptions, customStyles } =
@@ -46,39 +44,14 @@ const AddressForm = ({
   const [createAddress] = useCreateAddressMutation();
   const [updateAddress] = useUpdateAddressMutation();
   const [open, setOpen] = useState(false);
-  const { refetch } = useGetUserAddressesQuery();
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    if (open) {
-      if (isEdit && editAddress) {
-        setFormData({
-          name: editAddress.name || "",
-          contact_number: editAddress.contact_number || "",
-          address_line1: editAddress.address_line1 || "",
-          address_line2: editAddress.address_line2 || "",
-          city: editAddress.city || "",
-          state: editAddress.state || "",
-          postal_code: editAddress.postal_code || "",
-          country: editAddress.country || "",
-          is_default: editAddress.is_default || false,
-          full_name: editAddress.full_name || userName || "",
-        });
-      } else {
-        setFormData({
-          name: "",
-          contact_number: "",
-          address_line1: "",
-          address_line2: "",
-          city: "",
-          state: "",
-          postal_code: "",
-          country: "",
-          is_default: false,
-          full_name: userName || "",
-        });
-        setUserCountry(null);
-      }
+    if (open && isEdit && editAddress) {
+      setFormData({
+        ...editAddress,
+        full_name: editAddress.full_name || userName,
+      });
     }
   }, [open, isEdit, editAddress, userName]);
 
@@ -95,30 +68,15 @@ const AddressForm = ({
 
     try {
       const addressData = {
+        ...formData,
         name: formData.name || "Home",
-        full_name: formData.full_name,
-        contact_number: formData.contact_number,
-        address_line1: formData.address_line1,
-        address_line2: formData.address_line2,
-        city: formData.city,
-        state: formData.state,
-        postal_code: formData.postal_code,
-        country: formData.country,
-        is_default: formData.is_default,
       };
 
-      let response;
-      if (isEdit) {
-        response = await updateAddress({
-          id: editAddress._id,
-          addressData,
-        }).unwrap();
-      } else {
-        response = await createAddress(addressData).unwrap();
-      }
+      const response = isEdit
+        ? await updateAddress({ id: editAddress._id, addressData }).unwrap()
+        : await createAddress(addressData).unwrap();
 
       toast.success(response.message);
-      await refetch();
       setOpen(false);
     } catch (error) {
       toast.error(
@@ -132,10 +90,8 @@ const AddressForm = ({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger
-        className={`flex items-center gap-2 text-blue-500 hover:text-blue-400 transition-colors ${
-          isEdit
-            ? "opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-            : ""
+        className={`flex items-center gap-2 text-blue-500 hover:text-blue-400 ${
+          isEdit ? "opacity-0 group-hover:opacity-100" : ""
         }`}
       >
         {isEdit ? <Pencil className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
@@ -146,11 +102,6 @@ const AddressForm = ({
           <DialogTitle className="text-lg font-medium">
             {isEdit ? "Edit address" : "Add a new address"}
           </DialogTitle>
-          <DialogDescription className="text-gray-400 sr-only">
-            {isEdit
-              ? "Update your shipping address details below"
-              : "Fill in your shipping address details below"}
-          </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
           <div className="space-y-6">

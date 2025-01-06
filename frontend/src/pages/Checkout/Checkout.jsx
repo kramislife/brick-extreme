@@ -14,24 +14,19 @@ const Checkout = () => {
   const {
     email,
     address,
-    billingAddress,
     paymentMethod,
     cartItems,
     total,
-    useShippingAddress,
     handleEmailChange,
     handleAddressChange,
-    handleBillingAddressChange,
     handlePaymentMethodChange,
     handleSubmit,
-    handleUseShippingAddressChange,
     handleUpdateQuantity,
     handleRemoveItem,
-    useDefaultAddress,
-    handleUseDefaultAddress,
-    hasDefaultAddress,
     userAddresses,
     user,
+    handleCardDetailsChange,
+    cardDetails,
   } = useCheckout();
 
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -80,9 +75,6 @@ const Checkout = () => {
                   onAddressChange={handleAddressChange}
                   userAddresses={userAddresses}
                   userName={user?.name}
-                  useDefaultAddress={useDefaultAddress}
-                  onUseDefaultAddress={handleUseDefaultAddress}
-                  hasDefaultAddress={hasDefaultAddress}
                   onDeleteClick={handleDeleteClick}
                   key={userAddresses?.length}
                 />
@@ -90,12 +82,10 @@ const Checkout = () => {
                   paymentMethod={paymentMethod}
                   onPaymentMethodChange={handlePaymentMethodChange}
                   total={total}
-                  useShippingAddress={useShippingAddress}
-                  setUseShippingAddress={handleUseShippingAddressChange}
-                  billingAddress={billingAddress}
-                  onBillingAddressChange={handleBillingAddressChange}
                   address={address}
                   onSubmit={handleSubmit}
+                  handleCardDetailsChange={handleCardDetailsChange}
+                  cardDetails={cardDetails}
                 />
               </form>
             </div>

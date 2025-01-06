@@ -1,25 +1,11 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Minus, Plus, Trash2 } from "lucide-react";
-import { toast } from "react-toastify";
 
 const OrderSummary = ({ cartItems, total, updateQuantity, removeItem }) => {
   const handleQuantityUpdate = (productId, newQuantity) => {
-    try {
-      if (newQuantity < 1) return;
-      updateQuantity(productId, newQuantity);
-    } catch (error) {
-      toast.error("Failed to update quantity");
-    }
-  };
-
-  const handleRemoveItem = (productId) => {
-    try {
-      removeItem(productId);
-      // toast.success("Item removed from cart");
-    } catch (error) {
-      // toast.error("Failed to remove item");
-    }
+    if (newQuantity < 1) return;
+    updateQuantity(productId, newQuantity);
   };
 
   if (!cartItems?.length) {
@@ -64,34 +50,16 @@ const OrderSummary = ({ cartItems, total, updateQuantity, removeItem }) => {
                       </p>
                     )}
                   </div>
-                  <div className="flex items-center gap-2 mt-2">
-                    <div className="flex items-center gap-2 border border-white/10 rounded-lg p-1">
-                      <button
-                        type="button"
-                        onClick={() =>
-                          handleQuantityUpdate(item.product, item.quantity - 1)
-                        }
-                        disabled={item.quantity <= 1}
-                        className="p-1 rounded-md hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                        <Minus size={14} className="text-gray-400" />
-                      </button>
-                      <span className="text-sm text-gray-400 w-6 text-center">
-                        {item.quantity}
-                      </span>
-                      <button
-                        type="button"
-                        onClick={() =>
-                          handleQuantityUpdate(item.product, item.quantity + 1)
-                        }
-                        className="p-1 rounded-md hover:bg-white/10"
-                      >
-                        <Plus size={14} className="text-gray-400" />
-                      </button>
-                    </div>
+                  <div className="flex items-center gap-2">
+                    <QuantityControl
+                      quantity={item.quantity}
+                      onUpdate={(newQty) =>
+                        handleQuantityUpdate(item.product, newQty)
+                      }
+                    />
                     <button
                       type="button"
-                      onClick={() => handleRemoveItem(item.product)}
+                      onClick={() => removeItem(item.product)}
                       className="p-1 rounded-md hover:bg-white/10 text-red-500 hover:text-red-400"
                     >
                       <Trash2 size={15} />
@@ -104,21 +72,6 @@ const OrderSummary = ({ cartItems, total, updateQuantity, removeItem }) => {
               </div>
             </div>
           ))}
-
-          {/* Discount Input */}
-          <div className="flex gap-2 pt-4">
-            <input
-              type="text"
-              placeholder="Discount code or gift card"
-              className="flex-1 bg-brand/10 border-white/10 border rounded-lg px-4 py-2 transition duration-300 focus:outline-none focus:border-blue-500 hover:border-blue-300 h-12 placeholder:text-white/80 font-extralight text-white"
-            />
-            <button
-              type="button"
-              className="px-4 py-2 bg-blue-500/30 text-white rounded-md text-sm hover:bg-blue-500/20 transition-colors"
-            >
-              Apply
-            </button>
-          </div>
 
           {/* Summary */}
           <div className="space-y-3 pt-4">
@@ -141,5 +94,26 @@ const OrderSummary = ({ cartItems, total, updateQuantity, removeItem }) => {
     </Card>
   );
 };
+
+const QuantityControl = ({ quantity, onUpdate }) => (
+  <div className="flex items-center gap-2 border border-white/10 rounded-lg p-1">
+    <button
+      type="button"
+      onClick={() => onUpdate(quantity - 1)}
+      disabled={quantity <= 1}
+      className="p-1 rounded-md hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed"
+    >
+      <Minus size={14} className="text-gray-400" />
+    </button>
+    <span className="text-sm text-gray-400 w-6 text-center">{quantity}</span>
+    <button
+      type="button"
+      onClick={() => onUpdate(quantity + 1)}
+      className="p-1 rounded-md hover:bg-white/10"
+    >
+      <Plus size={14} className="text-gray-400" />
+    </button>
+  </div>
+);
 
 export default OrderSummary;
