@@ -19,7 +19,6 @@ const ContactSection = ({ email, onEmailChange }) => {
           type="email"
           value={email}
           onChange={(e) => onEmailChange(e.target.value)}
-          required
           placeholder=" "
         />
       </CardContent>

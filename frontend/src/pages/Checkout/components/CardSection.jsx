@@ -15,7 +15,6 @@ const CardSection = ({ onSubmit, onCardDetailsChange, cardDetails }) => {
             variant="floating"
             label="Card number"
             placeholder=" "
-            required
             maxLength="19"
             pattern="\d*"
             value={cardDetails.cardNumber}
@@ -39,7 +38,6 @@ const CardSection = ({ onSubmit, onCardDetailsChange, cardDetails }) => {
               variant="floating"
               label="Expiration date (MM/YY)"
               placeholder=" "
-              required
               maxLength="5"
               pattern="\d*"
               value={cardDetails.expiryDate}
@@ -61,7 +59,6 @@ const CardSection = ({ onSubmit, onCardDetailsChange, cardDetails }) => {
               variant="floating"
               label="CVV"
               placeholder=" "
-              required
               maxLength="4"
               pattern="\d*"
               value={cardDetails.cvv}
@@ -85,7 +82,6 @@ const CardSection = ({ onSubmit, onCardDetailsChange, cardDetails }) => {
           variant="floating"
           label="Name on card"
           placeholder=" "
-          required
           value={cardDetails.nameOnCard}
           onChange={(e) => onCardDetailsChange("nameOnCard", e.target.value)}
         />
