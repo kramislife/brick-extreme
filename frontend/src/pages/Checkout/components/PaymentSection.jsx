@@ -1,5 +1,11 @@
 import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { PAYMENT_METHODS } from "@/constant/paymentMethod";
 import MasterCard from "@/assets/mastercard.svg";
 import Visa from "@/assets/visa.png";
@@ -35,6 +41,9 @@ const PaymentSection = ({
           <CreditCard className="w-5 h-5 text-blue-400" />
           Payment Details
         </CardTitle>
+        <CardDescription className="text-gray-400 lg:ml-7">
+          Select your preferred payment method
+        </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="grid grid-cols-2 gap-3">

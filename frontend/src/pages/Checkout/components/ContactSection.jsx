@@ -17,7 +17,7 @@ const ContactSection = ({ email, onEmailChange }) => {
           <User className="w-5 h-5 text-blue-400" />
           Contact Information
         </CardTitle>
-        <CardDescription className="text-gray-400">
+        <CardDescription className="text-gray-400 lg:ml-7">
           Enter your email for order updates
         </CardDescription>
       </CardHeader>
@@ -25,12 +25,13 @@ const ContactSection = ({ email, onEmailChange }) => {
       {/* Email input */}
       <CardContent>
         <Input
+          variant="floating"
+          label="Email Address"
           type="email"
-          placeholder="Email address"
           value={email}
           onChange={(e) => onEmailChange(e.target.value)}
-          className="bg-brand/10 border-white/10 border rounded-lg px-4 py-2 transition duration-300 focus:outline-none focus:border-blue-500 hover:border-blue-300 h-12 placeholder:text-white/80 font-light text-white"
           required
+          placeholder=" "
         />
       </CardContent>
     </Card>

@@ -1,10 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import ContactSection from "./components/ContactSection";
 import ShippingSection from "./components/ShippingSection";
 import PaymentSection from "./components/PaymentSection";
 import OrderSummary from "./components/OrderSummary";
 import useCheckout from "@/hooks/Payment/useCheckout";
 import Metadata from "@/components/layout/Metadata/Metadata";
+import DeleteConfirmDialog from "@/components/admin/shared/DeleteDialog";
+import { useDeleteAddressMutation } from "@/redux/api/userApi";
+import { toast } from "react-hot-toast";
+import { useGetUserAddressesQuery } from "@/redux/api/userApi";
 
 const Checkout = () => {
   const {
@@ -23,7 +27,40 @@ const Checkout = () => {
     handleUseShippingAddressChange,
     handleUpdateQuantity,
     handleRemoveItem,
+    useDefaultAddress,
+    handleUseDefaultAddress,
+    hasDefaultAddress,
+    userAddresses,
+    user,
   } = useCheckout();
+
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [addressToDelete, setAddressToDelete] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [deleteAddress] = useDeleteAddressMutation();
+  const { refetch: refetchAddresses } = useGetUserAddressesQuery();
+
+  const handleDeleteClick = (address) => {
+    setAddressToDelete(address);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!addressToDelete) return;
+
+    setIsDeleting(true);
+    try {
+      const response = await deleteAddress(addressToDelete._id).unwrap();
+      toast.success(response.message || "Address deleted successfully");
+      await refetchAddresses();
+    } catch (error) {
+      toast.error(error.data?.message || "Failed to delete address");
+    } finally {
+      setIsDeleting(false);
+      setIsDeleteDialogOpen(false);
+      setAddressToDelete(null);
+    }
+  };
 
   return (
     <>
@@ -41,6 +78,13 @@ const Checkout = () => {
                 <ShippingSection
                   address={address}
                   onAddressChange={handleAddressChange}
+                  userAddresses={userAddresses}
+                  userName={user?.name}
+                  useDefaultAddress={useDefaultAddress}
+                  onUseDefaultAddress={handleUseDefaultAddress}
+                  hasDefaultAddress={hasDefaultAddress}
+                  onDeleteClick={handleDeleteClick}
+                  key={userAddresses?.length}
                 />
                 <PaymentSection
                   paymentMethod={paymentMethod}
@@ -68,6 +112,16 @@ const Checkout = () => {
           </div>
         </div>
       </div>
+
+      {/* Delete Confirmation Dialog */}
+      <DeleteConfirmDialog
+        isOpen={isDeleteDialogOpen}
+        onClose={() => setIsDeleteDialogOpen(false)}
+        onConfirm={handleDeleteConfirm}
+        title="Delete Address"
+        description="Are you sure you want to delete this address? This action cannot be undone."
+        isLoading={isDeleting}
+      />
     </>
   );
 };

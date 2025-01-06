@@ -510,7 +510,7 @@ export const createAddress = catchAsyncErrors(async (req, res, next) => {
   // RETURN THE CREATED ADDRESS TO THE CLIENT
   res.status(201).json({
     success: true,
-    message: "Address created successfully",
+    message: "New address has been added successfully",
     address,
   });
 });
@@ -519,7 +519,6 @@ export const createAddress = catchAsyncErrors(async (req, res, next) => {
 
 export const updateAddress = catchAsyncErrors(async (req, res, next) => {
   const user_id = req.user.user_id;
-
   const address_id = req.params.id;
 
   if (!user_id) {
@@ -528,10 +527,7 @@ export const updateAddress = catchAsyncErrors(async (req, res, next) => {
     );
   }
 
-  // console.log("ADDRESS ID:", address_id);
   const address = await Address.findById(address_id);
-
-  // console.log("ADDRESS - ", address);
 
   if (!address || address.is_deleted) {
     return next(new ErrorHandler("Address not found or has been deleted", 404));
@@ -573,30 +569,35 @@ export const updateAddress = catchAsyncErrors(async (req, res, next) => {
     await Address.updateMany(
       {
         user: user_id,
+        _id: { $ne: address_id },
         is_default: true,
       },
       { is_default: false }
     );
   }
 
-  address.name = name;
-  address.contact_number = contact_number;
-  address.address_line1 = address_line1;
-  address.address_line2 = address_line2;
-  address.city = city;
-  address.state = state;
-  address.postal_code = postal_code;
-  address.country = country;
-  address.country_code = country_code;
-  address.is_default = is_default || false;
-  address.updated_by = user_id;
-
-  await address.save();
+  const updatedAddress = await Address.findByIdAndUpdate(
+    address_id,
+    {
+      name,
+      contact_number,
+      address_line1,
+      address_line2,
+      city,
+      state,
+      postal_code,
+      country,
+      country_code,
+      is_default: is_default || false,
+      updated_by: user_id,
+    },
+    { new: true }
+  );
 
   res.status(200).json({
     success: true,
-    message: "Address updated successfully",
-    address,
+    message: "Address Has Been Updated Successfully",
+    address: updatedAddress,
   });
 });
 
@@ -615,7 +616,7 @@ export const getAllAddresses = catchAsyncErrors(async (req, res, next) => {
 
   res.status(200).json({
     success: true,
-    message: `${addresses.length} Addresses retrieved successfully`,
+    message: `${addresses.length} Addresses Retrieved Successfully`,
     addresses,
   });
 });
@@ -643,7 +644,7 @@ export const getSingleAddress = catchAsyncErrors(async (req, res, next) => {
 
   res.status(200).json({
     success: true,
-    message: "Address retrieved successfully",
+    message: "Address Retrieved Successfully",
     address,
   });
 });
@@ -676,6 +677,6 @@ export const deleteAddress = catchAsyncErrors(async (req, res, next) => {
 
   res.status(200).json({
     success: true,
-    message: "Address deleted successfully",
+    message: "Address Deleted Successfully",
   });
 });

@@ -38,8 +38,9 @@ const CardSection = ({
         <div className="relative">
           <Input
             type="text"
-            placeholder="Card number"
-            className={`${inputClassName} pr-20`}
+            variant="floating"
+            label="Card number"
+            placeholder=" "
             required
             maxLength="19"
             pattern="\d*"
@@ -59,8 +60,9 @@ const CardSection = ({
           <div className="relative">
             <Input
               type="text"
-              placeholder="Expiration date (MM/YY)"
-              className={`${inputClassName} pr-10`}
+              variant="floating"
+              label="Expiration date (MM/YY)"
+              placeholder=" "
               required
               maxLength="5"
               pattern="\d*"
@@ -79,8 +81,9 @@ const CardSection = ({
           <div className="relative group">
             <Input
               type="text"
-              placeholder="CVV"
-              className={`${inputClassName} pr-10`}
+              variant="floating"
+              label="CVV"
+              placeholder=" "
               required
               maxLength="4"
               pattern="\d*"
@@ -91,7 +94,7 @@ const CardSection = ({
             />
             <div className="absolute right-3 top-1/2 -translate-y-1/2 cursor-help">
               <HelpCircle className="h-5 w-5 text-gray-400" />
-              <div className="invisible group-hover:visible absolute right-0 bottom-full mb-2 w-60 p-2 bg-gray-900 text-white text-xs rounded-lg shadow-lg leading-relaxed font-light">
+              <div className="invisible group-hover:visible absolute right-0 bottom-full mb-3 w-60 p-2 bg-gray-900 text-white text-xs rounded-lg shadow-lg leading-relaxed font-light">
                 A 3-4 digit security code on back of your card
               </div>
             </div>
@@ -101,14 +104,15 @@ const CardSection = ({
         {/* Name on card input */}
         <Input
           type="text"
-          placeholder="Name on card"
-          className={inputClassName}
+          variant="floating"
+          label="Name on card"
+          placeholder=" "
           required
         />
       </div>
 
       {/* Use shipping address as billing address checkbox */}
-      <div className="mt-6">
+      {/* <div className="mt-6">
         <div className="flex items-center space-x-2">
           <Checkbox
             id="shipping-billing"
@@ -123,19 +127,19 @@ const CardSection = ({
             Use shipping address as billing address
           </label>
         </div>
-      </div>
+      </div> */}
 
       {/* Billing section - If shipping address is false shows the billing section fields*/}
-      {!useShippingAddress && (
+      {/* {!useShippingAddress && (
         <div className="mt-6">
           <BillingSection
             address={billingAddress}
             onAddressChange={onBillingAddressChange}
           />
         </div>
-      )}
+      )} */}
       <button
-        className="w-full bg-[#0070ba] hover:bg-[#003087] text-white py-3 px-4 rounded-md transition-colors duration-200 flex items-center justify-center gap-2"
+        className="w-full bg-blue-500 hover:bg-blue-600 text-white py-3 px-4 rounded-md transition-colors duration-200 flex items-center justify-center gap-2"
         type="submit"
         onClick={onSubmit}
       >
