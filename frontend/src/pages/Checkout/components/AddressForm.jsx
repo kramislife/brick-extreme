@@ -18,6 +18,7 @@ import {
 } from "@/redux/api/userApi";
 import { toast } from "react-toastify";
 import { useGetUserAddressesQuery } from "@/redux/api/userApi";
+import { DialogDescription } from "@radix-ui/react-dialog";
 
 const AddressForm = ({ isEdit = false, editAddress = null, userName = "" }) => {
   const [formData, setFormData] = useState({
@@ -104,6 +105,9 @@ const AddressForm = ({ isEdit = false, editAddress = null, userName = "" }) => {
         {isEdit ? <Pencil className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
         <span>{isEdit ? "" : "Add Address"}</span>
       </DialogTrigger>
+      <DialogDescription className="sr-only">
+        {isEdit ? "Edit address" : "Add a new address"}
+      </DialogDescription>
       <DialogContent className="bg-brand-gradient backdrop-blur-xl border-white/10 text-white max-w-2xl">
         <DialogHeader>
           <DialogTitle className="text-lg font-medium">
