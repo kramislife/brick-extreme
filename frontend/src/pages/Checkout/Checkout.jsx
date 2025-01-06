@@ -7,7 +7,7 @@ import useCheckout from "@/hooks/Payment/useCheckout";
 import Metadata from "@/components/layout/Metadata/Metadata";
 import DeleteConfirmDialog from "@/components/admin/shared/DeleteDialog";
 import { useDeleteAddressMutation } from "@/redux/api/userApi";
-import { toast } from "react-hot-toast";
+import { toast } from "react-toastify";
 import { useGetUserAddressesQuery } from "@/redux/api/userApi";
 
 const Checkout = () => {

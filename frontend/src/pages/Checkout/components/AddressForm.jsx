@@ -17,14 +17,9 @@ import {
   useUpdateAddressMutation,
 } from "@/redux/api/userApi";
 import { toast } from "react-toastify";
+import { useGetUserAddressesQuery } from "@/redux/api/userApi";
 
-const AddressForm = ({
-  onAddressChange,
-  formFields,
-  isEdit = false,
-  editAddress = null,
-  userName = "",
-}) => {
+const AddressForm = ({ isEdit = false, editAddress = null, userName = "" }) => {
   const [formData, setFormData] = useState({
     name: "",
     contact_number: "",
@@ -41,10 +36,11 @@ const AddressForm = ({
   const { userCountry, setUserCountry, countryOptions, customStyles } =
     useCountries((countryLabel) => handleFieldChange("country", countryLabel));
 
-  const [createAddress] = useCreateAddressMutation();
-  const [updateAddress] = useUpdateAddressMutation();
+  const [createAddress, { isLoading: isCreating }] = useCreateAddressMutation();
+  const [updateAddress, { isLoading: isUpdating }] = useUpdateAddressMutation();
   const [open, setOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+
+  const { refetch: refetchAddresses } = useGetUserAddressesQuery();
 
   useEffect(() => {
     if (open && isEdit && editAddress) {
@@ -64,7 +60,6 @@ const AddressForm = ({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
 
     try {
       const addressData = {
@@ -77,13 +72,25 @@ const AddressForm = ({
         : await createAddress(addressData).unwrap();
 
       toast.success(response.message);
+      await refetchAddresses();
       setOpen(false);
+
+      setFormData({
+        name: "",
+        contact_number: "",
+        address_line1: "",
+        address_line2: "",
+        city: "",
+        state: "",
+        postal_code: "",
+        country: "",
+        is_default: false,
+        full_name: userName,
+      });
     } catch (error) {
       toast.error(
         error.data?.message || `Failed to ${isEdit ? "update" : "add"} address`
       );
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -224,13 +231,13 @@ const AddressForm = ({
             <Button
               type="submit"
               className="w-full bg-blue-500 hover:bg-blue-600 text-white h-12"
-              disabled={isLoading}
+              disabled={isCreating || isUpdating}
             >
               {isEdit
-                ? isLoading
+                ? isUpdating
                   ? "Updating address..."
                   : "Update address"
-                : isLoading
+                : isCreating
                 ? "Adding address..."
                 : "Add address"}
             </Button>

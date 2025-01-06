@@ -677,6 +677,6 @@ export const deleteAddress = catchAsyncErrors(async (req, res, next) => {
 
   res.status(200).json({
     success: true,
-    message: "Address Deleted Successfully",
+    message: "Address has been deleted successfully",
   });
 });

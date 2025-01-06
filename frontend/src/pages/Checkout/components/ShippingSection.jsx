@@ -15,7 +15,7 @@ import {
   useGetUserAddressesQuery,
   useUpdateAddressMutation,
 } from "@/redux/api/userApi";
-import { toast } from "react-hot-toast";
+import { toast } from "react-toastify";
 
 const ShippingSection = ({
   address,
@@ -24,8 +24,9 @@ const ShippingSection = ({
   onDeleteClick,
 }) => {
   const [selectedAddress, setSelectedAddress] = useState(null);
-  const [isSettingShipping, setIsSettingShipping] = useState(false);
-  const [updateAddress] = useUpdateAddressMutation();
+  const [updateAddress, { isLoading: isUpdatingDefault }] =
+    useUpdateAddressMutation();
+  // const [isSettingShipping, setIsSettingShipping] = useState(false);
   const {
     data: userAddresses,
     isLoading,
@@ -80,31 +81,52 @@ const ShippingSection = ({
   const handleMakeDefault = async (addr, e) => {
     e.stopPropagation();
     try {
-      await updateAddress({
+      const response = await updateAddress({
         id: addr._id,
-        addressData: { ...addr, is_default: true },
+        addressData: {
+          // Include all existing address fields
+          name: addr.name,
+          contact_number: addr.contact_number,
+          address_line1: addr.address_line1,
+          address_line2: addr.address_line2,
+          city: addr.city,
+          state: addr.state,
+          postal_code: addr.postal_code,
+          country: addr.country,
+          country_code: addr.country_code,
+          is_default: true, // Set this address as default
+        },
       }).unwrap();
-      await refetchAddresses(); // Add refetch after setting default
-      toast.success("Default address set successfully");
+
+      if (response.success) {
+        toast.success(response.message);
+        await refetchAddresses();
+      }
     } catch (error) {
-      toast.error("Failed to set default address");
+      // Log the full error
+      console.error("Error setting default address:", error);
+      toast.error(
+        error?.data?.message ||
+          error?.message ||
+          "Failed to set default address"
+      );
     }
   };
 
-  const handleUseAddress = async (addr, e) => {
-    e.stopPropagation();
-    setIsSettingShipping(true);
-    try {
-      handleAddressSelect(addr);
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      await refetchAddresses();
-      toast.success("Shipping address set successfully");
-    } catch (error) {
-      toast.error("Failed to set shipping address");
-    } finally {
-      setIsSettingShipping(false);
-    }
-  };
+  // const handleUseAddress = async (addr, e) => {
+  //   e.stopPropagation();
+  //   setIsSettingShipping(true);
+  //   try {
+  //     handleAddressSelect(addr);
+  //     await new Promise((resolve) => setTimeout(resolve, 500));
+  //     await refetchAddresses();
+  //     toast.success("Shipping address set successfully");
+  //   } catch (error) {
+  //     toast.error("Failed to set shipping address");
+  //   } finally {
+  //     setIsSettingShipping(false);
+  //   }
+  // };
 
   return (
     <Card className="bg-darkBrand/20 backdrop-blur-xl border-white/10">
@@ -231,8 +253,11 @@ const ShippingSection = ({
                   <Button
                     onClick={(e) => handleMakeDefault(selectedAddress, e)}
                     className="w-full bg-blue-500 hover:bg-blue-600 text-white h-12"
+                    disabled={isUpdatingDefault}
                   >
-                    Set as default address
+                    {isUpdatingDefault
+                      ? "Setting as default..."
+                      : "Set as default address"}
                   </Button>
                 </div>
               </div>
