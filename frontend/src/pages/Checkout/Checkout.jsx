@@ -31,8 +31,7 @@ const Checkout = () => {
 
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [addressToDelete, setAddressToDelete] = useState(null);
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [deleteAddress] = useDeleteAddressMutation();
+  const [deleteAddress, { isLoading: isDeleting }] = useDeleteAddressMutation();
   const { refetch: refetchAddresses } = useGetUserAddressesQuery();
 
   const handleDeleteClick = (address) => {
@@ -43,7 +42,6 @@ const Checkout = () => {
   const handleDeleteConfirm = async () => {
     if (!addressToDelete) return;
 
-    setIsDeleting(true);
     try {
       const response = await deleteAddress(addressToDelete._id).unwrap();
       toast.success(response.message || "Address deleted successfully");
@@ -51,7 +49,6 @@ const Checkout = () => {
     } catch (error) {
       toast.error(error.data?.message || "Failed to delete address");
     } finally {
-      setIsDeleting(false);
       setIsDeleteDialogOpen(false);
       setAddressToDelete(null);
     }
