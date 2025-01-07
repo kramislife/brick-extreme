@@ -131,7 +131,7 @@ const Footer = () => {
 
       <div className="text-center text-sm px-6 text-gray-400 py-5">
         <p className="hover:text-gray-400 transition-colors">
-          © Copyright Brick Extreme 2024. All rights reserved
+          © Copyright Brick Extreme 2025. All rights reserved
         </p>
       </div>
     </footer>

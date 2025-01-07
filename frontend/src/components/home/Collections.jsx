@@ -5,20 +5,8 @@ import { categoryAnimations } from "@/hooks/Animation/animationConfig";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useGetCollectionQuery } from "@/redux/api/productApi";
-import { ImageIcon, Clock } from "lucide-react";
 import default_product from "@/assets/default/default_product.jpg";
-
-const PlaceholderImage = () => (
-  <div className="w-full h-[360px] bg-brand-gradient flex flex-col items-center justify-center gap-4 border border-slate-700 rounded-lg">
-    <ImageIcon className="w-12 h-12 text-slate-600" />
-    <div className="flex items-center gap-2 px-4 py-2 bg-slate-800/50 rounded-full">
-      <Clock className="w-4 h-4 text-slate-400" />
-      <span className="text-sm font-medium text-slate-400">
-        Image Coming Soon
-      </span>
-    </div>
-  </div>
-);
+import PlaceholderImage from "@/components/product/shared/PlaceholderImage";
 
 const Collections = () => {
   const navigate = useNavigate();
@@ -46,7 +34,7 @@ const Collections = () => {
         initial={{ opacity: 0, y: -20 }}
         animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: -20 }}
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-        className="text-3xl text-gray-300 font-extrabold mb-4 text-center pt-6 header-text"
+        className="text-3xl text-gray-300 font-extrabold mb-4 text-center pt-6 header-text pb-2"
       >
         Browse by Collections
       </motion.h2>
@@ -85,7 +73,7 @@ const Collections = () => {
                 whileHover={{ scale: 1.05 }}
                 transition={{ duration: 0.3 }}
               >
-                {collection.image?.url ? (
+                {collection?.image?.url ? (
                   <motion.img
                     src={collection?.image?.url || default_product}
                     alt={collection.name}
@@ -93,7 +81,7 @@ const Collections = () => {
                     {...categoryAnimations.imageVariants}
                   />
                 ) : (
-                  <PlaceholderImage />
+                  <PlaceholderImage type="collection" />
                 )}
                 <motion.div
                   className="absolute inset-0 bg-black"

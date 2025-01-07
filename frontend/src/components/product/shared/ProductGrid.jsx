@@ -5,7 +5,6 @@ import ProductCard from "@/components/product/ProductCard";
 import { PackageX } from "lucide-react";
 import { productGridAnimations } from "@/hooks/Animation/animationConfig";
 
-// return an empty array if products is not provided
 const ProductGrid = ({ title, products, baseUrl }) => {
   const navigate = useNavigate();
   const ref = useRef(null);
@@ -56,13 +55,14 @@ const ProductGrid = ({ title, products, baseUrl }) => {
             variants={productGridAnimations.containerVariants}
             initial="hidden"
             animate={isInView ? "visible" : "hidden"}
-            className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 py-5"
+            className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 py-5"
           >
             {products.slice(0, 4).map((product, index) => (
               <motion.div
                 key={product._id}
                 variants={productGridAnimations.cardVariants(index)}
               >
+                {/* Product Card Component */}
                 <ProductCard product={product} />
               </motion.div>
             ))}

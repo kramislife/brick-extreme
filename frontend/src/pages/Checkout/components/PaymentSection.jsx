@@ -1,5 +1,11 @@
 import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { PAYMENT_METHODS } from "@/constant/paymentMethod";
 import MasterCard from "@/assets/mastercard.svg";
 import Visa from "@/assets/visa.png";
@@ -13,20 +19,42 @@ const PaymentSection = ({
   paymentMethod,
   onPaymentMethodChange,
   total,
-  address,
   onSubmit,
-  useShippingAddress,
-  setUseShippingAddress,
-  billingAddress,
-  onBillingAddressChange,
+  handleCardDetailsChange,
+  cardDetails = {
+    cardNumber: "",
+    expiryDate: "",
+    cvv: "",
+    nameOnCard: "",
+  },
 }) => {
-  const getPaymentButtonStyles = (isSelected) => {
-    return `w-full h-10 rounded-md transition-all duration-200 flex items-center justify-center ${
+  const paymentMethods = [
+    {
+      type: PAYMENT_METHODS.CREDIT_CARD,
+      content: (
+        <div className="flex items-center gap-1">
+          <img src={MasterCard} alt="Credit Card" className="h-8 w-auto" />
+          <img src={Visa} alt="Credit Card" className="h-8 w-auto" />
+          <img src={Stripe} alt="Credit Card" className="h-6 w-auto" />
+        </div>
+      ),
+      className: "bg-white",
+    },
+    {
+      type: PAYMENT_METHODS.PAYPAL,
+      content: <img src={PayPal} alt="PayPal" className="h-20 w-auto" />,
+      className: "bg-yellow-300",
+    },
+  ];
+
+  const getPaymentButtonStyles = (isSelected) => `
+    w-full h-10 rounded-md transition-all duration-200 flex items-center justify-center
+    ${
       isSelected
         ? "ring-2 ring-blue-500"
         : "hover:border-blue-300 border border-white/10"
-    }`;
-  };
+    }
+  `;
 
   return (
     <Card className="bg-darkBrand/20 backdrop-blur-xl border-white/10">
@@ -35,44 +63,34 @@ const PaymentSection = ({
           <CreditCard className="w-5 h-5 text-blue-400" />
           Payment Details
         </CardTitle>
+        <CardDescription className="text-gray-400 lg:ml-7">
+          Select your preferred payment method
+        </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="grid grid-cols-2 gap-3">
-          <button
-            onClick={() => onPaymentMethodChange(PAYMENT_METHODS.CREDIT_CARD)}
-            className={`${getPaymentButtonStyles(
-              paymentMethod === PAYMENT_METHODS.CREDIT_CARD
-            )} bg-white`}
-          >
-            <div className="flex items-center gap-1">
-              <img src={MasterCard} alt="Credit Card" className="h-8 w-auto" />
-              <img src={Visa} alt="Credit Card" className="h-8 w-auto" />
-              <img src={Stripe} alt="Credit Card" className="h-6 w-auto" />
-            </div>
-          </button>
-
-          <button
-            onClick={() => onPaymentMethodChange(PAYMENT_METHODS.PAYPAL)}
-            className={`${getPaymentButtonStyles(
-              paymentMethod === PAYMENT_METHODS.PAYPAL
-            )} bg-yellow-300`}
-          >
-            <img src={PayPal} alt="PayPal" className="h-20 w-auto" />
-          </button>
+          {paymentMethods.map((method) => (
+            <button
+              key={method.type}
+              onClick={() => onPaymentMethodChange(method.type)}
+              className={`${getPaymentButtonStyles(
+                paymentMethod === method.type
+              )} ${method.className}`}
+            >
+              {method.content}
+            </button>
+          ))}
         </div>
 
-        {paymentMethod === PAYMENT_METHODS.CREDIT_CARD && (
+        {paymentMethod === PAYMENT_METHODS.CREDIT_CARD ? (
           <CardSection
-            useShippingAddress={useShippingAddress}
-            setUseShippingAddress={setUseShippingAddress}
-            billingAddress={billingAddress}
-            onBillingAddressChange={onBillingAddressChange}
-            address={address}
             onSubmit={onSubmit}
+            onCardDetailsChange={handleCardDetailsChange}
+            cardDetails={cardDetails}
           />
+        ) : (
+          <PayPalSection onSubmit={onSubmit} total={total} />
         )}
-
-        {paymentMethod === PAYMENT_METHODS.PAYPAL && <PayPalSection />}
       </CardContent>
     </Card>
   );

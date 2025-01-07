@@ -81,19 +81,17 @@ router.route("/products/:id").get(getProductById);
 
 // ---------------------------------------------------- ADDRESS ------------------------------------------------
 
-// GET ALL ADDRESS
+// GET ALL ADDRESSES
+router.route("/me/addresses").get(isAuthenticatedUser, getAllAddresses);
+
+// GET SINGLE ADDRESS FOR A USER
+router.route("/me/addresses/:id").get(isAuthenticatedUser, getSingleAddress);
 
 // CREATE NEW ADDRESS
 router.route("/me/createAddress").post(isAuthenticatedUser, createAddress);
 
 // UPDATE AN ADDRESS OF A USER
 router.route("/me/addresses/:id").patch(isAuthenticatedUser, updateAddress);
-
-// GET ALL ADDRESSES
-router.route("/me/addresses").get(isAuthenticatedUser, getAllAddresses);
-
-// GET SINGLE ADDRESS FOR A USER
-router.route("/me/addresses/:id").get(isAuthenticatedUser, getSingleAddress);
 
 // DELETE AN ADDRESS
 router.route("/me/addresses/:id").delete(isAuthenticatedUser, deleteAddress);

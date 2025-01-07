@@ -7,34 +7,37 @@ import {
   removeFromCart,
   clearCart,
 } from "@/redux/features/cartSlice";
-// import { useSubmitCheckoutMutation } from "@/redux/api/checkoutApi";
 import { toast } from "react-toastify";
+import { useGetMeQuery, useGetUserAddressesQuery } from "@/redux/api/userApi";
 
 const useCheckout = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { cartItems } = useSelector((state) => state.cart);
-  // const [submitCheckout, { isLoading }] = useSubmitCheckoutMutation();
+  const { data: userData } = useGetMeQuery();
+  const { data: userAddresses } = useGetUserAddressesQuery();
+  const [selectedShippingAddress, setSelectedShippingAddress] = useState(null);
 
   // Form states
   const [email, setEmail] = useState("");
   const [shippingAddress, setShippingAddress] = useState({
-    [FORM_FIELDS.ADDRESS.FIRST_NAME]: "",
-    [FORM_FIELDS.ADDRESS.LAST_NAME]: "",
-    [FORM_FIELDS.ADDRESS.PHONE]: "",
-    [FORM_FIELDS.ADDRESS.STREET]: "",
-    [FORM_FIELDS.ADDRESS.APARTMENT]: "",
+    [FORM_FIELDS.ADDRESS.CONTACT_NUMBER]: "",
+    [FORM_FIELDS.ADDRESS.ADDRESS_LINE1]: "",
+    [FORM_FIELDS.ADDRESS.ADDRESS_LINE2]: "",
     [FORM_FIELDS.ADDRESS.CITY]: "",
     [FORM_FIELDS.ADDRESS.STATE]: "",
-    [FORM_FIELDS.ADDRESS.ZIP_CODE]: "",
+    [FORM_FIELDS.ADDRESS.POSTAL_CODE]: "",
     [FORM_FIELDS.ADDRESS.COUNTRY]: "",
   });
-  const [billingAddress, setBillingAddress] = useState({ ...shippingAddress });
-  const [useShippingAddress, setUseShippingAddress] = useState(true);
   const [paymentMethod, setPaymentMethod] = useState(
     PAYMENT_METHODS.CREDIT_CARD
   );
-  const [orderStatus, setOrderStatus] = useState(null);
+  const [cardDetails, setCardDetails] = useState({
+    cardNumber: "",
+    expiryDate: "",
+    cvv: "",
+    nameOnCard: "",
+  });
 
   // Calculate total
   const total = cartItems.reduce(
@@ -45,35 +48,15 @@ const useCheckout = () => {
   const handleEmailChange = (value) => setEmail(value);
 
   const handleAddressChange = (field, value) => {
-    const updatedShippingAddress = {
-      ...shippingAddress,
+    if (field === "selectedAddress") {
+      setSelectedShippingAddress(value);
+      return;
+    }
+
+    setShippingAddress((prev) => ({
+      ...prev,
       [field]: value,
-    };
-    setShippingAddress(updatedShippingAddress);
-
-    // Only sync with billing address if useShippingAddress is true
-    if (useShippingAddress) {
-      setBillingAddress(updatedShippingAddress);
-    }
-  };
-
-  const handleBillingAddressChange = (field, value) => {
-    // Only update billing address if we're not using shipping address
-    if (!useShippingAddress) {
-      setBillingAddress((prev) => ({
-        ...prev,
-        [field]: value,
-      }));
-    }
-  };
-
-  const handleUseShippingAddressChange = (checked) => {
-    setUseShippingAddress(checked);
-    if (checked) {
-      // If checkbox is checked, copy shipping address to billing
-      setBillingAddress({ ...shippingAddress });
-    }
-    // If unchecked, keep the current billing address (don't reset it)
+    }));
   };
 
   const handlePaymentMethodChange = (value) => setPaymentMethod(value);
@@ -82,39 +65,34 @@ const useCheckout = () => {
     e.preventDefault();
 
     try {
+      const finalShippingAddress = selectedShippingAddress
+        ? {
+            full_name: userData?.name,
+            ...selectedShippingAddress,
+          }
+        : {
+            ...shippingAddress,
+            full_name: userData?.name,
+          };
+
       const orderData = {
         email,
-        shippingAddress,
-        billingAddress: useShippingAddress ? shippingAddress : billingAddress,
+        shippingAddress: finalShippingAddress,
         paymentMethod,
+        cardDetails: {
+          cardNumber: cardDetails.cardNumber,
+          expiryDate: cardDetails.expiryDate,
+          nameOnCard: cardDetails.nameOnCard,
+        },
         total,
         items: cartItems,
       };
 
-      console.log("Order Checkout Data", orderData);
+      console.log("Order Checkout Data:", orderData);
 
-      // const response = await submitCheckout(orderData).unwrap();
-
-      // // Handle successful checkout
-      // setOrderStatus("success");
-      // toast.success("Order placed successfully!");
-
-      // // Clear cart after successful checkout
-      // dispatch(clearCart());
-
-      // // Redirect based on payment method
-      // if (paymentMethod === PAYMENT_METHODS.BANK_TRANSFER) {
-      //   navigate("/bank-transfer-instructions", {
-      //     state: { orderId: response.orderId },
-      //   });
-      // } else {
-      //   navigate("/order-confirmation", {
-      //     state: { orderId: response.orderId },
-      //   });
-      // }
+      // TODO: Implement actual checkout
     } catch (error) {
       console.error("Checkout error:", error);
-      setOrderStatus("error");
       toast.error(error.data?.message || "Failed to process checkout");
     }
   };
@@ -129,24 +107,30 @@ const useCheckout = () => {
     dispatch(removeFromCart(productId));
   };
 
+  const handleCardDetailsChange = (field, value) => {
+    setCardDetails((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
+
   return {
     email,
     address: shippingAddress,
-    billingAddress,
     paymentMethod,
     cartItems,
     total,
-    orderStatus,
-    // isLoading,
-    useShippingAddress,
     handleEmailChange,
     handleAddressChange,
-    handleBillingAddressChange,
     handlePaymentMethodChange,
     handleSubmit,
-    handleUseShippingAddressChange,
     handleUpdateQuantity,
     handleRemoveItem,
+    userAddresses,
+    user: userData,
+    selectedShippingAddress,
+    handleCardDetailsChange,
+    cardDetails,
   };
 };
 

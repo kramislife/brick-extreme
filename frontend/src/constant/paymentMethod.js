@@ -14,16 +14,15 @@ export const FORM_FIELDS = {
     SECURITY_CODE: "securityCode",
     NAME_ON_CARD: "nameOnCard",
   },
-  // Shared address fields that can be used for both shipping and billing
+  // Updated address fields to match the backend structure
   ADDRESS: {
-    COUNTRY: "country",
-    FIRST_NAME: "first_name",
-    LAST_NAME: "last_name",
-    STREET: "street",
-    APARTMENT: "apartment",
-    ZIP_CODE: "zip_code",
+    FULL_NAME: "full_name",
+    CONTACT_NUMBER: "contact_number",
+    ADDRESS_LINE1: "address_line1",
+    ADDRESS_LINE2: "address_line2",
     CITY: "city",
     STATE: "state",
-    PHONE: "phone",
+    POSTAL_CODE: "postal_code",
+    COUNTRY: "country",
   },
 };
