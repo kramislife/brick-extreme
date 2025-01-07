@@ -25,7 +25,7 @@ const Products = () => {
   const scrollToTop = useScrollToTop();
 
   // Fetch all product data
-  const { productData, isProductLoading, productError, filterData } =
+  const { productData, isProductLoading, filterData } =
     useProductQueries(searchParams);
 
   // Handle filters
@@ -116,14 +116,14 @@ const Products = () => {
           />
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 py-2">
+        <div className="grid grid-cols-1 lg:grid-cols-[350px_1fr] gap-6 py-2">
           {/* Desktop Filter */}
-          <div className="hidden lg:block col-span-1 border border-gray-600 rounded-xl shadow-lg p-4 sticky top-24 h-[85vh]">
+          <div className="hidden lg:block border border-gray-600 rounded-xl shadow-lg p-4 sticky top-24 h-[85vh]">
             <div className="flex items-center mb-4 space-x-2">
               <Filter className="h-6 w-6 text-white" />
               <h2 className="text-xl font-bold text-white">Filters</h2>
             </div>
-            <div className="max-h-[75vh] overflow-y-auto pr-2">
+            <div className="overflow-y-auto pr-2 max-h-[75vh]">
               <FilterAccordion
                 categories={filterOptions}
                 openCategories={openCategories}
@@ -136,8 +136,8 @@ const Products = () => {
           </div>
 
           {/* Products Grid with Sort */}
-          <div className="col-span-1 lg:col-span-3">
-            <div className="hidden lg:block">
+          <div className="w-full">
+            <div className="hidden lg:block mb-6">
               <ProductSort
                 totalProducts={productData?.filteredProductCount || 0}
                 currentProducts={productData?.products?.length || 0}

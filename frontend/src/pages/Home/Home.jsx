@@ -12,22 +12,22 @@ const Home = () => {
     <>
       <Metadata title="Homepage" />
       <div>
-        <div className="lg:min-h-[90vh] bg-brand-gradient">
+        <div className="lg:min-h-[90vh]">
           <Banner />
         </div>
-        <div className="lg:min-h-[90vh] bg-brand-gradient">
+        <div className="lg:min-h-[90vh] bg-darkBrand/10">
           <BestSelling />
         </div>
-        <div className="lg:min-h-[90vh] bg-brand-gradient-r">
+        <div className="lg:min-h-[90vh] bg-brand">
           <LatestProduct />
         </div>
-        <div className="lg:min-h-[90vh] bg-brand-gradient">
+        <div className="lg:min-h-[90vh] bg-darkBrand/10">
           <FeaturedProduct />
         </div>
-        <div className="lg:min-h-[90vh] bg-brand-gradient-r">
+        <div className="lg:min-h-[90vh] bg-brand">
           <Collections />
         </div>
-        <div className="lg:min-h-[90vh] bg-brand-gradient">
+        <div className="lg:min-h-[90vh] bg-darkBrand/10">
           <Subscribe />
         </div>
       </div>

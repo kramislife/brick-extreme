@@ -3,19 +3,8 @@ import { motion, useInView } from "framer-motion";
 import { featuredProductAnimations } from "@/hooks/Animation/animationConfig";
 import { useGetCollectionQuery } from "@/redux/api/productApi";
 import { useNavigate } from "react-router-dom";
-import { ImageIcon, Clock } from "lucide-react";
-
-const PlaceholderImage = () => (
-  <div className="w-full lg:h-[80vh] bg-gradient-to-br from-slate-800 to-slate-900 flex flex-col items-center justify-center gap-4">
-    <ImageIcon className="w-12 h-12 text-slate-600" />
-    <div className="flex items-center gap-2 px-4 py-2 bg-slate-800/50 rounded-full">
-      <Clock className="w-4 h-4 text-slate-400" />
-      <span className="text-sm font-medium text-slate-400">
-        Image Coming Soon
-      </span>
-    </div>
-  </div>
-);
+import default_product from "@/assets/default/default_product.jpg";
+import PlaceholderImage from "@/components/product/shared/PlaceholderImage";
 
 const FeaturedProducts = () => {
   const navigate = useNavigate();
@@ -32,7 +21,7 @@ const FeaturedProducts = () => {
   };
 
   return (
-    <section ref={ref} className="p-4">
+    <section ref={ref} className="px-4 pb-10 pt-5">
       <motion.h2
         variants={featuredProductAnimations.titleVariants}
         initial="hidden"
@@ -55,16 +44,16 @@ const FeaturedProducts = () => {
             className="relative overflow-hidden group"
             onClick={() => handleCollectionClick(collection._id)}
           >
-            {collection.image?.url ? (
+            {collection?.image?.url ? (
               <motion.img
-                src={collection.image.url}
+                src={collection.image.url || default_product}
                 alt={collection.name}
                 className="w-full lg:h-[80vh] h-full object-cover"
                 whileHover={{ scale: 1.05 }}
                 transition={{ duration: 0.6 }}
               />
             ) : (
-              <PlaceholderImage />
+              <PlaceholderImage  />
             )}
             <motion.div
               initial={{ opacity: 0 }}
