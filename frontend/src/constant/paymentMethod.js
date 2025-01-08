@@ -1,8 +1,8 @@
 // Payment method options
 export const PAYMENT_METHODS = {
-  PAYPAL: "paypal",
-  CREDIT_CARD: "credit_card",
-  BANK_TRANSFER: "bank_transfer",
+  CREDIT_CARD: "Stripe",
+  PAYPAL: "PayPal",
+  COD: "COD",
 };
 
 // Form field names (for consistency across components)

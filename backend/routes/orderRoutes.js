@@ -12,6 +12,8 @@ import {
   getSingleOrder,
   updateOrderForAdmin,
   updateOrderForUser,
+  createPayPalOrderController,
+  capturePayPalPaymentController,
 } from "../controllers/orderController.js";
 const router = express.Router();
 
@@ -39,6 +41,15 @@ router
     ),
     getAllOrdersForAdmin
   );
+
+// Add these routes
+router
+  .route("/payment/create-paypal-order")
+  .post(isAuthenticatedUser, createPayPalOrderController);
+
+router
+  .route("/payment/capture-paypal-order/:orderId")
+  .post(isAuthenticatedUser, capturePayPalPaymentController);
 
 export default router;
 

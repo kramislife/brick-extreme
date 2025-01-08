@@ -5,6 +5,7 @@ import Product from "../models/product.model.js";
 import ErrorHandler from "../Utills/customErrorHandler.js";
 import { getOrderUpdateEmailTemplate } from "../Utills/Emails/UpdateEmailTemplate.js";
 import sendEmail from "../Utills/sendEmail.js";
+import { createPayPalOrder, capturePayPalPayment } from "../Utills/PayPal.js";
 
 // --------------- CREATE A NEW ORDER -----------------------------
 
@@ -54,6 +55,32 @@ export const createOrder = catchAsyncErrors(async (req, res, next) => {
     if (!item.isPreorder && product.stock < item.quantity) {
       return next(
         new ErrorHandler(`Insuffecient stock for product : ${item.name}`, 404)
+      );
+    }
+  }
+
+  // For PayPal payments, verify the payment
+  if (paymentInfo.method === "PayPal") {
+    try {
+      const paypalVerification = await capturePayPalPayment(
+        paymentInfo.transactionId
+      );
+
+      if (paypalVerification.status !== "COMPLETED") {
+        return next(
+          new ErrorHandler("PayPal payment verification failed", 400)
+        );
+      }
+
+      // Update payment info with PayPal details
+      paymentInfo.status = "Success";
+      paymentInfo.paidAt = Date.now();
+    } catch (error) {
+      return next(
+        new ErrorHandler(
+          "PayPal payment verification failed: " + error.message,
+          400
+        )
       );
     }
   }
@@ -356,3 +383,126 @@ export const updateOrderForAdmin = catchAsyncErrors(async (req, res, next) => {
     );
   }
 });
+
+// Add new endpoint for PayPal order creation
+export const createPayPalOrderController = catchAsyncErrors(
+  async (req, res, next) => {
+    const { orderItems, total } = req.body;
+
+    try {
+      let calculatedTotal = 0;
+
+      // Validate product availability and prices
+      for (const item of orderItems) {
+        const product = await Product.findById(item.product);
+        if (!product) {
+          return next(new ErrorHandler(`Product ${item.name} not found`, 404));
+        }
+
+        if (!item.isPreorder && product.stock < item.quantity) {
+          return next(
+            new ErrorHandler(`Insufficient stock for ${item.name}`, 400)
+          );
+        }
+
+        // Calculate the expected price with discount
+        const expectedPrice = product.discount
+          ? product.price * (1 - product.discount / 100)
+          : product.price;
+
+        const itemPrice = Number(item.price);
+
+        // Debug logs
+        console.log("Price calculation:", {
+          productName: product.product_name,
+          originalPrice: product.price,
+          discount: product.discount,
+          expectedPrice: expectedPrice,
+          itemPrice: itemPrice,
+        });
+
+        // Calculate item total
+        calculatedTotal += itemPrice * item.quantity;
+
+        // Allow for a small difference in price (e.g., 0.01 or 1%)
+        const priceDifference = Math.abs(expectedPrice - itemPrice);
+        const percentageDifference = (priceDifference / expectedPrice) * 100;
+
+        if (priceDifference > 0.01 && percentageDifference > 1) {
+          return next(
+            new ErrorHandler(
+              `Price mismatch for ${
+                item.name
+              }. Expected: ${expectedPrice.toFixed(
+                2
+              )}, Got: ${itemPrice.toFixed(2)}. Original price: ${
+                product.price
+              }, Discount: ${product.discount}%`,
+              400
+            )
+          );
+        }
+      }
+
+      // Validate total amount
+      const roundedCalculatedTotal = Math.round(calculatedTotal * 100) / 100;
+      const roundedTotal = Math.round(total * 100) / 100;
+
+      if (Math.abs(roundedCalculatedTotal - roundedTotal) > 0.01) {
+        return next(
+          new ErrorHandler(
+            `Total amount mismatch. Expected: ${roundedCalculatedTotal}, Got: ${roundedTotal}`,
+            400
+          )
+        );
+      }
+
+      const paypalOrder = await createPayPalOrder(
+        orderItems.map((item) => ({
+          name: item.name,
+          quantity: item.quantity,
+          price: Number(item.price).toFixed(2),
+        })),
+        roundedCalculatedTotal
+      );
+
+      res.status(200).json({
+        success: true,
+        data: paypalOrder,
+      });
+    } catch (error) {
+      console.error("PayPal order creation error:", error);
+      return next(new ErrorHandler(error.message, 500));
+    }
+  }
+);
+
+// Rename the controller to avoid conflict with the utility function
+export const capturePayPalPaymentController = catchAsyncErrors(
+  async (req, res, next) => {
+    const { orderId } = req.params;
+
+    if (!orderId) {
+      return next(new ErrorHandler("PayPal order ID is required", 400));
+    }
+
+    try {
+      // Here we use the utility function imported from PayPal.js
+      const captureData = await capturePayPalPayment(orderId);
+
+      res.status(200).json({
+        success: true,
+        message: "Payment captured successfully",
+        data: captureData,
+      });
+    } catch (error) {
+      console.error("PayPal capture error:", error);
+      return next(
+        new ErrorHandler(
+          error.message || "Failed to capture PayPal payment",
+          500
+        )
+      );
+    }
+  }
+);

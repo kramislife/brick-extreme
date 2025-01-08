@@ -27,6 +27,7 @@ const PaymentSection = ({
     cvv: "",
     nameOnCard: "",
   },
+  onPayPalApprove,
 }) => {
   const paymentMethods = [
     {
@@ -89,7 +90,11 @@ const PaymentSection = ({
             cardDetails={cardDetails}
           />
         ) : (
-          <PayPalSection onSubmit={onSubmit} total={total} />
+          <PayPalSection
+            onSubmit={onSubmit}
+            onApprove={onPayPalApprove}
+            total={total}
+          />
         )}
       </CardContent>
     </Card>

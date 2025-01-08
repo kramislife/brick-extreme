@@ -35,6 +35,7 @@ import ViewColor from "@/components/admin/Colors/ViewColor";
 import AddColor from "@/components/admin/Colors/AddColor";
 import UpdateColor from "@/components/admin/Colors/UpdateColor";
 import Checkout from "@/pages/Checkout/Checkout";
+import Order from "@/pages/Order/Order";
 
 const UserRoutes = (
   <>
@@ -79,6 +80,24 @@ const UserRoutes = (
         </ProtectedRoutes>
       }
     />
+
+    {/* New Order Routes */}
+    <Route
+      path="order/:id"
+      element={
+        <ProtectedRoutes>
+          <Order />
+        </ProtectedRoutes>
+      }
+    />
+    {/* <Route
+      path="orders"
+      element={
+        <ProtectedRoutes>
+          <OrderHistory />
+        </ProtectedRoutes>
+      }
+    /> */}
 
     {/* Protected Admin/Employee Routes */}
     <Route

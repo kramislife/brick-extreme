@@ -2,16 +2,29 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const checkoutApi = createApi({
   reducerPath: "checkoutApi",
-  baseQuery: fetchBaseQuery({ baseUrl: "/api" }), // Adjust this to match your API URL
+  baseQuery: fetchBaseQuery({
+    baseUrl: "/api/v1",
+    credentials: "include",
+    prepareHeaders: (headers) => {
+      return headers;
+    },
+  }),
   endpoints: (builder) => ({
-    submitCheckout: builder.mutation({
+    createPayPalOrder: builder.mutation({
       query: (orderData) => ({
-        url: "/checkout",
+        url: "/payment/create-paypal-order",
         method: "POST",
         body: orderData,
+      }),
+    }),
+    capturePayPalOrder: builder.mutation({
+      query: (orderID) => ({
+        url: `/payment/capture-paypal-order/${orderID}`,
+        method: "POST",
       }),
     }),
   }),
 });
 
-export const { useSubmitCheckoutMutation } = checkoutApi;
+export const { useCreatePayPalOrderMutation, useCapturePayPalOrderMutation } =
+  checkoutApi;

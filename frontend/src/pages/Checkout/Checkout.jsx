@@ -27,12 +27,19 @@ const Checkout = () => {
     user,
     handleCardDetailsChange,
     cardDetails,
+    handlePayPalApprove,
   } = useCheckout();
 
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [addressToDelete, setAddressToDelete] = useState(null);
   const [deleteAddress, { isLoading: isDeleting }] = useDeleteAddressMutation();
   const { refetch: refetchAddresses } = useGetUserAddressesQuery();
+
+  const paypalOptions = {
+    "client-id": import.meta.env.VITE_PAYPAL_CLIENT_ID,
+    currency: "USD",
+    intent: "capture",
+  };
 
   const handleDeleteClick = (address) => {
     setAddressToDelete(address);
@@ -81,6 +88,7 @@ const Checkout = () => {
                   total={total}
                   address={address}
                   onSubmit={handleSubmit}
+                  onPayPalApprove={handlePayPalApprove}
                   handleCardDetailsChange={handleCardDetailsChange}
                   cardDetails={cardDetails}
                 />
