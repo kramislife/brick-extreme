@@ -3,10 +3,25 @@ import dotenv from "dotenv";
 
 dotenv.config({ path: "backend/config/config.env" });
 
+const PAYPAL_MODE = process.env.PAYPAL_MODE || "sandbox";
+const PAYPAL_API_URL =
+  process.env.PAYPAL_API_URL || "https://api-m.sandbox.paypal.com";
+
 // Validate environment variables
-if (!process.env.PAYPAL_CLIENT_ID || !process.env.PAYPAL_CLIENT_SECRET) {
-  throw new Error("PayPal credentials are not configured properly");
+if (
+  !process.env.PAYPAL_CLIENT_ID ||
+  !process.env.PAYPAL_CLIENT_SECRET ||
+  !PAYPAL_API_URL
+) {
+  throw new Error("PayPal configuration is incomplete");
 }
+
+export const getPayPalConfig = () => ({
+  mode: PAYPAL_MODE,
+  apiUrl: PAYPAL_API_URL,
+  clientId: process.env.PAYPAL_CLIENT_ID,
+  clientSecret: process.env.PAYPAL_CLIENT_SECRET,
+});
 
 // Configure PayPal environment with error handling
 const getPayPalClient = () => {
