@@ -3,7 +3,7 @@ import { ArrowUpRight } from "lucide-react";
 import { PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js";
 import { toast } from "react-toastify";
 
-const PayPalSection = ({ onSubmit, onApprove, total }) => {
+const PayPalSection = ({  onApprove, total }) => {
   const [{ isResolved }] = usePayPalScriptReducer();
   const [key, setKey] = useState(0);
   const [isProcessing, setIsProcessing] = useState(false);

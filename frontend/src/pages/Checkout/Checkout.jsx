@@ -35,12 +35,6 @@ const Checkout = () => {
   const [deleteAddress, { isLoading: isDeleting }] = useDeleteAddressMutation();
   const { refetch: refetchAddresses } = useGetUserAddressesQuery();
 
-  const paypalOptions = {
-    "client-id": import.meta.env.VITE_PAYPAL_CLIENT_ID,
-    currency: "USD",
-    intent: "capture",
-  };
-
   const handleDeleteClick = (address) => {
     setAddressToDelete(address);
     setIsDeleteDialogOpen(true);
