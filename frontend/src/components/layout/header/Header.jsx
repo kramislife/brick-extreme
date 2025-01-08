@@ -19,11 +19,8 @@ const Header = () => {
   const [prevCartCount, setPrevCartCount] = useState(0);
   const [isCartOpen, setIsCartOpen] = useState(false);
 
-  // Calculate total items
-  const totalItems = cartItems.reduce(
-    (total, item) => total + item.quantity,
-    0
-  );
+  // Calculate total unique items instead of total quantity
+  const totalItems = cartItems.length;
 
   // Track cart changes for animation
   useEffect(() => {
