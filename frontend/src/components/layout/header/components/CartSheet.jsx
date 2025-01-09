@@ -7,11 +7,11 @@ import {
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { useSelector, useDispatch } from "react-redux";
-import { removeFromCart, updateQuantity } from "@/redux/features/cartSlice";
+import { removeFromCart, updateQuantity, selectCartTotal } from "@/redux/features/cartSlice";
 import { useNavigate, Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "react-toastify";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const CartSheet = ({ isOpen, setIsOpen }) => {
   const navigate = useNavigate();
@@ -21,17 +21,22 @@ const CartSheet = ({ isOpen, setIsOpen }) => {
   const [showLoginMessage, setShowLoginMessage] = useState(false);
   const [checkoutDisabled, setCheckoutDisabled] = useState(false);
 
-  // Calculate total
-  const total = cartItems.reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0
-  );
+  // Use the memoized selector for total
+  const total = useSelector(selectCartTotal);
 
-  const handleQuantityUpdate = (product, currentQuantity, newQuantity) => {
+  // Reset checkout state when auth status changes
+  useEffect(() => {
+    if (isAuthenticated) {
+      setShowLoginMessage(false);
+      setCheckoutDisabled(false);
+    }
+  }, [isAuthenticated]);
+
+  const handleQuantityUpdate = (productId, newQuantity) => {
     if (newQuantity < 1) {
-      dispatch(removeFromCart(product));
+      dispatch(removeFromCart(productId));
     } else {
-      dispatch(updateQuantity({ product, quantity: newQuantity }));
+      dispatch(updateQuantity({ product: productId, quantity: newQuantity }));
     }
   };
 
@@ -129,7 +134,6 @@ const CartSheet = ({ isOpen, setIsOpen }) => {
                                   onClick={() =>
                                     handleQuantityUpdate(
                                       item.product,
-                                      item.quantity,
                                       item.quantity - 1
                                     )
                                   }
@@ -146,7 +150,6 @@ const CartSheet = ({ isOpen, setIsOpen }) => {
                                   onClick={() =>
                                     handleQuantityUpdate(
                                       item.product,
-                                      item.quantity,
                                       item.quantity + 1
                                     )
                                   }
@@ -170,7 +173,7 @@ const CartSheet = ({ isOpen, setIsOpen }) => {
             <div className="sticky bottom-0 px-6 py-5 bg-brand border-t border-white/10">
               <div className="flex justify-between items-center mb-4">
                 <span className="text-gray-400">Total</span>
-                <span className="text-white text-xl font-semibold">
+                <span className="text-emerald-400 text-xl font-semibold">
                   ${total.toFixed(2)}
                 </span>
               </div>

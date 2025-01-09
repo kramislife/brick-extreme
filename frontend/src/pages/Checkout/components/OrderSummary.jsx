@@ -18,6 +18,27 @@ const OrderSummary = ({ cartItems, total, updateQuantity, removeItem }) => {
     );
   }
 
+  const QuantityControl = ({ quantity, onUpdate }) => (
+    <div className="flex items-center gap-2 border border-white/10 rounded-lg p-1">
+      <button
+        type="button"
+        onClick={() => onUpdate(quantity - 1)}
+        disabled={quantity <= 1}
+        className="p-1 rounded-md hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        <Minus size={14} className="text-gray-400" />
+      </button>
+      <span className="text-sm text-gray-400 w-6 text-center">{quantity}</span>
+      <button
+        type="button"
+        onClick={() => onUpdate(quantity + 1)}
+        className="p-1 rounded-md hover:bg-white/10"
+      >
+        <Plus size={14} className="text-gray-400" />
+      </button>
+    </div>
+  );
+
   return (
     <Card className="bg-darkBrand/20 backdrop-blur-xl border-white/10">
       <CardHeader>
@@ -66,12 +87,28 @@ const OrderSummary = ({ cartItems, total, updateQuantity, removeItem }) => {
                     </button>
                   </div>
                 </div>
-                <span className="text-green-500">
-                  ${((item.price || 0) * (item.quantity || 1)).toFixed(2)}
+                {/* Price */}
+                <span className="text-emerald-400">
+                  ${(item.price * item.quantity).toFixed(2)}
                 </span>
               </div>
             </div>
           ))}
+
+          {/* Discount Input */}
+          <div className="flex gap-2 pt-4">
+            <input
+              type="text"
+              placeholder="Discount code or gift card"
+              className="flex-1 bg-brand/10 border-white/10 border rounded-lg px-4 py-2 transition duration-300 focus:outline-none focus:border-blue-500 hover:border-blue-300 h-12 placeholder:text-white/80 font-extralight text-white"
+            />
+            <button
+              type="button"
+              className="px-4 py-2 bg-blue-500/30 text-white rounded-md text-sm hover:bg-blue-500/20 transition-colors"
+            >
+              Apply
+            </button>
+          </div>
 
           {/* Summary */}
           <div className="space-y-3 pt-4">
@@ -83,7 +120,7 @@ const OrderSummary = ({ cartItems, total, updateQuantity, removeItem }) => {
             <div className="flex justify-between text-white font-medium pt-5 border-t border-white/10">
               <span>Total</span>
               <div>
-                <span className="text-green-500 text-xl">
+                <span className="text-emerald-400 text-xl">
                   ${total.toFixed(2)}
                 </span>
               </div>
@@ -94,26 +131,5 @@ const OrderSummary = ({ cartItems, total, updateQuantity, removeItem }) => {
     </Card>
   );
 };
-
-const QuantityControl = ({ quantity, onUpdate }) => (
-  <div className="flex items-center gap-2 border border-white/10 rounded-lg p-1">
-    <button
-      type="button"
-      onClick={() => onUpdate(quantity - 1)}
-      disabled={quantity <= 1}
-      className="p-1 rounded-md hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed"
-    >
-      <Minus size={14} className="text-gray-400" />
-    </button>
-    <span className="text-sm text-gray-400 w-6 text-center">{quantity}</span>
-    <button
-      type="button"
-      onClick={() => onUpdate(quantity + 1)}
-      className="p-1 rounded-md hover:bg-white/10"
-    >
-      <Plus size={14} className="text-gray-400" />
-    </button>
-  </div>
-);
 
 export default OrderSummary;

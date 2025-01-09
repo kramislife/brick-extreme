@@ -8,6 +8,13 @@ import {
 } from "../Utills/cloudinary.js";
 import ErrorHandler from "../Utills/customErrorHandler.js";
 
+// calculate discounted price
+const calculateDiscountedPrice = (product) => {
+  return product.price && product.discount
+    ? product.price - (product.price * product.discount) / 100
+    : product.price || 0;
+};
+
 //------------------------------------  GET ALL PRODUCT => GET /products  ------------------------------------
 
 export const getProduct = catchAsyncErrors(async (req, res, next) => {
@@ -43,14 +50,25 @@ export const getProduct = catchAsyncErrors(async (req, res, next) => {
   // Calculate total pages
   const totalPages = Math.ceil(filteredProductCount / resPerPage);
 
+  // Add discounted_price to each product before sending
+  const productsWithDiscountedPrice = paginatedProducts.map((product) => ({
+    ...product.toObject(),
+    discounted_price: calculateDiscountedPrice(product),
+  }));
+
+  const allProductsWithDiscountedPrice = allFilteredProducts.map((product) => ({
+    ...product.toObject(),
+    discounted_price: calculateDiscountedPrice(product),
+  }));
+
   res.status(200).json({
     resPerPage,
     currentPage,
     totalPages,
     filteredProductCount,
     message: `${filteredProductCount} Products retrieved successfully`,
-    products: paginatedProducts,
-    allProducts: allFilteredProducts, // Send all products for accurate counting
+    products: productsWithDiscountedPrice,
+    allProducts: allProductsWithDiscountedPrice,
   });
 });
 //------------------------------------  GET BEST SELLER PRODUCTS  => GET /products/best-seller  ------------------------------------
@@ -124,10 +142,20 @@ export const getProductById = catchAsyncErrors(async (req, res, next) => {
   //   allProducts(...product, ...similarProducts);
   // }
 
+  const productWithDiscount = {
+    ...product.toObject(),
+    discounted_price: calculateDiscountedPrice(product),
+  };
+
+  const similarProductsWithDiscount = similarProducts.map((product) => ({
+    ...product.toObject(),
+    discounted_price: calculateDiscountedPrice(product),
+  }));
+
   res.status(200).json({
     message: "Product Retrieved Successfully",
-    product,
-    similarProducts,
+    product: productWithDiscount,
+    similarProducts: similarProductsWithDiscount,
   });
 });
 

@@ -27,6 +27,7 @@ const Checkout = () => {
     user,
     handleCardDetailsChange,
     cardDetails,
+    handlePayPalApprove,
   } = useCheckout();
 
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -81,6 +82,7 @@ const Checkout = () => {
                   total={total}
                   address={address}
                   onSubmit={handleSubmit}
+                  onPayPalApprove={handlePayPalApprove}
                   handleCardDetailsChange={handleCardDetailsChange}
                   cardDetails={cardDetails}
                 />

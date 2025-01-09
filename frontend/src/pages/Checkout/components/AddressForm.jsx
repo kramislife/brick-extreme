@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Input } from "@/components/ui/input";
 import Select from "react-select";
-import { useCountries } from "@/hooks/Payment/useCountries";
 import {
   Dialog,
   DialogContent,
@@ -12,88 +11,23 @@ import {
 import { Plus, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-  useCreateAddressMutation,
-  useUpdateAddressMutation,
-} from "@/redux/api/userApi";
-import { toast } from "react-toastify";
-import { useGetUserAddressesQuery } from "@/redux/api/userApi";
+import { useAddressForm } from "@/hooks/Payment/useAddressForm";
 import { DialogDescription } from "@radix-ui/react-dialog";
 
 const AddressForm = ({ isEdit = false, editAddress = null, userName = "" }) => {
-  const [formData, setFormData] = useState({
-    name: "",
-    contact_number: "",
-    address_line1: "",
-    address_line2: "",
-    city: "",
-    state: "",
-    postal_code: "",
-    country: "",
-    is_default: false,
-    full_name: userName,
-  });
-
-  const { userCountry, setUserCountry, countryOptions, customStyles } =
-    useCountries((countryLabel) => handleFieldChange("country", countryLabel));
-
-  const [createAddress, { isLoading: isCreating }] = useCreateAddressMutation();
-  const [updateAddress, { isLoading: isUpdating }] = useUpdateAddressMutation();
-  const [open, setOpen] = useState(false);
-
-  const { refetch: refetchAddresses } = useGetUserAddressesQuery();
-
-  useEffect(() => {
-    if (open && isEdit && editAddress) {
-      setFormData({
-        ...editAddress,
-        full_name: editAddress.full_name || userName,
-      });
-    }
-  }, [open, isEdit, editAddress, userName]);
-
-  const handleFieldChange = (field, value) => {
-    setFormData((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    try {
-      const addressData = {
-        ...formData,
-        name: formData.name || "Home",
-      };
-
-      const response = isEdit
-        ? await updateAddress({ id: editAddress._id, addressData }).unwrap()
-        : await createAddress(addressData).unwrap();
-
-      toast.success(response.message);
-      await refetchAddresses();
-      setOpen(false);
-
-      setFormData({
-        name: "",
-        contact_number: "",
-        address_line1: "",
-        address_line2: "",
-        city: "",
-        state: "",
-        postal_code: "",
-        country: "",
-        is_default: false,
-        full_name: userName,
-      });
-    } catch (error) {
-      toast.error(
-        error.data?.message || `Failed to ${isEdit ? "update" : "add"} address`
-      );
-    }
-  };
+  const {
+    formData,
+    handleFieldChange,
+    handleSubmit,
+    open,
+    setOpen,
+    isCreating,
+    isUpdating,
+    userCountry,
+    setUserCountry,
+    countryOptions,
+    customStyles,
+  } = useAddressForm({ isEdit, editAddress, userName });
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>

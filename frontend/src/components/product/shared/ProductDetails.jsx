@@ -1,11 +1,7 @@
 import React, { useState, useRef, useMemo, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { addToCart } from "@/redux/features/cartSlice";
-import {
-  ChevronLeft,
-  ChevronRight,
-  CircleCheckBig,
-} from "lucide-react";
+import { ChevronLeft, ChevronRight, CircleCheckBig } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import Metadata from "@/components/layout/Metadata/Metadata";
@@ -89,8 +85,7 @@ const ProductDetails = ({
   // Handle add to cart with animation
   const handleAddToCart = () => {
     try {
-      const discountedPrice =
-        currentProduct.price * (1 - (currentProduct.discount || 0) / 100);
+      const discountedPrice = currentProduct.discounted_price;
 
       // Trigger the animation
       setShowAnimation(true);
@@ -112,8 +107,6 @@ const ProductDetails = ({
         // Open cart sheet after animation completes
         setIsCartOpen(true);
       }, 800);
-
-      // console.log(`Added to cart: ${currentProduct.product_name}`);
     } catch (error) {
       toast.error("Failed to add item to cart");
       console.error("Add to cart error:", error);
@@ -240,11 +233,7 @@ const ProductDetails = ({
               {/* Updated Price Display */}
               <div className="flex items-center space-x-4">
                 <span className="text-4xl font-semibold">
-                  $
-                  {(
-                    (currentProduct?.price || 0) *
-                    (1 - (currentProduct?.discount || 0) / 100)
-                  ).toFixed(2)}
+                  ${(currentProduct?.discounted_price || 0).toFixed(2)}
                 </span>
                 {currentProduct?.discount > 0 && (
                   <span className="text-xl text-red-500 line-through">

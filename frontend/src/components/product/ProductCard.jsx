@@ -20,10 +20,7 @@ const ProductCard = ({ product }) => {
     }
   };
 
-  const discountedPrice =
-    product?.price && product?.discount
-      ? product.price - (product.price * product.discount) / 100
-      : product?.price || 0;
+  const discountedPrice = product?.discounted_price || 0;
 
   return (
     <motion.div

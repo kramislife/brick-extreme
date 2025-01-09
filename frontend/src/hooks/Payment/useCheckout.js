@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { PAYMENT_METHODS, FORM_FIELDS } from "@/constant/paymentMethod";
+import { PAYMENT_METHODS } from "@/constant/paymentMethod";
 import {
   updateQuantity,
   removeFromCart,
@@ -9,6 +9,8 @@ import {
 } from "@/redux/features/cartSlice";
 import { toast } from "react-toastify";
 import { useGetMeQuery, useGetUserAddressesQuery } from "@/redux/api/userApi";
+import { useCreateOrderMutation } from "@/redux/api/orderApi";
+import { useCreatePayPalOrderMutation } from "@/redux/api/checkoutApi";
 
 const useCheckout = () => {
   const dispatch = useDispatch();
@@ -16,19 +18,9 @@ const useCheckout = () => {
   const { cartItems } = useSelector((state) => state.cart);
   const { data: userData } = useGetMeQuery();
   const { data: userAddresses } = useGetUserAddressesQuery();
-  const [selectedShippingAddress, setSelectedShippingAddress] = useState(null);
 
-  // Form states
-  const [email, setEmail] = useState("");
-  const [shippingAddress, setShippingAddress] = useState({
-    [FORM_FIELDS.ADDRESS.CONTACT_NUMBER]: "",
-    [FORM_FIELDS.ADDRESS.ADDRESS_LINE1]: "",
-    [FORM_FIELDS.ADDRESS.ADDRESS_LINE2]: "",
-    [FORM_FIELDS.ADDRESS.CITY]: "",
-    [FORM_FIELDS.ADDRESS.STATE]: "",
-    [FORM_FIELDS.ADDRESS.POSTAL_CODE]: "",
-    [FORM_FIELDS.ADDRESS.COUNTRY]: "",
-  });
+  // Address and Payment States
+  const [selectedShippingAddress, setSelectedShippingAddress] = useState(null);
   const [paymentMethod, setPaymentMethod] = useState(
     PAYMENT_METHODS.CREDIT_CARD
   );
@@ -40,63 +32,130 @@ const useCheckout = () => {
   });
 
   // Calculate total
-  const total = cartItems.reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0
+  const total = useMemo(
+    () =>
+      cartItems.reduce(
+        (sum, item) => sum + Number(item.price) * Number(item.quantity),
+        0
+      ),
+    [cartItems]
   );
 
-  const handleEmailChange = (value) => setEmail(value);
-
+  // Address Handlers
   const handleAddressChange = (field, value) => {
     if (field === "selectedAddress") {
       setSelectedShippingAddress(value);
       return;
     }
+  };
 
-    setShippingAddress((prev) => ({
+  // Payment Handlers
+  const handlePaymentMethodChange = (value) => setPaymentMethod(value);
+
+  const handleCardDetailsChange = (field, value) => {
+    setCardDetails((prev) => ({
       ...prev,
       [field]: value,
     }));
   };
 
-  const handlePaymentMethodChange = (value) => setPaymentMethod(value);
+  // API Mutations
+  const [createOrder] = useCreateOrderMutation();
+  const [createPayPalOrder] = useCreatePayPalOrderMutation();
 
+  // Submit Handler
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
 
     try {
-      const finalShippingAddress = selectedShippingAddress
-        ? {
-            full_name: userData?.name,
-            ...selectedShippingAddress,
-          }
-        : {
-            ...shippingAddress,
-            full_name: userData?.name,
-          };
+      if (!selectedShippingAddress) {
+        toast.error("Please select a shipping address");
+        return;
+      }
 
-      const orderData = {
-        email,
-        shippingAddress: finalShippingAddress,
-        paymentMethod,
-        cardDetails: {
-          cardNumber: cardDetails.cardNumber,
-          expiryDate: cardDetails.expiryDate,
-          nameOnCard: cardDetails.nameOnCard,
-        },
-        total,
-        items: cartItems,
-      };
+      // Handle PayPal payment
+      if (paymentMethod === PAYMENT_METHODS.PAYPAL) {
+        const paypalOrderData = {
+          orderItems: cartItems.map((item) => ({
+            product: item.product,
+            name: item.name,
+            quantity: parseInt(item.quantity, 10),
+            price: Number(item.price).toFixed(2),
+            image: item.image,
+            isPreorder: item.isPreorder || false,
+          })),
+          total: Number(total).toFixed(2),
+        };
 
-      console.log("Order Checkout Data:", orderData);
+        const response = await createPayPalOrder(paypalOrderData).unwrap();
 
-      // TODO: Implement actual checkout
+        if (!response?.data?.orderID) {
+          throw new Error("Failed to create PayPal order");
+        }
+
+        return response.data.orderID;
+      }
+
+      // Handle Credit Card payment (placeholder for future implementation)
+      if (paymentMethod === PAYMENT_METHODS.CREDIT_CARD) {
+        // Validate card details
+
+        // TODO: Implement credit card payment logic
+        // toast.info("Credit card payment will be implemented soon");
+      }
     } catch (error) {
       console.error("Checkout error:", error);
-      toast.error(error.data?.message || "Failed to process checkout");
+      throw error;
     }
   };
 
+  // PayPal Success Handler
+  const handlePayPalApprove = async (data) => {
+    try {
+      toast.loading("Processing payment...");
+
+      const orderData = {
+        shippingAddress: selectedShippingAddress._id,
+        billingAddress: selectedShippingAddress._id,
+        orderItems: cartItems.map((item) => ({
+          product: item.product,
+          name: item.name,
+          quantity: item.quantity,
+          price: parseFloat(item.price),
+          image: item.image,
+        })),
+        itemsPrice: parseFloat(total),
+        taxPrice: 0,
+        shippingPrice: 0,
+        discountPrice: 0,
+        paymentInfo: {
+          method: "PayPal",
+          transactionId: data.orderID,
+          status: "Success",
+          paidAt: new Date().toISOString(),
+        },
+        totalPrice: parseFloat(total),
+        orderStatus: "Processing",
+      };
+
+      const order = await createOrder(orderData).unwrap();
+
+      if (order.success) {
+        toast.dismiss();
+        toast.success("Payment successful! Order created.");
+        dispatch(clearCart());
+        navigate(`/order/${order.data._id}`);
+      }
+    } catch (error) {
+      toast.dismiss();
+      toast.error(
+        error?.data?.message || error?.message || "Failed to complete payment"
+      );
+      throw error;
+    }
+  };
+
+  // Cart Handlers
   const handleUpdateQuantity = (productId, newQuantity) => {
     if (newQuantity > 0) {
       dispatch(updateQuantity({ product: productId, quantity: newQuantity }));
@@ -107,20 +166,21 @@ const useCheckout = () => {
     dispatch(removeFromCart(productId));
   };
 
-  const handleCardDetailsChange = (field, value) => {
-    setCardDetails((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
+  // Card Validation Helper
+  const validateCardDetails = (details) => {
+    const { cardNumber, expiryDate, cvv, nameOnCard } = details;
+    return (
+      cardNumber.length >= 15 &&
+      expiryDate.length === 5 &&
+      cvv.length >= 3 &&
+      nameOnCard.length > 0
+    );
   };
 
   return {
-    email,
-    address: shippingAddress,
     paymentMethod,
     cartItems,
     total,
-    handleEmailChange,
     handleAddressChange,
     handlePaymentMethodChange,
     handleSubmit,
@@ -129,8 +189,9 @@ const useCheckout = () => {
     userAddresses,
     user: userData,
     selectedShippingAddress,
-    handleCardDetailsChange,
+    handlePayPalApprove,
     cardDetails,
+    handleCardDetailsChange,
   };
 };
 
